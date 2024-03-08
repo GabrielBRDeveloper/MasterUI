@@ -20,6 +20,7 @@ public class ViewGroup extends View {
     protected void requestLayout() {
         if (getParent() != null) {
             getParent().requestLayout();
+            invalidate();
         } else {
             measure();
             measureBounds();
@@ -55,6 +56,10 @@ public class ViewGroup extends View {
 
     public List<View> getChildren(){
         return new ArrayList<>(children);
+    }
+
+    public int getChildIndex(View child){
+        return children.indexOf(child);
     }
 
     public <T extends View> T getChildAt(int index){

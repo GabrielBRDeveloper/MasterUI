@@ -19,10 +19,10 @@ public class GLTexel {
     static {
         BufferUtils.zeroBuffer(bufferUV);
         bufferUV.put(new float[]{
-                0, 1,
-                1, 1,
                 0, 0,
-                1, 0
+                1, 0,
+                0, 1,
+                1, 1
         });
         bufferUV.position(0);
     }

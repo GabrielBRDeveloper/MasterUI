@@ -48,6 +48,8 @@ public class View {
 
     protected void measure() {
         Point location = parent.getChildLocation(this);
+        int ow = getMeasuredWidth();
+        int oh = getMeasuredHeight();
         { // Measure sizes
             int w = 1;
             int h = 1;
@@ -63,6 +65,9 @@ public class View {
                 h = Math.max(0, parent.getMeasuredHeight() - location.y);
             }
             onMeasure(w,h);
+            if (ow != w || oh != h){
+                invalidate();
+            }
         }
     }
 
@@ -87,7 +92,7 @@ public class View {
     }
 
     public int getMeasuredWidth() {
-        return measured.y;
+        return measured.x;
     }
 
     public int getMeasuredHeight() {
@@ -111,6 +116,8 @@ public class View {
     }
 
     public void invalidate() {
+        if (requiresDraw)return;
+
         requiresDraw = true;
         if (getParent() != null) {
             getParent().invalidate();
@@ -118,7 +125,12 @@ public class View {
     }
 
     public boolean isVisible() {
-        return parent != null && parent.isVisible() && bounds.width() > 0 && bounds.height() > 0;
+        boolean basic = parent != null && parent.isVisible() && bounds.width() > 0 && bounds.height() > 0;
+        if (!basic){
+            basic &= bounds.left < parent.getMeasuredWidth();
+            basic &= bounds.top < parent.getMeasuredHeight();
+        }
+        return basic;
     }
 
     public boolean equals(Object obj) {

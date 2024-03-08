@@ -4,6 +4,7 @@ import br.nullexcept.mux.graphics.Color;
 import br.nullexcept.mux.graphics.drawable.ColorDrawable;
 import br.nullexcept.mux.renderer.program.GLShaderList;
 import br.nullexcept.mux.renderer.texel.GLTexel;
+import br.nullexcept.mux.widget.AbsoluteLayout;
 import br.nullexcept.mux.view.RootViewGroup;
 import br.nullexcept.mux.view.View;
 import br.nullexcept.mux.view.ViewGroup;
@@ -31,17 +32,20 @@ public class TestGFW extends GlesWindow {
         root = new RootViewGroup(null);
         root.setBackground(new ColorDrawable(Color.RED));
 
-        ViewGroup view = new ViewGroup(null);
-        view.setLayoutParams(new ViewGroup.LayoutParams(512,80));
+        AbsoluteLayout view = new AbsoluteLayout(null);
+        view.setLayoutParams(new ViewGroup.LayoutParams(512,512));
         view.setBackground(new ColorDrawable(Color.GREEN));
         root.addChild(view);
 
-
-        View view2 = new View(null);
-        view2.setLayoutParams(new ViewGroup.LayoutParams(600,600));
-        view2.setBackground(new ColorDrawable(Color.BLUE));
-        view.addChild(view2);
-
+        external = view;
+        for (int i = 0; i < 32; i++){
+            for (int x = 0; x < 32; x++) {
+                View view2 = new View(null);
+                view2.setLayoutParams(new AbsoluteLayout.LayoutParams(i * 32, x * 32, 20, 20));
+                view2.setBackground(new ColorDrawable(Color.BLUE));
+                view.addChild(view2);
+            }
+        }
     }
 
     float[] bars = new float[100];
@@ -60,6 +64,8 @@ public class TestGFW extends GlesWindow {
             }
         }
 
+        external.invalidate();
+
         frames++;
         if (System.currentTimeMillis() - lastTime >= 1000){
             fps = frames;
@@ -71,7 +77,7 @@ public class TestGFW extends GlesWindow {
         root.draw();
         glClearColor(.0f,0f,0f,1f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        GLTexel.drawTexture(0,512,512,-512, root.getCanvas().getFramebuffer().getTexture());
+        GLTexel.drawTexture(0,0,512,512, root.getCanvas().getFramebuffer().getTexture());
     }
 
     @Override

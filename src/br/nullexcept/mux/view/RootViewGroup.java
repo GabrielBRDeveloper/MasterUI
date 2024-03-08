@@ -4,6 +4,7 @@ import br.nullexcept.mux.app.Context;
 import br.nullexcept.mux.graphics.Rect;
 import br.nullexcept.mux.renderer.texel.CanvasTexel;
 import br.nullexcept.mux.renderer.texel.GLTexel;
+import org.lwjgl.nanovg.NanoVG;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -98,7 +99,6 @@ public class RootViewGroup extends ViewGroup {
 
     public void draw() {
         measure();
-        invalidateAll();
         drawer.drawInternal(rootCanvas, this);
     }
 
@@ -119,7 +119,7 @@ public class RootViewGroup extends ViewGroup {
         private void drawInternal(CanvasTexel canvas, View view){
             Rect bounds = view.getBounds();
             if (bounds.width() != canvas.getWidth() || bounds.height() != canvas.getHeight()) {
-                System.err.println("RESIZE CANVAS OF: ");
+                System.err.println("RESIZE CANVAS OF VIEW["+view.hashCode()+"]");
                 canvas.getFramebuffer().resize(bounds.width(), bounds.height());
             }
             canvas.begin();
@@ -137,8 +137,6 @@ public class RootViewGroup extends ViewGroup {
                         canvas.getFramebuffer().bind();
                         GLTexel.drawTexture(childBounds.left, childBounds.top,childBounds.width(),childBounds.height(), texel.getFramebuffer().getTexture());
                         canvas.getFramebuffer().unbind();
-                    } else {
-                        System.out.println(child.getBounds().toString());
                     }
                 }
                 canvas.begin();
