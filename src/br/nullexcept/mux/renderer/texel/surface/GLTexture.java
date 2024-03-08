@@ -39,9 +39,12 @@ public class GLTexture implements Bindable, Disposable {
         //MemoryUtil.memFree(buffer);
     }
 
-    public void recreate(int width, int height, ByteBuffer buffer){
+    public void recreate(int width, int height, ByteBuffer buffer) {
         bind();
-        glTexImage2D(GL_TEXTURE_2D, 0, format, width, height,0, format, GL_UNSIGNED_BYTE, buffer);
+        if (buffer != null)
+            glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, buffer);
+        else
+            glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, 0);
         unbind();
     }
 

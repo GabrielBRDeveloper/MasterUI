@@ -1,12 +1,12 @@
 package br.nullexcept.mux.test;
 
-import br.nullexcept.mux.graphics.Canvas;
 import br.nullexcept.mux.graphics.Color;
-import br.nullexcept.mux.graphics.Paint;
-import br.nullexcept.mux.graphics.Rect;
-import br.nullexcept.mux.renderer.texel.CanvasTexel;
+import br.nullexcept.mux.graphics.drawable.ColorDrawable;
 import br.nullexcept.mux.renderer.program.GLShaderList;
 import br.nullexcept.mux.renderer.texel.GLTexel;
+import br.nullexcept.mux.view.RootViewGroup;
+import br.nullexcept.mux.view.View;
+import br.nullexcept.mux.view.ViewGroup;
 
 import static br.nullexcept.mux.hardware.GLES.*;
 
@@ -18,9 +18,8 @@ public class TestGFW extends GlesWindow {
     private int frames = 0;
     private long lastTime = 0;
     private int[][] sizes = new int[2][1];
-    private Canvas canvas;
-    private final Paint paint = new Paint();
-    private final Rect rect = new Rect();
+    private RootViewGroup root;
+    private View external;
 
     public static void main(String[] args) {
         new TestGFW().init();
@@ -29,8 +28,20 @@ public class TestGFW extends GlesWindow {
     @Override
     protected void create() {
         GLShaderList.build();
-        canvas = new CanvasTexel(512,512);
-        paint.setTextSize(30);
+        root = new RootViewGroup(null);
+        root.setBackground(new ColorDrawable(Color.RED));
+
+        ViewGroup view = new ViewGroup(null);
+        view.setLayoutParams(new ViewGroup.LayoutParams(512,80));
+        view.setBackground(new ColorDrawable(Color.GREEN));
+        root.addChild(view);
+
+
+        View view2 = new View(null);
+        view2.setLayoutParams(new ViewGroup.LayoutParams(600,600));
+        view2.setBackground(new ColorDrawable(Color.BLUE));
+        view.addChild(view2);
+
     }
 
     float[] bars = new float[100];
@@ -57,39 +68,10 @@ public class TestGFW extends GlesWindow {
             System.out.println("fps: "+fps);
         }
 
-        canvas.begin();
-        canvas.drawColor(Color.BLACK);
-
-        paint.setColor(Color.WHITE);
-        //drawBars();
-        for (int i = 0; i < 40; i++) {
-            canvas.drawText("Hello world", 0, (i * 70) + 120, paint);
-        }
-
-        canvas.drawText("FPS: "+fps, 10, canvas.getHeight()-32,paint);
-        canvas.end();
+        root.draw();
         glClearColor(.0f,0f,0f,1f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        GLTexel.drawTexture(0,512,512,-512, ((CanvasTexel)canvas).getFramebuffer().getTexture());
-    }
-
-    public void drawBars(){
-        for (int i = 0; i < bars.length; i++){
-            if (bars[i] >= 500){
-                mul[i] = -1.0f;
-            } else if (bars[i] <= 5){
-                mul[i] = 1.0f;
-            }
-            bars[i] += mul[i];
-        }
-
-        int i = 0;
-        for (float x : bars) {
-            rect.setPosition((i*5)+5, (int) x);
-            rect.setSize(2, (int) (512-x));
-            canvas.drawRect(rect, paint);
-            i++;
-        }
+        GLTexel.drawTexture(0,512,512,-512, root.getCanvas().getFramebuffer().getTexture());
     }
 
     @Override

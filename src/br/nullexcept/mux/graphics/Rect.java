@@ -52,4 +52,14 @@ public class Rect {
     public void set(Rect rect) {
         set(rect.left, rect.top, rect.right, rect.bottom);
     }
+
+    @Override
+    public String toString() {
+        return "Rect{" +
+                "left=" + left +
+                ", top=" + top +
+                ", right=" + right +
+                ", bottom=" + bottom +
+                '}';
+    }
 }

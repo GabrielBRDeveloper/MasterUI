@@ -7,7 +7,7 @@ import br.nullexcept.mux.lang.Disposable;
 import static br.nullexcept.mux.hardware.GLES.*;
 
 public class GLFramebuffer implements Disposable, Bindable {
-    private final int width, height;
+    private int width, height;
     private final GLTexture texture;
     private final int frameBuffer;
     public GLFramebuffer(int width, int height) {
@@ -17,19 +17,18 @@ public class GLFramebuffer implements Disposable, Bindable {
         texture = new GLTexture(width,height, GL_RGBA);
         glGenFramebuffers(buffer);
         frameBuffer = buffer[0];
-
         glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
-
-        buffer = new int[1];
-        glGenRenderbuffers(buffer);
         glBindTexture(GL_TEXTURE_2D, texture.getTexture());
-
-        glRenderbufferStorage(GL_RENDERBUFFER,GL_DEPTH_COMPONENT,width,height);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture.getTexture(),0);
         glClear(GL_COLOR_BUFFER_BIT);
-
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glBindTexture(GL_TEXTURE_2D, 0);
+    }
+
+    public void resize(int width, int height){
+        texture.recreate(width, height, null);
+        this.width = width;
+        this.height = height;
     }
 
     public int getWidth() {

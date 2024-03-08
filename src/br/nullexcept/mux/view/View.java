@@ -2,6 +2,7 @@ package br.nullexcept.mux.view;
 
 import br.nullexcept.mux.app.Context;
 import br.nullexcept.mux.graphics.Canvas;
+import br.nullexcept.mux.graphics.Drawable;
 import br.nullexcept.mux.graphics.Point;
 import br.nullexcept.mux.graphics.Rect;
 
@@ -15,20 +16,34 @@ public class View {
     private boolean touchable;
     private final Point measured = new Point();
     private final int hashCode = hash();
+    private final Rect rect = new Rect();
     private Object tag;
+    private Drawable background;
     private ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+    boolean requiresDraw = true;
 
     public View(Context context) {
     }
 
-    public void draw(Canvas canvas) {
+    public void setBackground(Drawable background) {
+        this.background = background;
+        invalidate();
     }
 
     public void onDraw(Canvas canvas) {
+        rect.set(0,0, canvas.getWidth(), canvas.getHeight());
+        if (background != null) {
+            background.setBounds(rect);
+            background.draw(canvas);
+        }
+    }
+
+    public void onDrawForeground(Canvas canvas){
+
     }
 
     public ViewGroup getParent() {
-        return null;
+        return parent;
     }
 
     protected void measure() {
@@ -59,14 +74,15 @@ public class View {
     }
 
     protected final void measureBounds(){
-        Point location = parent.getChildLocation(this);
+        Point location = getParent().getChildLocation(this);
+        bounds.set(location.x, location.y, location.x+getMeasuredWidth(), location.y+getMeasuredHeight());
     }
 
     protected void onMeasure(int width, int height){
         measured.set(width, height);
     }
 
-    private void setParent(ViewGroup group) {
+    final void setParent(ViewGroup group) {
         parent = group;
     }
 
@@ -82,11 +98,23 @@ public class View {
         return params;
     }
 
-    public Rect getGlobalBounds() {
+    public Rect getBounds() {
         return bounds;
     }
 
+    public boolean isFocusable() {
+        return focusable;
+    }
+
+    public CanvasProvider getProvider(){
+        return getParent().getProvider();
+    }
+
     public void invalidate() {
+        requiresDraw = true;
+        if (getParent() != null) {
+            getParent().invalidate();
+        }
     }
 
     public boolean isVisible() {
@@ -100,5 +128,21 @@ public class View {
     private static synchronized int hash() {
         currentHash++;
         return currentHash;
+    }
+
+    public int hashCode(){
+        return this.hashCode;
+    }
+
+    public void setLayoutParams(ViewGroup.LayoutParams params) {
+        this.params = params;
+        if (getParent() != null) {
+            getParent().requestLayout();
+        }
+        invalidate();
+    }
+
+    protected interface CanvasProvider {
+        void draw(View view);
     }
 }

@@ -45,8 +45,8 @@ class VgTexel {
 
         globalColor.a(Color.alpha(color)/255.0f);
         globalColor.r(Color.red(color)/255.0f);
-        globalColor.g(Color.blue(color)/255.0f);
-        globalColor.b(Color.green(color)/255.0f);
+        globalColor.g(Color.green(color)/255.0f);
+        globalColor.b(Color.blue(color)/255.0f);
     }
 
     public static Paint getPaint() {
