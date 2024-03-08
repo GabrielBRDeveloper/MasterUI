@@ -128,16 +128,18 @@ public class RootViewGroup extends ViewGroup {
             if (view instanceof ViewGroup){
                 canvas.end();
                 for (View child: ((ViewGroup) view).getChildren()){
+                    if (child.requiresDraw && child.isVisible()) {
+                        this.draw(child);
+                    }
+                }
+                for (View child: ((ViewGroup) view).getChildren()){
+                    canvas.getFramebuffer().bind();
                     if (child.isVisible()){
-                        if (child.requiresDraw) {
-                            this.draw(child);
-                        }
                         Rect childBounds = child.getBounds();
                         CanvasTexel texel = renders.get(child.hashCode()).canvas;
-                        canvas.getFramebuffer().bind();
                         GLTexel.drawTexture(childBounds.left, childBounds.top,childBounds.width(),childBounds.height(), texel.getFramebuffer().getTexture());
-                        canvas.getFramebuffer().unbind();
                     }
+                    canvas.getFramebuffer().unbind();
                 }
                 canvas.begin();
             }
