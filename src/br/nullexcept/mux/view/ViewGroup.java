@@ -2,6 +2,7 @@ package br.nullexcept.mux.view;
 
 import br.nullexcept.mux.app.Context;
 import br.nullexcept.mux.graphics.Point;
+import br.nullexcept.mux.res.AttributeList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +12,10 @@ public class ViewGroup extends View {
 
     public ViewGroup(Context context) {
         super(context);
+    }
+
+    public ViewGroup(Context context, AttributeList attrs) {
+        super(context, attrs);
     }
 
     protected Point getChildLocation(View view) {
@@ -32,20 +37,29 @@ public class ViewGroup extends View {
         LayoutParams params = getLayoutParams();
         ViewGroup parent = getParent();
         Point location = parent.getChildLocation(this);
-
-        if (params.width == LayoutParams.WRAP_CONTENT || params.height == LayoutParams.WRAP_CONTENT){
-            //@TODO
+        int width, height;
+        if (params.isWrapRequired()) {
+            if (params.width == LayoutParams.WRAP_CONTENT) {
+                width = calculateWidth();
+            } else {
+                width = params.width == LayoutParams.MATCH_PARENT ? parent.getMeasuredWidth() - location.x : params.width;
+            }
+            if (params.height == LayoutParams.WRAP_CONTENT) {
+                height = calculateHeight();
+            } else {
+                height = params.height == LayoutParams.MATCH_PARENT ? parent.getMeasuredHeight() - location.y : params.height;
+            }
         } else {
-            int width = params.width == LayoutParams.MATCH_PARENT ? parent.getMeasuredWidth() - location.x : params.width;
-            int height = params.height == LayoutParams.MATCH_PARENT ? parent.getMeasuredHeight() - location.y : params.height;
+            width = params.width == LayoutParams.MATCH_PARENT ? parent.getMeasuredWidth() - location.x : params.width;
+            height = params.height == LayoutParams.MATCH_PARENT ? parent.getMeasuredHeight() - location.y : params.height;
             width = Math.max(0, width);
             height = Math.max(0, height);
-            onMeasure(width, height);
         }
-        for (View child: children){
+        onMeasure(width, height);
+        for (View child : children) {
             child.measure();
         }
-        for (View child: children){
+        for (View child : children) {
             child.measureBounds();
         }
     }
@@ -111,6 +125,10 @@ public class ViewGroup extends View {
         public LayoutParams(int width, int height){
             this.width = width;
             this.height = height;
+        }
+
+        private boolean isWrapRequired(){
+            return width == WRAP_CONTENT || height == WRAP_CONTENT;
         }
     }
 }

@@ -8,6 +8,7 @@ import br.nullexcept.mux.widget.AbsoluteLayout;
 import br.nullexcept.mux.view.RootViewGroup;
 import br.nullexcept.mux.view.View;
 import br.nullexcept.mux.view.ViewGroup;
+import br.nullexcept.mux.widget.TextView;
 
 import static br.nullexcept.mux.hardware.GLES.*;
 
@@ -21,6 +22,7 @@ public class TestGFW extends GlesWindow {
     private int[][] sizes = new int[2][1];
     private RootViewGroup root;
     private View external;
+    private TextView text;
 
     public static void main(String[] args) {
         new TestGFW().init();
@@ -43,9 +45,16 @@ public class TestGFW extends GlesWindow {
                 View view2 = new View(null);
                 view2.setLayoutParams(new AbsoluteLayout.LayoutParams(i * 32, x * 32, 20, 20));
                 view2.setBackground(new ColorDrawable(Color.BLUE));
-                view.addChild(view2);
+                //view.addChild(view2);
             }
         }
+
+        text = new TextView(null);
+        text.setTextSize(32.0f);
+        text.setText("Hello world!!!\nHello my friends");
+        text.setBackground(new ColorDrawable(Color.BLUE));
+        //text.setLayoutParams(new AbsoluteLayout.LayoutParams(300,300));
+        view.addChild(text);
     }
 
     float[] bars = new float[100];
@@ -63,8 +72,6 @@ public class TestGFW extends GlesWindow {
                 v = 0;
             }
         }
-
-        external.invalidate();
 
         frames++;
         if (System.currentTimeMillis() - lastTime >= 1000){

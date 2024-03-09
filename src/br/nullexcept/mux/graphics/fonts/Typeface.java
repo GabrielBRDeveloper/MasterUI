@@ -4,6 +4,7 @@ import br.nullexcept.mux.C;
 import org.lwjgl.nanovg.NanoVG;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.UUID;
 
 public class Typeface {
@@ -31,21 +32,23 @@ public class Typeface {
         this.descent = descent[0];
         this.lineHeight = lineHeight[0];
         float[] bounds = new float[4];
-        for (int i = 0; i < bounds.length; i++){
+        for (int i = 0; i < this.bounds.length; i++){
             String character = String.valueOf((char)i);
+            Arrays.fill(bounds,0);
             NanoVG.nvgTextBounds(context,0,lineHeight[0],character,bounds);
             this.bounds[i][0] = (byte) Math.abs((int)bounds[0]);
             this.bounds[i][1] = (byte) Math.abs((int)bounds[1]);
             this.bounds[i][2] = (byte) ((int)bounds[2]);
-            this.bounds[i][3] = (byte) ((int)bounds[2]);
+            this.bounds[i][3] = (byte) ((int)bounds[3]);
         }
     }
 
     protected int measureChar(char ch){
-        if (ch > bounds.length){
+        if (ch > bounds.length || ch == ' '){
             ch = 'Z';
         }
-        return bounds[ch][3];
+        int size = (bounds[ch][2] & 0xFF) - (bounds[ch][0] & 0xFF);
+        return size;
     }
 
     public int hashCode(){

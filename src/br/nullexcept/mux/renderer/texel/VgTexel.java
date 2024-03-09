@@ -80,5 +80,6 @@ class VgTexel {
 
     public static void drawText(int x, int y, String line) {
         nvgText(globalContext, x,y, line);
+        nvgFillColor(globalContext, globalColor);
     }
 }

@@ -63,15 +63,9 @@ public class CanvasTexel implements Canvas {
         if (text == null){
             return;
         }
-        String[] lines = text.split("\n");
         VgTexel.beginElement();
         VgTexel.applyPaint(paint);
-        x += translation.x;
-        y += translation.y;
-        for (String line: lines) {
-            VgTexel.drawText(x, y, line);
-            y += paint.getTextSize();
-        }
+        VgTexel.drawText(x, y, text);
         VgTexel.endElement();
     }
 

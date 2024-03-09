@@ -2,12 +2,15 @@ package br.nullexcept.mux.view;
 
 import br.nullexcept.mux.app.Context;
 import br.nullexcept.mux.graphics.Rect;
+import br.nullexcept.mux.renderer.program.GLShaderList;
 import br.nullexcept.mux.renderer.texel.CanvasTexel;
 import br.nullexcept.mux.renderer.texel.GLTexel;
 import org.lwjgl.nanovg.NanoVG;
+import org.lwjgl.nanovg.NanoVGGLES2;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class RootViewGroup extends ViewGroup {
     private final HashMap<Integer, RenderObject> renders = new HashMap<>();
@@ -90,6 +93,7 @@ public class RootViewGroup extends ViewGroup {
                 render.canvas.dispose();
             }
         }
+        invalidateAll();
     }
 
     @Override
@@ -119,7 +123,6 @@ public class RootViewGroup extends ViewGroup {
         private void drawInternal(CanvasTexel canvas, View view){
             Rect bounds = view.getBounds();
             if (bounds.width() != canvas.getWidth() || bounds.height() != canvas.getHeight()) {
-                System.err.println("RESIZE CANVAS OF VIEW["+view.hashCode()+"]");
                 canvas.getFramebuffer().resize(bounds.width(), bounds.height());
             }
             canvas.begin();
@@ -127,20 +130,34 @@ public class RootViewGroup extends ViewGroup {
             view.onDraw(canvas);
             if (view instanceof ViewGroup){
                 canvas.end();
-                for (View child: ((ViewGroup) view).getChildren()){
-                    if (child.requiresDraw && child.isVisible()) {
-                        this.draw(child);
+                List<View> children = ((ViewGroup) view).getChildren();
+                int drawables = 0;
+                for (View child: children){
+                    if (child.isVisible()) {
+                        if (child.requiresDraw) {
+                            this.draw(child);
+                        }
+                        drawables++;
                     }
                 }
-                for (View child: ((ViewGroup) view).getChildren()){
-                    canvas.getFramebuffer().bind();
+                float[][] borders = new float[4][drawables];
+                int[] textures = new int[drawables];
+                int index = 0;
+                for (View child: children){
                     if (child.isVisible()){
                         Rect childBounds = child.getBounds();
                         CanvasTexel texel = renders.get(child.hashCode()).canvas;
-                        GLTexel.drawTexture(childBounds.left, childBounds.top,childBounds.width(),childBounds.height(), texel.getFramebuffer().getTexture());
+                        borders[0][index] = childBounds.left;
+                        borders[1][index] = childBounds.top;
+                        borders[2][index] = childBounds.width();
+                        borders[3][index] = childBounds.height();
+                        textures[index] = texel.getFramebuffer().getTexture().getTexture();
+                        index++;
                     }
-                    canvas.getFramebuffer().unbind();
                 }
+                canvas.getFramebuffer().bind();
+                GLTexel.drawLayers(borders[0], borders[1], borders[2], borders[3], GLShaderList.TEXTURE,textures);
+                canvas.getFramebuffer().unbind();
                 canvas.begin();
             }
             view.onDrawForeground(canvas);

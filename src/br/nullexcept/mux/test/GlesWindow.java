@@ -24,7 +24,7 @@ public abstract class GlesWindow {
 
             window = glfwCreateWindow(512,512,"OpenGL-ES", 0,0);
             glfwMakeContextCurrent(window);
-            glfwSwapInterval(0);
+            glfwSwapInterval(1);
             glfwShowWindow(window);
             Configuration.OPENGLES_EXPLICIT_INIT.set(false);
             GLES.createCapabilities();

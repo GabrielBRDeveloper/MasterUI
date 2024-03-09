@@ -18,16 +18,24 @@ public abstract class FontMetrics {
     }
 
     public float getLineHeight() {
-        return paint.getTypeface().lineHeight * scale();
+        return  paint.getTypeface().lineHeight * scale();
     }
 
     public float measureChar(char ch){
         return paint.getTypeface().measureChar(ch) * scale();
     }
 
-    protected float scale(){
+    private float scale(){
         return (paint.getTextSize()/Typeface.SCALE);
     }
 
-    protected void update(){}
+    public float measureText(CharSequence line){
+        float width = 0;
+        Typeface typeface = paint.getTypeface();
+        float scale = scale();
+        for (int i = 0; i < line.length(); i++){
+            width += typeface.measureChar(line.charAt(i)) * scale;
+        }
+        return width;
+    }
 }

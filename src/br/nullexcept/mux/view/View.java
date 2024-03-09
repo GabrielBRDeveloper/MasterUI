@@ -5,6 +5,7 @@ import br.nullexcept.mux.graphics.Canvas;
 import br.nullexcept.mux.graphics.Drawable;
 import br.nullexcept.mux.graphics.Point;
 import br.nullexcept.mux.graphics.Rect;
+import br.nullexcept.mux.res.AttributeList;
 
 import java.util.Objects;
 
@@ -22,7 +23,12 @@ public class View {
     private ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     boolean requiresDraw = true;
 
-    public View(Context context) {
+
+    public View(Context context){
+        this(context, null);
+    }
+
+    public View(Context context, AttributeList attrs) {
     }
 
     public void setBackground(Drawable background) {
@@ -47,6 +53,9 @@ public class View {
     }
 
     protected void measure() {
+        if (parent == null)
+            return;
+
         Point location = parent.getChildLocation(this);
         int ow = getMeasuredWidth();
         int oh = getMeasuredHeight();
@@ -57,18 +66,32 @@ public class View {
                 w = params.width;
             } else if (params.height == ViewGroup.LayoutParams.MATCH_PARENT){
                 w = Math.max(0, parent.getMeasuredWidth() - location.x);
+            } else {
+                w = calculateWidth();
             }
 
             if (params.height >= 0){
                 h = params.height;
             } else if (params.height == ViewGroup.LayoutParams.MATCH_PARENT){
                 h = Math.max(0, parent.getMeasuredHeight() - location.y);
+            } else {
+                h = calculateHeight();
             }
-            onMeasure(w,h);
             if (ow != w || oh != h){
+                onMeasure(w,h);
+                parent.requestLayout();
+                measure();
                 invalidate();
             }
         }
+    }
+
+    protected int calculateWidth(){
+        return 0;
+    }
+
+    protected int calculateHeight(){
+        return 0;
     }
 
     public <T extends View> T findViewByTag(Object tag){
@@ -111,8 +134,12 @@ public class View {
         return focusable;
     }
 
-    public CanvasProvider getProvider(){
+    CanvasProvider getProvider(){
         return getParent().getProvider();
+    }
+
+    public void setTag(Object tag) {
+        this.tag = tag;
     }
 
     public void invalidate() {
@@ -154,7 +181,7 @@ public class View {
         invalidate();
     }
 
-    protected interface CanvasProvider {
+    interface CanvasProvider {
         void draw(View view);
     }
 }

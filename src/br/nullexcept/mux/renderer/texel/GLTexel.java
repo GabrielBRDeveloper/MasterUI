@@ -55,6 +55,34 @@ public class GLTexel {
         drawTexture(x, y, width, height, GLShaderList.TEXTURE, texture);
     }
 
+    public static void drawLayers(float[] x, float[] y, float[] width, float[] height, GLProgram program, int[] textures){
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        program.bind();
+
+        int vPosition = program.attribute(GLProgram.ATTRIBUTE_POSITION);
+        int vTextureCoords = program.attribute(GLProgram.ATTRIBUTE_UV);
+        int uTexture = program.uniform(GLProgram.UNIFORM_TEXTURE);
+
+        glEnableVertexAttribArray(vPosition);
+        glEnableVertexAttribArray(vTextureCoords);
+
+        for (int i = 0; i < x.length; i++) {
+            prepareRect(x[i], y[i], width[i], height[i]);
+
+            glBindTexture(GL_TEXTURE_2D, textures[i]);
+            glVertexAttribPointer(vPosition, 3, GL_FLOAT, false, 0, bufferRect);
+            glVertexAttribPointer(vTextureCoords, 2, GL_FLOAT, false, 0, bufferUV);
+
+            glUniform1i(uTexture, GL_TEXTURE_2D);
+            glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+            glDisable(GL_DEPTH_TEST);
+        }
+
+        program.unbind();
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
+
     public static void drawTexture(float x, float y, float width, float height, GLProgram program, GLTexture texture){
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

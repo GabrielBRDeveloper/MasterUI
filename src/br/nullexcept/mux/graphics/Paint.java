@@ -6,8 +6,8 @@ import br.nullexcept.mux.graphics.fonts.Typeface;
 public class Paint {
     private Typeface typeface;
     private int flags;
-    private int color;
-    private float textSize;
+    private int color = Color.WHITE;
+    private float textSize = 18.0f;
     private float strokeWidth = 0.0f;
     private final FontMetrics metrics;
 

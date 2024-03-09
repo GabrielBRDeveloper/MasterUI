@@ -2,12 +2,18 @@ package br.nullexcept.mux.widget;
 
 import br.nullexcept.mux.app.Context;
 import br.nullexcept.mux.graphics.Point;
+import br.nullexcept.mux.res.AttributeList;
 import br.nullexcept.mux.view.View;
 import br.nullexcept.mux.view.ViewGroup;
 
 public class AbsoluteLayout extends ViewGroup {
+
     public AbsoluteLayout(Context context) {
         super(context);
+    }
+
+    public AbsoluteLayout(Context context, AttributeList attrs) {
+        super(context, attrs);
     }
 
     @Override
