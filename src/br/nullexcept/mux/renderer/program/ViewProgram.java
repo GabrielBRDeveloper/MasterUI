@@ -1,14 +1,16 @@
 package br.nullexcept.mux.renderer.program;
 
-class TextProgram extends GLProgram {
+class ViewProgram extends GLProgram {
     @Override
     protected String fragment() {
         return ("precision mediump float;\n" +
+                "uniform float alpha; \n"+
                 "uniform sampler2D __texture__;\n" +
                 "varying vec2 xuv;" +
                 "void main(){\n" +
                 "   vec4 pixel = texture2D(__texture__, xuv);\n" +
-                "   gl_FragColor = vec4(1.0, 1.0, 1.0, pixel.a);\n" +
+                "   pixel.a *= alpha;\n" +
+                "   gl_FragColor = pixel;\n" +
                 "};\n").replaceAll("__texture__", UNIFORM_TEXTURE);
     }
 

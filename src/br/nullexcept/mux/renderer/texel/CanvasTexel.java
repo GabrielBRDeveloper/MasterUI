@@ -29,7 +29,7 @@ public class CanvasTexel implements Canvas {
     @Override
     public void reset() {
         GLES.glClearColor(0,0,0,0);
-        GLES.glClear(GLES20.GL_COLOR_BUFFER_BIT|GLES20.GL_DEPTH_BUFFER_BIT);
+        GLES.glClear(GLES20.GL_COLOR_BUFFER_BIT|GLES20.GL_DEPTH_BUFFER_BIT|GLES.GL_STENCIL_BUFFER_BIT);
         translation.set(0,0);
     }
 

@@ -5,6 +5,8 @@ import br.nullexcept.mux.graphics.Color;
 import br.nullexcept.mux.graphics.Paint;
 import br.nullexcept.mux.graphics.fonts.TypefaceFactory;
 import org.lwjgl.nanovg.NVGColor;
+import org.lwjgl.nanovg.NVGPaint;
+import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.nanovg.NanoVGGLES2;
 import static org.lwjgl.nanovg.NanoVG.*;
 
@@ -12,6 +14,7 @@ class VgTexel {
     private static long globalContext = 0;
     private static final Paint globalPaint = new Paint();
     private static final NVGColor globalColor = NVGColor.create();
+    private static final NVGPaint nvgPaint = NVGPaint.create();
 
     public static void initialize(){
         globalPaint.setTextSize(-1f);
@@ -30,9 +33,12 @@ class VgTexel {
         setColor(paint.getColor());
         setTextSize(paint.getTextSize());
 
-        nvgFillColor(globalContext, globalColor);
+        nvgPaint.innerColor(globalColor);
+        nvgPaint.outerColor(globalColor);
+
+        nvgFillPaint(globalContext, nvgPaint);
         nvgStrokeColor(globalContext, globalColor);
-        nvgStrokeWidth(globalContext, paint.getStrokeWidth());
+        //nvgStrokeWidth(globalContext, paint.getStrokeWidth());
     }
 
     private static void setTextSize(float textSize) {
@@ -43,10 +49,13 @@ class VgTexel {
     public static void setColor(int color){
         globalPaint.setColor(color);
 
-        globalColor.a(Color.alpha(color)/255.0f);
-        globalColor.r(Color.red(color)/255.0f);
-        globalColor.g(Color.green(color)/255.0f);
-        globalColor.b(Color.blue(color)/255.0f);
+        NanoVG.nvgRGBAf(
+                Color.red(color) / 255.0f,
+                Color.green(color) / 255.0f,
+                Color.blue(color) / 255.0f,
+                Color.alpha(color) / 255.0f,
+                globalColor
+        );
     }
 
     public static Paint getPaint() {
@@ -71,7 +80,7 @@ class VgTexel {
     }
 
     public static void beginFrame(int w, int h) {
-        nvgBeginFrame(globalContext, w,h, 1.0f);
+        nvgBeginFrame(globalContext, w,h,1.0f);
     }
 
     public static void endFrame() {
@@ -80,6 +89,5 @@ class VgTexel {
 
     public static void drawText(int x, int y, String line) {
         nvgText(globalContext, x,y, line);
-        nvgFillColor(globalContext, globalColor);
     }
 }

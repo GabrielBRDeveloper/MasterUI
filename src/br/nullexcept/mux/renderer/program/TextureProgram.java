@@ -7,8 +7,7 @@ class TextureProgram extends GLProgram {
                 "uniform sampler2D __texture__;\n" +
                 "varying vec2 xuv;" +
                 "void main(){\n" +
-                "   vec4 pixel = texture2D(__texture__, xuv);\n" +
-                "   gl_FragColor = pixel;\n" +
+                "   gl_FragColor = texture2D(__texture__, xuv);\n" +
                 "};\n").replaceAll("__texture__", UNIFORM_TEXTURE);
     }
 

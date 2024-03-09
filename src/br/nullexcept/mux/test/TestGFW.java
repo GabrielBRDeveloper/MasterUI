@@ -50,9 +50,9 @@ public class TestGFW extends GlesWindow {
         }
 
         text = new TextView(null);
+        text.setAlpha(1f);
         text.setTextSize(32.0f);
         text.setText("Hello world!!!\nHello my friends");
-        text.setBackground(new ColorDrawable(Color.BLUE));
         //text.setLayoutParams(new AbsoluteLayout.LayoutParams(300,300));
         view.addChild(text);
     }

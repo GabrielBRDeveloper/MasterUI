@@ -5,8 +5,6 @@ import br.nullexcept.mux.graphics.Rect;
 import br.nullexcept.mux.renderer.program.GLShaderList;
 import br.nullexcept.mux.renderer.texel.CanvasTexel;
 import br.nullexcept.mux.renderer.texel.GLTexel;
-import org.lwjgl.nanovg.NanoVG;
-import org.lwjgl.nanovg.NanoVGGLES2;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -140,7 +138,7 @@ public class RootViewGroup extends ViewGroup {
                         drawables++;
                     }
                 }
-                float[][] borders = new float[4][drawables];
+                float[][] borders = new float[5][drawables];
                 int[] textures = new int[drawables];
                 int index = 0;
                 for (View child: children){
@@ -151,12 +149,13 @@ public class RootViewGroup extends ViewGroup {
                         borders[1][index] = childBounds.top;
                         borders[2][index] = childBounds.width();
                         borders[3][index] = childBounds.height();
+                        borders[4][index] = child.getAlpha();
                         textures[index] = texel.getFramebuffer().getTexture().getTexture();
                         index++;
                     }
                 }
                 canvas.getFramebuffer().bind();
-                GLTexel.drawLayers(borders[0], borders[1], borders[2], borders[3], GLShaderList.TEXTURE,textures);
+                GLTexel.drawViewLayers(borders[0], borders[1], borders[2], borders[3],textures, borders[4]);
                 canvas.getFramebuffer().unbind();
                 canvas.begin();
             }

@@ -55,14 +55,17 @@ public class GLTexel {
         drawTexture(x, y, width, height, GLShaderList.TEXTURE, texture);
     }
 
-    public static void drawLayers(float[] x, float[] y, float[] width, float[] height, GLProgram program, int[] textures){
+    public static void drawViewLayers(float[] x, float[] y, float[] width, float[] height, int[] textures, float[] alphas){
         glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glBlendFunc(GL_SRC_ALPHA, GL_BLEND_SRC_ALPHA);
+        GLProgram program = GLShaderList.VIEW;
+
         program.bind();
 
         int vPosition = program.attribute(GLProgram.ATTRIBUTE_POSITION);
         int vTextureCoords = program.attribute(GLProgram.ATTRIBUTE_UV);
         int uTexture = program.uniform(GLProgram.UNIFORM_TEXTURE);
+        int uAlpha = program.uniform("alpha");
 
         glEnableVertexAttribArray(vPosition);
         glEnableVertexAttribArray(vTextureCoords);
@@ -75,6 +78,7 @@ public class GLTexel {
             glVertexAttribPointer(vTextureCoords, 2, GL_FLOAT, false, 0, bufferUV);
 
             glUniform1i(uTexture, GL_TEXTURE_2D);
+            glUniform1f(uAlpha, alphas[i]);
             glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
             glDisable(GL_DEPTH_TEST);
         }

@@ -20,6 +20,7 @@ public class View {
     private final Rect rect = new Rect();
     private Object tag;
     private Drawable background;
+    private float alpha = 1.0f;
     private ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     boolean requiresDraw = true;
 
@@ -179,6 +180,15 @@ public class View {
             getParent().requestLayout();
         }
         invalidate();
+    }
+
+    public void setAlpha(float alpha) {
+        this.alpha = Math.max(0.0f, Math.min(1.0f, alpha));
+        invalidate();
+    }
+
+    public float getAlpha() {
+        return alpha;
     }
 
     interface CanvasProvider {

@@ -30,6 +30,11 @@ public class TextView extends View {
         return width;
     }
 
+    public void setTextColor(int color){
+        paint.setColor(color);
+        invalidate();
+    }
+
     @Override
     protected int calculateHeight() {
         return (int) (paint.getFontMetrics().getLineHeight() * text.length);
