@@ -89,6 +89,19 @@ public class ViewGroup extends View {
         notifyTreeChanged();
     }
 
+    public void removeAllViews(){
+        while (children.size() > 0){
+            View child = children.get(0);
+            children.remove(0);
+            child.setParent(null);
+            notifyTreeChanged();
+            onChildRemoved(child);
+        }
+    }
+
+    private void onChildRemoved(View view) {
+    }
+
     private void notifyTreeChanged(){
         if (getParent() != null){
             getParent().notifyTreeChanged();

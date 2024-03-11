@@ -2,8 +2,6 @@ package br.nullexcept.mux.core.texel;
 
 import br.nullexcept.mux.app.Context;
 import br.nullexcept.mux.graphics.Rect;
-import br.nullexcept.mux.core.texel.CanvasTexel;
-import br.nullexcept.mux.core.texel.GLTexel;
 import br.nullexcept.mux.view.View;
 import br.nullexcept.mux.view.ViewGroup;
 import br.nullexcept.mux.view.Window;
@@ -24,8 +22,8 @@ public class RootViewGroup extends ViewGroup {
     }
 
     {
-        rootCanvas = new CanvasTexel(256,256);
-        getBounds().set(0,0,256,256);
+        rootCanvas = new CanvasTexel(64,64);
+        getBounds().set(0,0,64,64);
     }
 
     @Override
@@ -104,6 +102,14 @@ public class RootViewGroup extends ViewGroup {
     }
 
     @Override
+    public void addChild(View view) {
+        //For allow only 1 view
+        removeAllViews();
+        view.setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        super.addChild(view);
+    }
+
+    @Override
     protected void requestLayout() {
         for (View view: getChildren())
             view.measure();
@@ -124,6 +130,8 @@ public class RootViewGroup extends ViewGroup {
 
     public void resize(int w, int h) {
         rootCanvas.getFramebuffer().resize(w, h);
+        measure();
+        requestLayout();
         invalidateAll();
     }
 

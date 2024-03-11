@@ -43,7 +43,6 @@ class GlfwWindow extends Window {
     private void update(){
         if (System.currentTimeMillis() - last >= 1000){
             last = System.currentTimeMillis();
-            System.out.println("Window ["+window+"] fps: "+frames);
             frames = 0;
         }
         frames++;
@@ -57,7 +56,7 @@ class GlfwWindow extends Window {
             GLFW.glfwSwapBuffers(C.GLFW_CONTEXT);
             GLFW.glfwMakeContextCurrent(window);
             getWidth();
-            if (ow != sizes[0][0] && oh != sizes[1][0]){
+            if (ow != sizes[0][0] || oh != sizes[1][0]){
                 ow = sizes[0][0];
                 oh = sizes[1][0];
                 anchor.resize(ow, oh);

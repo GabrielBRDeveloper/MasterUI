@@ -4,8 +4,7 @@ import br.nullexcept.mux.app.Activity;
 import br.nullexcept.mux.app.Application;
 import br.nullexcept.mux.graphics.Color;
 import br.nullexcept.mux.graphics.drawable.ColorDrawable;
-import br.nullexcept.mux.view.View;
-import br.nullexcept.mux.view.ViewGroup;
+import br.nullexcept.mux.widget.TextView;
 
 public class Example extends Activity {
     public static void main(String[] args) {
@@ -16,9 +15,11 @@ public class Example extends Activity {
     public void onCreate() {
         super.onCreate();
         System.out.println("On create");
-        View view = new View(this);
+        TextView view = new TextView(this);
         setTitle("Hello world!");
-        view.setBackground(new ColorDrawable(Color.RED));
+        view.setText("Hello view!");
+        view.setTextSize(18.0f);
+        view.setBackground(new ColorDrawable(Color.BLACK));
         setContentView(view);
     }
 
