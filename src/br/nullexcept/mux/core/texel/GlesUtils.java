@@ -1,8 +1,8 @@
-package br.nullexcept.mux.renderer;
+package br.nullexcept.mux.core.texel;
 
 import static br.nullexcept.mux.hardware.GLES.*;
 
-public class GlesUtils {
+class GlesUtils {
     public static int compileShader(String source, int type){
         int shader = glCreateShader(type);
         glShaderSource(shader, source);

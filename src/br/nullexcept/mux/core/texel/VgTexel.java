@@ -1,4 +1,4 @@
-package br.nullexcept.mux.renderer.texel;
+package br.nullexcept.mux.core.texel;
 
 import br.nullexcept.mux.C;
 import br.nullexcept.mux.graphics.Color;
@@ -15,12 +15,15 @@ class VgTexel {
     private static final Paint globalPaint = new Paint();
     private static final NVGColor globalColor = NVGColor.create();
     private static final NVGPaint nvgPaint = NVGPaint.create();
+    private static final NVGPaint tmpPaint = NVGPaint.create();
 
     public static void initialize(){
         globalPaint.setTextSize(-1f);
         globalContext = NanoVGGLES2.nnvgCreate(NanoVGGLES2.NVG_ANTIALIAS);
         C.VG_CONTEXT = globalContext;
+        C.BITMAP_FACTORY = new TexelBitmapFactory();
         TypefaceFactory.createDefaults();
+        GLShaderList.build();
     }
 
     @Deprecated
@@ -85,6 +88,23 @@ class VgTexel {
 
     public static void endFrame() {
         nvgEndFrame(globalContext);
+    }
+
+    public static void drawImage(TexelBitmap image, float destX, float destY, float destW, float destH, float srcX, float srcY, float srcW, float srcH) {
+        float aw = image.getWidth() / srcW;
+        float ah = image.getHeight() / srcH;
+
+        float imgH = destH * ah;
+        float imgW = destW *= aw;
+
+        float imgX = destX - ((srcX / image.getWidth()) * imgW);
+        float imgY = destY - ((srcY / image.getHeight()) * imgH);
+
+        nvgImagePattern(globalContext, imgX, imgY, imgW, imgH, 0, image.id(), 1.0f, tmpPaint);
+        nvgRect(globalContext, destX, destY, destW, destH);
+        nvgFillPaint(globalContext, tmpPaint);
+        nvgFill(globalContext);
+        nvgFillPaint(globalContext, nvgPaint);
     }
 
     public static void drawText(int x, int y, String line) {

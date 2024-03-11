@@ -2,6 +2,7 @@ package br.nullexcept.mux.view;
 
 import br.nullexcept.mux.app.Context;
 import br.nullexcept.mux.graphics.Point;
+import br.nullexcept.mux.input.Event;
 import br.nullexcept.mux.res.AttributeList;
 
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public class ViewGroup extends View {
     }
 
     @Override
-    protected void measure() {
+    public void measure() {
         LayoutParams params = getLayoutParams();
         ViewGroup parent = getParent();
         Point location = parent.getChildLocation(this);
@@ -84,7 +85,7 @@ public class ViewGroup extends View {
         children.add(view);
         view.setParent(this);
         onChildAdded(view);
-        view.requiresDraw = true;
+        view.addFlag(View.FLAG_REQUIRES_DRAW);
         notifyTreeChanged();
     }
 
@@ -93,6 +94,11 @@ public class ViewGroup extends View {
             getParent().notifyTreeChanged();
         }
         onTreeChanged();
+    }
+
+
+    public void dispatchEvent(Event event){
+
     }
 
     protected void onChildAdded(View view){

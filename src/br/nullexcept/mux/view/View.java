@@ -10,6 +10,8 @@ import br.nullexcept.mux.res.AttributeList;
 import java.util.Objects;
 
 public class View {
+    static final int FLAG_REQUIRES_DRAW = 2;
+
     private static int currentHash = 0;
     private ViewGroup parent;
     private final Rect bounds = new Rect();
@@ -21,9 +23,8 @@ public class View {
     private Object tag;
     private Drawable background;
     private float alpha = 1.0f;
+    private int flags = 0;
     private ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-    boolean requiresDraw = true;
-
 
     public View(Context context){
         this(context, null);
@@ -49,11 +50,27 @@ public class View {
 
     }
 
+    public void addFlag(int mask){
+        if ((flags & mask) == 0){
+            flags |= mask;
+        }
+    }
+
+    public boolean hasFlag(int mask){
+        return (flags & mask) != 0;
+    }
+
+    public void subFlag(int mask){
+        if (hasFlag(mask)){
+            flags &= ~mask;
+        }
+    }
+
     public ViewGroup getParent() {
         return parent;
     }
 
-    protected void measure() {
+    public void measure() {
         if (parent == null)
             return;
 
@@ -102,7 +119,7 @@ public class View {
         return null;
     }
 
-    protected final void measureBounds(){
+    public final void measureBounds(){
         Point location = getParent().getChildLocation(this);
         bounds.set(location.x, location.y, location.x+getMeasuredWidth(), location.y+getMeasuredHeight());
     }
@@ -135,18 +152,14 @@ public class View {
         return focusable;
     }
 
-    CanvasProvider getProvider(){
-        return getParent().getProvider();
-    }
-
     public void setTag(Object tag) {
         this.tag = tag;
     }
 
-    public void invalidate() {
-        if (requiresDraw)return;
+    public final void invalidate() {
+        if (hasFlag(FLAG_REQUIRES_DRAW))return;
 
-        requiresDraw = true;
+        addFlag(FLAG_REQUIRES_DRAW);
         if (getParent() != null) {
             getParent().invalidate();
         }
@@ -189,9 +202,5 @@ public class View {
 
     public float getAlpha() {
         return alpha;
-    }
-
-    interface CanvasProvider {
-        void draw(View view);
     }
 }

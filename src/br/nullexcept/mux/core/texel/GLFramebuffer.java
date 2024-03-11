@@ -1,4 +1,4 @@
-package br.nullexcept.mux.renderer.texel.surface;
+package br.nullexcept.mux.core.texel;
 
 import br.nullexcept.mux.graphics.Color;
 import br.nullexcept.mux.lang.Bindable;
@@ -6,7 +6,7 @@ import br.nullexcept.mux.lang.Disposable;
 
 import static br.nullexcept.mux.hardware.GLES.*;
 
-public class GLFramebuffer implements Disposable, Bindable {
+class GLFramebuffer implements Disposable, Bindable {
     private int width, height;
     private final GLTexture texture;
     private final int frameBuffer;

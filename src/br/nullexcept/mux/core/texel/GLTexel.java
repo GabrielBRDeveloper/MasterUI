@@ -1,8 +1,5 @@
-package br.nullexcept.mux.renderer.texel;
+package br.nullexcept.mux.core.texel;
 
-import br.nullexcept.mux.renderer.program.GLProgram;
-import br.nullexcept.mux.renderer.program.GLShaderList;
-import br.nullexcept.mux.renderer.texel.surface.GLTexture;
 import br.nullexcept.mux.graphics.Color;
 import org.lwjgl.BufferUtils;
 
@@ -10,7 +7,7 @@ import java.nio.FloatBuffer;
 
 import static br.nullexcept.mux.hardware.GLES.*;
 
-public class GLTexel {
+class GLTexel {
     private static final FloatBuffer bufferRect = BufferUtils.createFloatBuffer(3*4);
     private static final FloatBuffer bufferUV = BufferUtils.createFloatBuffer(2*4);
     private static final FloatBuffer bufferColor = BufferUtils.createFloatBuffer(4);
@@ -114,27 +111,5 @@ public class GLTexel {
         program.unbind();
         texture.unbind();
         glDisable(GL_DEPTH_TEST);
-    }
-
-    public static void drawRect(float x, float y, float width, float height, int color){
-        prepareRect(x, y, width, height);
-        prepareColor(color);
-
-        GLProgram program = GLShaderList.BASIC;
-        program.bind();
-
-        int vPosition = program.attribute(GLProgram.ATTRIBUTE_POSITION);
-        int vColor = program.uniform(GLProgram.ATTRIBUTE_COLOR);
-
-        bufferRect.position(0);
-        bufferColor.position(0);
-
-        glVertexAttribPointer(vPosition, 3, GL_FLOAT, false, 0, bufferRect);
-        glEnableVertexAttribArray(vPosition);
-
-        glUniform4fv(vColor, bufferColor);
-
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-        glUseProgram(0);
     }
 }

@@ -1,31 +1,35 @@
-package br.nullexcept.mux.view;
+package br.nullexcept.mux.core.texel;
 
 import br.nullexcept.mux.app.Context;
 import br.nullexcept.mux.graphics.Rect;
-import br.nullexcept.mux.renderer.program.GLShaderList;
-import br.nullexcept.mux.renderer.texel.CanvasTexel;
-import br.nullexcept.mux.renderer.texel.GLTexel;
+import br.nullexcept.mux.core.texel.CanvasTexel;
+import br.nullexcept.mux.core.texel.GLTexel;
+import br.nullexcept.mux.view.View;
+import br.nullexcept.mux.view.ViewGroup;
+import br.nullexcept.mux.view.Window;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class RootViewGroup extends ViewGroup {
+    private static final int FLAG_REQUIRES_DRAW = 2;
+
     private final HashMap<Integer, RenderObject> renders = new HashMap<>();
     private final CanvasTexel rootCanvas;
     private final RootDrawer drawer = new RootDrawer();
 
-    public RootViewGroup(Context context) {
+    public RootViewGroup(Context context, Window window) {
         super(context);
     }
 
     {
-        rootCanvas = new CanvasTexel(512,512);
-        getBounds().set(0,0,512,512);
+        rootCanvas = new CanvasTexel(256,256);
+        getBounds().set(0,0,256,256);
     }
 
     @Override
-    protected void measure() {
+    public void measure() {
         getBounds().set(0,0,rootCanvas.getWidth(), rootCanvas.getHeight());
     }
 
@@ -40,9 +44,6 @@ public class RootViewGroup extends ViewGroup {
     }
 
     @Override
-    public void invalidate() { }
-
-    @Override
     protected void onTreeChanged() {
         super.onTreeChanged();
         mountRenderBag();
@@ -53,10 +54,6 @@ public class RootViewGroup extends ViewGroup {
         super.onMeasure(rootCanvas.getWidth(), rootCanvas.getHeight());
     }
 
-    @Override
-    public CanvasProvider getProvider() {
-        return drawer;
-    }
 
     private void mountRenderBag(ViewGroup group){
         for (View child: group.getChildren()){
@@ -73,10 +70,11 @@ public class RootViewGroup extends ViewGroup {
         }
     }
 
-    private void invalidateAll(){
+    void invalidateAll(){
         for (RenderObject render: renders.values()){
-            render.view.requiresDraw = true;
+            render.view.addFlag(FLAG_REQUIRES_DRAW);
         }
+        addFlag(FLAG_REQUIRES_DRAW);
     }
 
     private void mountRenderBag(){
@@ -99,9 +97,10 @@ public class RootViewGroup extends ViewGroup {
         return true;
     }
 
-    public void draw() {
-        measure();
-        drawer.drawInternal(rootCanvas, this);
+    public void drawFrame() {
+        if (hasFlag(FLAG_REQUIRES_DRAW)) {
+            drawer.drawInternal(rootCanvas, this);
+        }
     }
 
     @Override
@@ -112,11 +111,23 @@ public class RootViewGroup extends ViewGroup {
             view.measureBounds();
     }
 
+    public void dispose(){
+        for (RenderObject render: renders.values()){
+            render.canvas.dispose();
+        }
+        renders.clear();
+    }
+
     public CanvasTexel getCanvas() {
         return rootCanvas;
     }
 
-    private class RootDrawer implements CanvasProvider {
+    public void resize(int w, int h) {
+        rootCanvas.getFramebuffer().resize(w, h);
+        invalidateAll();
+    }
+
+    private class RootDrawer {
 
         private void drawInternal(CanvasTexel canvas, View view){
             Rect bounds = view.getBounds();
@@ -132,7 +143,7 @@ public class RootViewGroup extends ViewGroup {
                 int drawables = 0;
                 for (View child: children){
                     if (child.isVisible()) {
-                        if (child.requiresDraw) {
+                        if (child.hasFlag(FLAG_REQUIRES_DRAW)) {
                             this.draw(child);
                         }
                         drawables++;
@@ -160,11 +171,10 @@ public class RootViewGroup extends ViewGroup {
                 canvas.begin();
             }
             view.onDrawForeground(canvas);
-            view.requiresDraw = false;
+            view.subFlag(FLAG_REQUIRES_DRAW);
             canvas.end();
         }
 
-        @Override
         public void draw(View view) {
             if (!view.isVisible()){
                 return;

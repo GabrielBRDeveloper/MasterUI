@@ -1,16 +1,14 @@
-package br.nullexcept.mux.renderer.program;
+package br.nullexcept.mux.core.texel;
 
-import br.nullexcept.mux.renderer.GlesUtils;
 import br.nullexcept.mux.lang.Bindable;
 import br.nullexcept.mux.lang.Disposable;
 
 import static br.nullexcept.mux.hardware.GLES.*;
 
-public abstract class GLProgram implements Bindable, Disposable {
+abstract class GLProgram implements Bindable, Disposable {
 
     public static final String ATTRIBUTE_POSITION = "vPosition";
     public static final String ATTRIBUTE_UV = "vTextureCoords";
-    public static final String ATTRIBUTE_COLOR = "vColor";
     public static final String UNIFORM_TEXTURE = "uTexture";
 
     private int program = -1;

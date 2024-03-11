@@ -4,7 +4,12 @@ import java.util.HashMap;
 
 public class Looper {
     private final HashMap<Long, Runnable> executions = new HashMap<>();
+    static Looper mainLooper;
     private boolean stop = false;
+
+    public static Looper getMainLooper() {
+        return mainLooper;
+    }
 
     public void initialize(){
         executions.clear();
@@ -31,6 +36,8 @@ public class Looper {
                         runnable.run();
                     } catch (Throwable e) {
                         System.err.println("ERROR ON EXECUTE: " + e);
+                        e.printStackTrace(System.err);
+                        stop = true;
                     }
                 }
             }

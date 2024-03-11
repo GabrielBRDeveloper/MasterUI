@@ -1,4 +1,4 @@
-package br.nullexcept.mux.renderer.texel.surface;
+package br.nullexcept.mux.core.texel;
 
 import br.nullexcept.mux.lang.Bindable;
 import br.nullexcept.mux.lang.Disposable;

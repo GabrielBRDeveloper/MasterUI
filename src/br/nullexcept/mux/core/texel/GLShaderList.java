@@ -1,13 +1,12 @@
-package br.nullexcept.mux.renderer.program;
+package br.nullexcept.mux.core.texel;
 
 import java.util.ArrayList;
 
-public class GLShaderList {
+class GLShaderList {
     private static ArrayList<GLProgram> list = new ArrayList<>();
 
-    public static final GLProgram BASIC = register(new SimpleProgram());
-    public static final GLProgram TEXTURE = register(new TextureProgram());
-    public static final GLProgram VIEW = register(new ViewProgram());
+    public static final GLProgram TEXTURE = register(new GLProgramTexture());
+    public static final GLProgram VIEW = register(new GLProgramView());
 
     public static <T extends GLProgram> T register(T value){
         list.add(value);
