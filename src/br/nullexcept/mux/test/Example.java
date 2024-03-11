@@ -7,9 +7,9 @@ import br.nullexcept.mux.graphics.drawable.ColorDrawable;
 import br.nullexcept.mux.view.View;
 import br.nullexcept.mux.view.ViewGroup;
 
-public class Main extends Activity {
+public class Example extends Activity {
     public static void main(String[] args) {
-        Application.initialize(new Main());
+        Application.initialize(new Example());
     }
 
     @Override
@@ -19,7 +19,6 @@ public class Main extends Activity {
         View view = new View(this);
         setTitle("Hello world!");
         view.setBackground(new ColorDrawable(Color.RED));
-        view.setLayoutParams(new ViewGroup.LayoutParams(400, 400));
         setContentView(view);
     }
 
