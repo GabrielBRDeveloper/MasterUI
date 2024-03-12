@@ -27,7 +27,7 @@ public class AbsoluteLayout extends ViewGroup {
     @Override
     protected Point getChildLocation(View view) {
         LayoutParams params = (LayoutParams) view.getLayoutParams();
-        return new Point(params.x, params.y);
+        return new Point(params.x + getPaddingLeft(), params.y + getPaddingTop());
     }
 
     public static class LayoutParams extends ViewGroup.LayoutParams {

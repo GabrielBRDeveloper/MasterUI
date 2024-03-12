@@ -38,10 +38,8 @@ class VgTexel {
 
         nvgPaint.innerColor(globalColor);
         nvgPaint.outerColor(globalColor);
-
         nvgFillPaint(globalContext, nvgPaint);
         nvgStrokeColor(globalContext, globalColor);
-        //nvgStrokeWidth(globalContext, paint.getStrokeWidth());
     }
 
     private static void setTextSize(float textSize) {
@@ -88,6 +86,9 @@ class VgTexel {
 
     public static void endFrame() {
         nvgEndFrame(globalContext);
+        nvgResetTransform(globalContext);
+        nvgReset(globalContext);
+        nvgResetScissor(globalContext);
     }
 
     public static void drawImage(TexelBitmap image, float destX, float destY, float destW, float destH, float srcX, float srcY, float srcW, float srcH) {

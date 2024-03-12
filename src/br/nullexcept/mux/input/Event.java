@@ -1,13 +1,13 @@
 package br.nullexcept.mux.input;
 
 public class Event {
-    private final InputDevice device;
+    private int target = -1;
 
-    public Event(InputDevice device) {
-        this.device = device;
+    public void setTarget(int target) {
+        this.target = target;
     }
 
-    public InputDevice getDevice() {
-        return device;
+    public int getTarget() {
+        return target;
     }
 }

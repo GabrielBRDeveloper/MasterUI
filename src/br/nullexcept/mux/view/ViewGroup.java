@@ -2,7 +2,9 @@ package br.nullexcept.mux.view;
 
 import br.nullexcept.mux.app.Context;
 import br.nullexcept.mux.graphics.Point;
+import br.nullexcept.mux.graphics.Rect;
 import br.nullexcept.mux.input.Event;
+import br.nullexcept.mux.input.MouseEvent;
 import br.nullexcept.mux.res.AttributeList;
 
 import java.util.ArrayList;
@@ -20,7 +22,7 @@ public class ViewGroup extends View {
     }
 
     protected Point getChildLocation(View view) {
-        return new Point(0, 0);
+        return new Point(getPaddingLeft(), getPaddingTop());
     }
 
     protected void requestLayout() {
@@ -37,32 +39,78 @@ public class ViewGroup extends View {
     public void measure() {
         LayoutParams params = getLayoutParams();
         ViewGroup parent = getParent();
+        if (parent == null)
+            return;
+
+        int pw = parent.getMeasuredWidth() - parent.getPaddingLeft() - parent.getPaddingRight();
+        int ph = parent.getMeasuredHeight() - parent.getPaddingTop() - parent.getPaddingBottom();
+
+        int ow = getMeasuredWidth();
+        int oh = getMeasuredHeight();
         Point location = parent.getChildLocation(this);
         int width, height;
         if (params.isWrapRequired()) {
             if (params.width == LayoutParams.WRAP_CONTENT) {
                 width = calculateWidth();
             } else {
-                width = params.width == LayoutParams.MATCH_PARENT ? parent.getMeasuredWidth() - location.x : params.width;
+                width = params.width == LayoutParams.MATCH_PARENT ? pw - location.x : params.width;
             }
             if (params.height == LayoutParams.WRAP_CONTENT) {
                 height = calculateHeight();
             } else {
-                height = params.height == LayoutParams.MATCH_PARENT ? parent.getMeasuredHeight() - location.y : params.height;
+                height = params.height == LayoutParams.MATCH_PARENT ? ph - location.y : params.height;
             }
         } else {
-            width = params.width == LayoutParams.MATCH_PARENT ? parent.getMeasuredWidth() - location.x : params.width;
-            height = params.height == LayoutParams.MATCH_PARENT ? parent.getMeasuredHeight() - location.y : params.height;
+            width = params.width == LayoutParams.MATCH_PARENT ? pw - location.x : params.width;
+            height = params.height == LayoutParams.MATCH_PARENT ? ph - location.y : params.height;
             width = Math.max(0, width);
             height = Math.max(0, height);
         }
-        onMeasure(width, height);
         for (View child : children) {
             child.measure();
         }
         for (View child : children) {
             child.measureBounds();
         }
+        if (width != ow || height != oh) {
+            onMeasure(width, height);
+        }
+    }
+
+    @Override
+    public boolean dispatchMouseEvent(MouseEvent mouseEvent) {
+        boolean handle = false;
+        for (int i = children.size() - 1; i >= 0; i--){
+            View child = children.get(i);
+            Rect bounds = child.getBounds();
+            if (bounds.inner(mouseEvent.getX(), mouseEvent.getY())){
+                final int bx = bounds.left;
+                final int by = bounds.top;
+                mouseEvent.transform(-bx, -by);
+                handle = child.dispatchMouseEvent(mouseEvent);
+                mouseEvent.transform(bx, by);
+            }
+            if (handle)break;
+        }
+        return handle || super.dispatchMouseEvent(mouseEvent);
+    }
+
+    @Override
+    protected int calculateWidth() {
+        int width = 0;
+        for (View child: children){
+            width = Math.max(child.getMeasuredWidth(), width);
+        }
+        return width + getPaddingLeft() + getPaddingRight();
+    }
+
+    @Override
+    protected int calculateHeight() {
+        int height = 0;
+        for (View child: children){
+            height = Math.max(child.getMeasuredHeight(), height);
+        }
+        return height + getPaddingTop() + getPaddingBottom();
     }
 
     public int getChildrenCount(){

@@ -1,7 +1,11 @@
 package br.nullexcept.mux.core.texel;
 
 import br.nullexcept.mux.app.Context;
+import br.nullexcept.mux.graphics.Color;
 import br.nullexcept.mux.graphics.Rect;
+import br.nullexcept.mux.graphics.drawable.ColorDrawable;
+import br.nullexcept.mux.input.Event;
+import br.nullexcept.mux.input.MouseEvent;
 import br.nullexcept.mux.view.View;
 import br.nullexcept.mux.view.ViewGroup;
 import br.nullexcept.mux.view.Window;
@@ -10,18 +14,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class RootViewGroup extends ViewGroup {
+public class WindowContainer extends ViewGroup {
     private static final int FLAG_REQUIRES_DRAW = 2;
 
     private final HashMap<Integer, RenderObject> renders = new HashMap<>();
     private final CanvasTexel rootCanvas;
-    private final RootDrawer drawer = new RootDrawer();
+    private final ViewDrawer drawer = new ViewDrawer();
 
-    public RootViewGroup(Context context, Window window) {
+    public WindowContainer(Context context, Window window) {
         super(context);
-    }
-
-    {
+        setBackground(new ColorDrawable(Color.BLACK));
         rootCanvas = new CanvasTexel(64,64);
         getBounds().set(0,0,64,64);
     }
@@ -124,6 +126,20 @@ public class RootViewGroup extends ViewGroup {
         renders.clear();
     }
 
+    public void dispatchEvent(Event event) {
+        if (event instanceof MouseEvent){
+            if(event.getTarget() == -1){
+                dispatchMouseEvent((MouseEvent) event);
+            } else {
+                View target = renders.get(event.getTarget()).view;
+                Rect visibleBounds = target.getVisibleBounds();
+                ((MouseEvent) event).transform(-visibleBounds.left, -visibleBounds.top);
+                target.dispatchMouseEvent((MouseEvent) event);
+                ((MouseEvent) event).transform(visibleBounds.left, visibleBounds.top);
+            }
+        }
+    }
+
     public CanvasTexel getCanvas() {
         return rootCanvas;
     }
@@ -135,7 +151,7 @@ public class RootViewGroup extends ViewGroup {
         invalidateAll();
     }
 
-    private class RootDrawer {
+    private class ViewDrawer {
 
         private void drawInternal(CanvasTexel canvas, View view){
             Rect bounds = view.getBounds();

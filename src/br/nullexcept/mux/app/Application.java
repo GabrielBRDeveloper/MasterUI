@@ -8,6 +8,8 @@ import org.lwjgl.opengles.GLES;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class Application {
+    private static long lastGc = System.currentTimeMillis();
+
     public static void initialize(Activity activity){
         glfwInit();
         glfwDefaultWindowHints();
@@ -36,6 +38,10 @@ public class Application {
 
     private static final void loop(){
         glfwPollEvents();
+        if (System.currentTimeMillis() - lastGc > 5000){
+            System.gc();
+            lastGc = System.currentTimeMillis();
+        }
         Looper.getMainLooper().post(Application::loop);
     }
 

@@ -36,6 +36,14 @@ public class Rect {
         set(0,0,0,0);
     }
 
+
+    public void move(int x, int y){
+        left += x;
+        top += y;
+        right += x;
+        bottom += y;
+    }
+
     public void setPosition(int x, int y){
         int w = width();
         int h = height();
@@ -61,5 +69,9 @@ public class Rect {
                 ", right=" + right +
                 ", bottom=" + bottom +
                 '}';
+    }
+
+    public boolean inner(float x, float y) {
+        return x >= left && y >= top && x <= right&& y <= bottom;
     }
 }

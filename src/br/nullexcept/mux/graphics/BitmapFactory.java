@@ -17,7 +17,7 @@ public abstract class BitmapFactory {
         return createBitmap(width, height, Bitmap.Format.ARGB);
     }
 
-    public static Bitmap parseBitmap(InputStream input){
+    public static Bitmap openBitmap(InputStream input){
         return C.BITMAP_FACTORY._openStreamBitmap(input);
     }
 }

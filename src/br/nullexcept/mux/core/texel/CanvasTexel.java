@@ -57,7 +57,7 @@ class CanvasTexel implements Canvas {
     @Override
     public void drawText(String text, int x, int y, Paint paint) {
         if (text == null) {
-            return;
+            text = "[NULL]";
         }
         VgTexel.beginElement();
         VgTexel.applyPaint(paint);
