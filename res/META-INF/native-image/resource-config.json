@@ -1,0 +1,25 @@
+{
+  "resources": {
+    "includes": [
+      {"pattern": "assets/.*"},
+      {"pattern": "assets/.*/.*"},
+      {"pattern": "assets/.*/.*/.*"},
+      {"pattern": "assets/.*/.*/.*/.*"},
+
+      {"pattern": ".*/*.so"},
+      {"pattern": ".*/.*/*.so"},
+      {"pattern": ".*/.*/.*/*.so"},
+      {"pattern": ".*/.*/.*/.*/*.so"},
+      {"pattern": ".*/.*/.*/.*/.*/*.so"},
+      {"pattern": ".*/.*/.*/.*/.*/.*/*.so"},
+
+      {"pattern": ".*/*.dll"},
+      {"pattern": ".*/.*/*.dll"},
+      {"pattern": ".*/.*/.*/*.dll"},
+      {"pattern": ".*/.*/.*/.*/*.dll"},
+      {"pattern": ".*/.*/.*/.*/.*/*.dll"},
+      {"pattern": ".*/.*/.*/.*/.*/.*/*.dll"}
+    ]
+  },
+  "bundles": []
+}

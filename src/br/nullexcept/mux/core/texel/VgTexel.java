@@ -4,10 +4,8 @@ import br.nullexcept.mux.C;
 import br.nullexcept.mux.graphics.Color;
 import br.nullexcept.mux.graphics.Paint;
 import br.nullexcept.mux.graphics.fonts.TypefaceFactory;
-import org.lwjgl.nanovg.NVGColor;
-import org.lwjgl.nanovg.NVGPaint;
-import org.lwjgl.nanovg.NanoVG;
-import org.lwjgl.nanovg.NanoVGGLES2;
+import org.lwjgl.nanovg.*;
+
 import static org.lwjgl.nanovg.NanoVG.*;
 
 class VgTexel {
@@ -18,12 +16,18 @@ class VgTexel {
     private static final NVGPaint tmpPaint = NVGPaint.create();
 
     public static void initialize(){
-        globalPaint.setTextSize(-1f);
-        globalContext = NanoVGGLES2.nnvgCreate(NanoVGGLES2.NVG_ANTIALIAS);
-        C.VG_CONTEXT = globalContext;
-        C.BITMAP_FACTORY = new TexelBitmapFactory();
-        TypefaceFactory.createDefaults();
-        GLShaderList.build();
+        try {
+            globalContext = NanoVGGLES2.nvgCreate(NanoVGGLES2.NVG_ANTIALIAS);
+            globalPaint.setTextSize(-1f);
+            C.VG_CONTEXT = globalContext;
+            C.BITMAP_FACTORY = new TexelBitmapFactory();
+            TypefaceFactory.createDefaults();
+            GLShaderList.build();
+        } catch (Throwable e){
+            System.err.println("Error on initialize nanovg texel.");
+            e.printStackTrace(System.out);
+            throw new RuntimeException("CORE ERROR");
+        }
     }
 
     @Deprecated
