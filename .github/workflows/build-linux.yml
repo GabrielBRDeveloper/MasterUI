@@ -9,7 +9,7 @@ on:
 jobs:
   build-linux:
     name: Compile for linux.
-    run-on: ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Prepare OS
         run: apt update
