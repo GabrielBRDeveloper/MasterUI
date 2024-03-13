@@ -11,8 +11,9 @@ jobs:
     name: Compile for linux.
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: Prepare OS
-        run: apt update
+        run: sudo apt update 
       - name: Install dependencies
         run: sudo apt install openjdk-8-jdk ant -y
       - name: Build project
