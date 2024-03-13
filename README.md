@@ -1,3 +1,5 @@
+https://github.com/GabrielBRDeveloper/MasterUI/actions/workflows/build-linux.yml/badge.svg
+
 # Master UI
 
 Java library for make a beautiful UI, code design is based in android ui.
