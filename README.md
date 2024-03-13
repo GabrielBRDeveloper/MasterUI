@@ -1,4 +1,4 @@
-https://github.com/GabrielBRDeveloper/MasterUI/actions/workflows/build-linux.yml/badge.svg
+![Build linux (x86)](https://github.com/GabrielBRDeveloper/MasterUI/actions/workflows/build-linux.yml/badge.svg)
 
 # Master UI
 
