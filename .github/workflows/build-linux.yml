@@ -1,0 +1,24 @@
+name: Build MasterUI (Linux x64)
+
+on:
+  push:
+    branches:
+      - master
+    pull_request:
+
+jobs:
+  build-linux:
+    name: Compile for linux.
+    run-on: ubuntu-latest
+    steps:
+      - name: Prepare OS
+        run: apt update
+      - name: Install dependencies
+        run: apt install openjdk-8-jdk ant -y
+      - name: Build project
+        run: ant
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: Linux
+          path: ./out/artifacts/MasterUI/MasterUI.jar
