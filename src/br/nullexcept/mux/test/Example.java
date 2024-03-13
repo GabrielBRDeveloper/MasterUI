@@ -4,7 +4,6 @@ import br.nullexcept.mux.app.Activity;
 import br.nullexcept.mux.app.Application;
 import br.nullexcept.mux.graphics.Bitmap;
 import br.nullexcept.mux.graphics.BitmapFactory;
-import br.nullexcept.mux.graphics.Color;
 import br.nullexcept.mux.graphics.drawable.BitmapDrawable;
 import br.nullexcept.mux.graphics.drawable.ColorDrawable;
 import br.nullexcept.mux.res.AssetsManager;

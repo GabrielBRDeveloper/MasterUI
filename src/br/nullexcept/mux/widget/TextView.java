@@ -2,7 +2,6 @@ package br.nullexcept.mux.widget;
 
 import br.nullexcept.mux.app.Context;
 import br.nullexcept.mux.graphics.Canvas;
-import br.nullexcept.mux.graphics.Color;
 import br.nullexcept.mux.graphics.Paint;
 import br.nullexcept.mux.graphics.Rect;
 import br.nullexcept.mux.graphics.fonts.FontMetrics;

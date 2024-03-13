@@ -4,7 +4,10 @@ import br.nullexcept.mux.C;
 import br.nullexcept.mux.graphics.Color;
 import br.nullexcept.mux.graphics.Paint;
 import br.nullexcept.mux.graphics.fonts.TypefaceFactory;
-import org.lwjgl.nanovg.*;
+import org.lwjgl.nanovg.NVGColor;
+import org.lwjgl.nanovg.NVGPaint;
+import org.lwjgl.nanovg.NanoVG;
+import org.lwjgl.nanovg.NanoVGGLES2;
 
 import static org.lwjgl.nanovg.NanoVG.*;
 
