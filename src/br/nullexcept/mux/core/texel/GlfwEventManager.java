@@ -1,18 +1,22 @@
 package br.nullexcept.mux.core.texel;
 
+import br.nullexcept.mux.app.Looper;
 import br.nullexcept.mux.graphics.Point;
+import br.nullexcept.mux.hardware.CharEvent;
 import br.nullexcept.mux.input.InputDevice;
 import br.nullexcept.mux.input.KeyEvent;
 import br.nullexcept.mux.input.MouseEvent;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWCharModsCallback;
+import org.lwjgl.glfw.GLFWCharModsCallbackI;
+import org.lwjgl.system.libffi.FFICIF;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 class GlfwEventManager {
     private final HashMap<Integer, GlfwKeyEvent> downKeyEvents = new HashMap<>();
     private final HashMap<Integer, GlfwMouseEvent> downMouseEvents = new HashMap<>();
-
-    private char lastCharacter;
     private final long gfwWindow;
     private final GlfwWindow window;
 
@@ -23,11 +27,9 @@ class GlfwEventManager {
 
         long address = window.getAddress();
 
+        GLFW.glfwSetCharCallback(address, (win, charCode) -> window.onCharEvent(new CharEvent((char) charCode,System.nanoTime(),null)));
         GLFW.glfwSetKeyCallback(address, (win, i, i1, i2, i3) -> processKeyEvent(i,i1,i2, i3));
-        GLFW.glfwSetCharCallback(address, (win, charCode) -> lastCharacter = (char)charCode);
-        GLFW.glfwSetMouseButtonCallback(address, (win, button, action, modes) -> {
-            processMouseEvent(button, action, modes);
-        });
+        GLFW.glfwSetMouseButtonCallback(address, (win, button, action, modes) -> processMouseEvent(button, action, modes));
         this.gfwWindow = address;
     }
 
@@ -40,7 +42,7 @@ class GlfwEventManager {
     }
 
     private void processKeyEvent(int keycode, int scancode, int action, int modifiers) {
-        if (action == 0 && !downMouseEvents.containsKey(keycode)){
+        if (action == 0 && !downKeyEvents.containsKey(keycode)){
             return;
         }
         if (!downKeyEvents.containsKey(keycode)){
@@ -48,12 +50,9 @@ class GlfwEventManager {
         }
 
         GlfwKeyEvent keyEvent = downKeyEvents.get(keycode);
-        keyEvent.character = lastCharacter;
-
         if (action == 0){
             downKeyEvents.remove(keycode);
         }
-        lastCharacter = 0;
         onKeyEvent(keyEvent);
     }
 
@@ -87,15 +86,9 @@ class GlfwEventManager {
     private class GlfwKeyEvent extends KeyEvent {
         private final int keyCode;
         private final long downTime = System.nanoTime();
-        private char character;
 
         public GlfwKeyEvent(int keycode) {
             this.keyCode = keycode;
-        }
-
-        @Override
-        public char getCharacter() {
-            return character;
         }
 
         @Override
@@ -105,7 +98,7 @@ class GlfwEventManager {
 
         @Override
         public int getAction() {
-            return downKeyEvents.containsKey(keyCode) ? ACTION_DOWN : ACTION_UP;
+            return downKeyEvents.containsKey(keyCode) ? KeyEvent.ACTION_DOWN : KeyEvent.ACTION_UP;
         }
 
         @Override

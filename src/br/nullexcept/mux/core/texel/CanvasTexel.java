@@ -55,7 +55,7 @@ class CanvasTexel implements Canvas {
     }
 
     @Override
-    public void drawText(String text, int x, int y, Paint paint) {
+    public void drawText(CharSequence text, int x, int y, Paint paint) {
         if (text == null) {
             text = "[NULL]";
         }

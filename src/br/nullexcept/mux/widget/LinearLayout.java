@@ -4,13 +4,14 @@ import br.nullexcept.mux.app.Context;
 import br.nullexcept.mux.graphics.Point;
 import br.nullexcept.mux.graphics.Rect;
 import br.nullexcept.mux.res.AttributeList;
-import br.nullexcept.mux.view.Gravity;
 import br.nullexcept.mux.view.View;
+import br.nullexcept.mux.view.ViewAttrs;
 import br.nullexcept.mux.view.ViewGroup;
 
 public class LinearLayout extends ViewGroup {
     public static int ORIENTATION_HORIZONTAL = 1;
     public static int ORIENTATION_VERTICAL = 0;
+
     private int orientation;
     private final Rect rect = new Rect();
 
@@ -22,6 +23,17 @@ public class LinearLayout extends ViewGroup {
         super(context, attrs);
     }
 
+    @Override
+    protected void onRequestAttribute(AttributeList attr) {
+        super.onRequestAttribute(attr);
+        attr.searchRaw(ViewAttrs.orientation, value -> {
+            if ("horizontal".equals(value)){
+                setOrientation(ORIENTATION_HORIZONTAL);
+            } else {
+                setOrientation(ORIENTATION_VERTICAL);
+            }
+        });
+    }
 
     @Override
     public void addChild(View view) {
@@ -31,31 +43,23 @@ public class LinearLayout extends ViewGroup {
 
     @Override
     protected Point getChildLocation(View view) {
-        LayoutParams params = (LayoutParams) view.getLayoutParams();
-        return new Point(params.position.x + getPaddingLeft(), params.position.y + getPaddingTop());
+        Point point = new Point(getPaddingLeft(), getPaddingTop());
+        int index = getChildIndex(view);
+        for (int i = 0; i < index; i++){
+            View child = getChildAt(i);
+            if (orientation == ORIENTATION_HORIZONTAL){
+                point.x += child.getMeasuredWidth();
+            } else {
+                point.y += child.getMeasuredHeight();
+            }
+        }
+
+        return point;
     }
 
     @Override
-    protected void onMeasure(int width, int height) {
-        super.onMeasure(width, height);
-        int space = 0;
-        for (int i = 0; i < getChildrenCount(); i++){
-            View child = getChildAt(i);
-            LayoutParams params = (LayoutParams) child.getLayoutParams();
-            int w = child.getMeasuredWidth();
-            int h = child.getMeasuredHeight();
-
-            Gravity.applyGravity(getGravity(),w,h,width,height,rect);
-            if (orientation == ORIENTATION_HORIZONTAL){
-                params.position.set(space, rect.top);
-                space += w;
-            } else {
-                params.position.set(rect.left, space);
-                space += h;
-            }
-            child.measureBounds();
-        }
-        measure();
+    public void measure() {
+        super.measure();
     }
 
     public void setOrientation(int orientation) {
@@ -63,9 +67,7 @@ public class LinearLayout extends ViewGroup {
         requestLayout();
     }
 
-
     private static class LayoutParams extends ViewGroup.LayoutParams {
-        private final Point position = new Point();
         public LayoutParams(int width, int height) {
             super(width, height);
         }

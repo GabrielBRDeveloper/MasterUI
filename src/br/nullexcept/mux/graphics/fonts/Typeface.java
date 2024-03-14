@@ -6,11 +6,10 @@ import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 import java.util.UUID;
 
 public class Typeface {
-    protected static final float SCALE = 128.0f;
+    protected static final float SCALE = 1024.0f;
     public static Typeface DEFAULT;
 
     protected final float ascent;
@@ -20,7 +19,7 @@ public class Typeface {
 
     private final int font;
     private final String id = UUID.randomUUID().toString();
-    private final byte[][] bounds = new byte[1024*8][4]; //32KB of buffer for store characters bounds
+    private final short[] bounds = new short[1024*8]; //32KB of buffer for store characters bounds
 
     Typeface(ByteBuffer buffer){
         this.buffer = buffer;
@@ -37,28 +36,27 @@ public class Typeface {
         this.ascent = ascent[0];
         this.descent = descent[0];
         this.lineHeight = lineHeight[0];
-        float[] bounds = new float[4];
         NVGGlyphPosition.create();
         NVGGlyphPosition.Buffer b = NVGGlyphPosition.create(1);
         ByteBuffer bf = MemoryUtil.memByteBuffer(b.address(),b.sizeof());
         for (int i = 0; i < this.bounds.length; i++){
             String character = String.valueOf((char)i);
-            Arrays.fill(bounds,0);
-            NanoVG.nvgTextBounds(context,0,lineHeight[0],character,bounds);
             NanoVG.nvgTextGlyphPositions(context,0,0,character,b);
-            this.bounds[i][0] = (byte) Math.abs((int)bounds[0]);
-            this.bounds[i][1] = (byte) Math.abs((int)bounds[1]);
-            this.bounds[i][2] = (byte) ((int)(b.maxx()));
-            this.bounds[i][3] = (byte) ((int)bounds[3]);
+            this.bounds[i] = (short) ((short) Math.abs(b.maxx()) + Math.abs(b.minx()));
         }
     }
 
     protected int measureChar(char ch){
         if (ch > bounds.length){
+            System.err.println("INVALID MEASURE OUTBOUNDS CHAR: "+(int)ch);
             ch = 'Z';
         }
-        int size = (bounds[ch][2] & 0xFF) + (bounds[ch][0] & 0xFF);
-        return size;
+        switch (ch){
+            case '\n':
+            case '\r':
+                return 0;
+        }
+        return bounds[ch];
     }
 
     public int hashCode(){

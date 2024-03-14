@@ -3,7 +3,6 @@ package br.nullexcept.mux.view;
 import br.nullexcept.mux.app.Context;
 import br.nullexcept.mux.graphics.Point;
 import br.nullexcept.mux.graphics.Rect;
-import br.nullexcept.mux.input.Event;
 import br.nullexcept.mux.input.MouseEvent;
 import br.nullexcept.mux.res.AttributeList;
 
@@ -12,6 +11,7 @@ import java.util.List;
 
 public class ViewGroup extends View {
     private final ArrayList<View> children = new ArrayList<>();
+    private final Rect rect = new Rect();
 
     public ViewGroup(Context context) {
         super(context);
@@ -25,7 +25,7 @@ public class ViewGroup extends View {
         return new Point(getPaddingLeft(), getPaddingTop());
     }
 
-    protected void requestLayout() {
+    public void requestLayout() {
         if (getParent() != null) {
             getParent().requestLayout();
             invalidate();
@@ -42,27 +42,26 @@ public class ViewGroup extends View {
         if (parent == null)
             return;
 
-        int pw = parent.getMeasuredWidth() - parent.getPaddingLeft() - parent.getPaddingRight();
-        int ph = parent.getMeasuredHeight() - parent.getPaddingTop() - parent.getPaddingBottom();
+        parent.getInternalSize(rect);
 
         int ow = getMeasuredWidth();
         int oh = getMeasuredHeight();
         Point location = parent.getChildLocation(this);
         int width, height;
-        if (params.isWrapRequired()) {
+        if (params.hasWrap()) {
             if (params.width == LayoutParams.WRAP_CONTENT) {
                 width = calculateWidth();
             } else {
-                width = params.width == LayoutParams.MATCH_PARENT ? pw - location.x : params.width;
+                width = params.width == LayoutParams.MATCH_PARENT ? rect.width() - location.x : params.width;
             }
             if (params.height == LayoutParams.WRAP_CONTENT) {
                 height = calculateHeight();
             } else {
-                height = params.height == LayoutParams.MATCH_PARENT ? ph - location.y : params.height;
+                height = params.height == LayoutParams.MATCH_PARENT ? rect.height() - location.y : params.height;
             }
         } else {
-            width = params.width == LayoutParams.MATCH_PARENT ? pw - location.x : params.width;
-            height = params.height == LayoutParams.MATCH_PARENT ? ph - location.y : params.height;
+            width = params.width == LayoutParams.MATCH_PARENT ? rect.width() - location.x : params.width;
+            height = params.height == LayoutParams.MATCH_PARENT ? rect.height() - location.y : params.height;
             width = Math.max(0, width);
             height = Math.max(0, height);
         }
@@ -74,6 +73,7 @@ public class ViewGroup extends View {
         }
         if (width != ow || height != oh) {
             onMeasure(width, height);
+            measure();
         }
     }
 
@@ -137,6 +137,12 @@ public class ViewGroup extends View {
         notifyTreeChanged();
     }
 
+    protected void requestFocus(View focused){
+        if (getParent() != null){
+            getParent().requestFocus(focused);
+        }
+    }
+
     public void removeAllViews(){
         while (children.size() > 0){
             View child = children.get(0);
@@ -155,11 +161,6 @@ public class ViewGroup extends View {
             getParent().notifyTreeChanged();
         }
         onTreeChanged();
-    }
-
-
-    public void dispatchEvent(Event event){
-
     }
 
     protected void onChildAdded(View view){
@@ -194,7 +195,7 @@ public class ViewGroup extends View {
             this.height = height;
         }
 
-        private boolean isWrapRequired(){
+        public boolean hasWrap(){
             return width == WRAP_CONTENT || height == WRAP_CONTENT;
         }
     }

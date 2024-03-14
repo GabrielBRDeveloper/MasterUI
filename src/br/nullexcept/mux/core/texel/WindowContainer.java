@@ -4,7 +4,9 @@ import br.nullexcept.mux.app.Context;
 import br.nullexcept.mux.graphics.Color;
 import br.nullexcept.mux.graphics.Rect;
 import br.nullexcept.mux.graphics.drawable.ColorDrawable;
+import br.nullexcept.mux.hardware.CharEvent;
 import br.nullexcept.mux.input.Event;
+import br.nullexcept.mux.input.KeyEvent;
 import br.nullexcept.mux.input.MouseEvent;
 import br.nullexcept.mux.view.View;
 import br.nullexcept.mux.view.ViewGroup;
@@ -16,10 +18,12 @@ import java.util.List;
 
 public class WindowContainer extends ViewGroup {
     private static final int FLAG_REQUIRES_DRAW = 2;
+    private static final int FLAG_FOCUSED = 4;
 
     private final HashMap<Integer, RenderObject> renders = new HashMap<>();
     private final CanvasTexel rootCanvas;
     private final ViewDrawer drawer = new ViewDrawer();
+    private int focusedView = hashCode();
 
     public WindowContainer(Context context, Window window) {
         super(context);
@@ -47,13 +51,13 @@ public class WindowContainer extends ViewGroup {
     protected void onTreeChanged() {
         super.onTreeChanged();
         mountRenderBag();
+        requestFocus(this);
     }
 
     @Override
     protected void onMeasure(int width, int height) {
         super.onMeasure(rootCanvas.getWidth(), rootCanvas.getHeight());
     }
-
 
     private void mountRenderBag(ViewGroup group){
         for (View child: group.getChildren()){
@@ -67,6 +71,20 @@ public class WindowContainer extends ViewGroup {
             if (child instanceof ViewGroup){
                 mountRenderBag((ViewGroup) child);
             }
+        }
+    }
+
+    @Override
+    protected void requestFocus(View focused) {
+        focused = focused == null ? this : focused;
+        if (!focused.hasFlag(FLAG_FOCUSED)){
+            if (renders.containsKey(focusedView)){
+                View oldFocus = renders.get(focusedView).view;
+                oldFocus.onFocusChanged(false);
+            }
+            focusedView = focused.hashCode();
+            focused.onFocusChanged(true);
+            focused.addFlag(FLAG_FOCUSED);
         }
     }
 
@@ -97,7 +115,12 @@ public class WindowContainer extends ViewGroup {
         return true;
     }
 
+    private long lastRefresh = 0;
     public void drawFrame() {
+        if (System.currentTimeMillis() - lastRefresh >= 7000){
+            invalidateAll();
+            lastRefresh = System.currentTimeMillis();
+        }
         if (hasFlag(FLAG_REQUIRES_DRAW)) {
             drawer.drawInternal(rootCanvas, this);
         }
@@ -112,7 +135,7 @@ public class WindowContainer extends ViewGroup {
     }
 
     @Override
-    protected void requestLayout() {
+    public void requestLayout() {
         for (View view: getChildren())
             view.measure();
         for (View view: getChildren())
@@ -126,16 +149,21 @@ public class WindowContainer extends ViewGroup {
         renders.clear();
     }
 
-    public void dispatchEvent(Event event) {
+    public void sendEvent(Event event) {
         if (event instanceof MouseEvent){
             if(event.getTarget() == -1){
-                dispatchMouseEvent((MouseEvent) event);
+                dispatchEvent(event);
             } else {
                 View target = renders.get(event.getTarget()).view;
                 Rect visibleBounds = target.getVisibleBounds();
                 ((MouseEvent) event).transform(-visibleBounds.left, -visibleBounds.top);
-                target.dispatchMouseEvent((MouseEvent) event);
+                target.dispatchEvent(event);
                 ((MouseEvent) event).transform(visibleBounds.left, visibleBounds.top);
+            }
+        } else if ((event instanceof KeyEvent)||(event instanceof CharEvent)){
+            if (focusedView != hashCode()){
+                View focused = renders.get(focusedView).view;
+                focused.dispatchEvent(event);
             }
         }
     }

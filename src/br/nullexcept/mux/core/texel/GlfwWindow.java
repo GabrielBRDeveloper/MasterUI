@@ -3,6 +3,7 @@ package br.nullexcept.mux.core.texel;
 import br.nullexcept.mux.C;
 import br.nullexcept.mux.app.Activity;
 import br.nullexcept.mux.app.Looper;
+import br.nullexcept.mux.hardware.CharEvent;
 import br.nullexcept.mux.hardware.GLES;
 import br.nullexcept.mux.input.KeyEvent;
 import br.nullexcept.mux.input.MouseEvent;
@@ -61,8 +62,6 @@ class GlfwWindow extends Window {
                 activity.onCreate();
                 initialized = true;
             }
-            GLFW.glfwSwapBuffers(C.GLFW_CONTEXT);
-            GLFW.glfwMakeContextCurrent(window);
             container.drawFrame();
             getWidth();
             if (ow != sizes[0][0] || oh != sizes[1][0]) {
@@ -70,6 +69,8 @@ class GlfwWindow extends Window {
                 oh = sizes[1][0];
                 container.resize(ow, oh);
             }
+            GLFW.glfwSwapBuffers(C.GLFW_CONTEXT);
+            GLFW.glfwMakeContextCurrent(window);
             GLES.glViewport(0, 0, ow, oh);
             GLTexel.drawTexture(0, 0, ow, oh, container.getCanvas().getFramebuffer().getTexture());
             GLFW.glfwSwapBuffers(window);
@@ -116,11 +117,15 @@ class GlfwWindow extends Window {
     }
 
     public void onMouseEvent(MouseEvent event) {
-        container.dispatchEvent(event);
+        container.sendEvent(event);
     }
 
     public void onKeyEvent(KeyEvent event) {
-        container.dispatchEvent(event);
+        container.sendEvent(event);
+    }
+
+    public void onCharEvent(CharEvent charEvent) {
+        container.sendEvent(charEvent);
     }
 
     public boolean isFocused(){

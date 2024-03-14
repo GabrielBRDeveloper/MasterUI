@@ -52,6 +52,7 @@ class VgTexel {
     private static void setTextSize(float textSize) {
         globalPaint.setTextSize(textSize);
         nvgFontSize(globalContext, globalPaint.getTextSize());
+        nvgTextLetterSpacing(globalContext,0.0f);
     }
 
     public static void setColor(int color){
@@ -115,7 +116,7 @@ class VgTexel {
         nvgFillPaint(globalContext, nvgPaint);
     }
 
-    public static void drawText(int x, int y, String line) {
+    public static void drawText(int x, int y, CharSequence line) {
         nvgText(globalContext, x,y, line);
     }
 }

@@ -128,9 +128,6 @@ public abstract class KeyEvent extends InputEvent {
     public static int ACTION_DOWN = 0;
     public static int ACTION_UP = 1;
 
-    public abstract char getCharacter();
     public abstract int getKeyCode();
     public abstract int getAction();
-    public abstract long getDownTime();
-
 }

@@ -29,7 +29,6 @@ public abstract class MouseEvent extends InputEvent {
 
     public abstract int getButton();
     public abstract int getAction();
-    public abstract long getDownTime();
 
     protected void resetTransform(){
         transform.set(0,0);

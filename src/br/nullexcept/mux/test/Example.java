@@ -2,14 +2,19 @@ package br.nullexcept.mux.test;
 
 import br.nullexcept.mux.app.Activity;
 import br.nullexcept.mux.app.Application;
+import br.nullexcept.mux.app.Looper;
 import br.nullexcept.mux.graphics.Bitmap;
 import br.nullexcept.mux.graphics.BitmapFactory;
+import br.nullexcept.mux.graphics.Color;
 import br.nullexcept.mux.graphics.drawable.BitmapDrawable;
 import br.nullexcept.mux.graphics.drawable.ColorDrawable;
+import br.nullexcept.mux.hardware.CharEvent;
+import br.nullexcept.mux.input.KeyEvent;
 import br.nullexcept.mux.res.AssetsManager;
 import br.nullexcept.mux.view.Gravity;
 import br.nullexcept.mux.view.View;
 import br.nullexcept.mux.view.ViewGroup;
+import br.nullexcept.mux.widget.EditText;
 import br.nullexcept.mux.widget.LinearLayout;
 import br.nullexcept.mux.widget.TextView;
 
@@ -42,14 +47,21 @@ public class Example extends Activity {
         View imageView = new View(this);
         imageView.setBackground(new BitmapDrawable(bitmap));
         imageView.setLayoutParams(new ViewGroup.LayoutParams(256,140));
+        imageView.setFocusable(true);
         imageView.setOnClickListener((vw)->{
             System.err.println("CLICKED ON PANDA");
         });
+
+        EditText edit = new EditText(this);
+        edit.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        edit.setPadding(20,20,20,20);
+        edit.setBackground(new ColorDrawable(Color.BLACK));
 
         content.setPadding(20,20,20,20);
 
         content.addChild(view);
         content.addChild(imageView);
+        content.addChild(edit);
         layout.setOrientation(LinearLayout.ORIENTATION_HORIZONTAL);
         layout.addChild(leftBar);
         layout.addChild(content);
