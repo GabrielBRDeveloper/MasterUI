@@ -4,7 +4,7 @@ import br.nullexcept.mux.app.Context;
 import br.nullexcept.mux.graphics.Canvas;
 import br.nullexcept.mux.graphics.Paint;
 import br.nullexcept.mux.graphics.fonts.FontMetrics;
-import br.nullexcept.mux.hardware.CharEvent;
+import br.nullexcept.mux.input.CharEvent;
 import br.nullexcept.mux.input.KeyEvent;
 import br.nullexcept.mux.input.MouseEvent;
 import br.nullexcept.mux.lang.TextLayout;
@@ -37,6 +37,7 @@ public class EditText extends View {
         super.onRequestAttribute(attr);
         attr.searchText(ViewAttrs.text, this::setText);
         attr.searchColor(ViewAttrs.textColor, this::setTextColor);
+        attr.searchBoolean(ViewAttrs.singleLine, this::setSingleLine);
         attr.searchDimension(ViewAttrs.textSize, this::setTextSize);
     }
 
@@ -70,9 +71,9 @@ public class EditText extends View {
     }
 
     private void caretLoop() {
-        loopState = isVisible();
+        loopState = isVisible() && isFocused();
         invalidate();
-        caretVisible = !caretVisible;
+        caretVisible = (!caretVisible) && isFocused();
         if (loopState) {
             post(this::caretLoop, 300);
         }

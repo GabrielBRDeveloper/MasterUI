@@ -8,7 +8,6 @@ class CanvasTexel implements Canvas {
     private static long CURRENT_CANVAS = -1;
     private final GLFramebuffer framebuffer;
     private final long id = (long) (Math.random() * Long.MAX_VALUE);
-    private final Point translation = new Point();
 
     public CanvasTexel(int width, int height) {
         this.framebuffer = new GLFramebuffer(width, height);
@@ -26,7 +25,6 @@ class CanvasTexel implements Canvas {
     public void reset() {
         GLES.glClearColor(0, 0, 0, 0);
         GLES.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT | GLES.GL_STENCIL_BUFFER_BIT);
-        translation.set(0, 0);
     }
 
     @Override
@@ -67,8 +65,12 @@ class CanvasTexel implements Canvas {
 
     @Override
     public void translate(int x, int y) {
-        translation.x += x;
-        translation.y += y;
+        VgTexel.move(x,y);
+    }
+
+    @Override
+    public void rotate(float angle) {
+        VgTexel.rotate(angle);
     }
 
     @Override
@@ -79,6 +81,22 @@ class CanvasTexel implements Canvas {
     @Override
     public void drawBitmap(int x, int y, Bitmap bitmap, Paint paint) {
         drawBitmap(x, y, bitmap.getWidth(), bitmap.getHeight(), bitmap, paint);
+    }
+
+    @Override
+    public void drawEllipse(int left, int top, int right, int bottom, Paint paint) {
+        VgTexel.beginElement();
+        VgTexel.applyPaint(paint);
+        VgTexel.drawEllipse(left, top, right-left, bottom-top);
+        VgTexel.endElement();
+    }
+
+    @Override
+    public void drawRoundRect(int left, int top, int right, int bottom, int radius, Paint paint) {
+        VgTexel.beginElement();
+        VgTexel.applyPaint(paint);
+        VgTexel.drawRoundedRect(left,top, right-left, bottom-top, radius);
+        VgTexel.endElement();
     }
 
     @Override

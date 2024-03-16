@@ -3,7 +3,7 @@ package br.nullexcept.mux.view;
 import br.nullexcept.mux.app.Context;
 import br.nullexcept.mux.graphics.Point;
 import br.nullexcept.mux.graphics.Rect;
-import br.nullexcept.mux.input.MouseEvent;
+import br.nullexcept.mux.input.MotionEvent;
 import br.nullexcept.mux.res.AttributeList;
 
 import java.util.ArrayList;
@@ -78,7 +78,7 @@ public class ViewGroup extends View {
     }
 
     @Override
-    public boolean dispatchMouseEvent(MouseEvent mouseEvent) {
+    protected boolean dispatchMouseEvent(MotionEvent mouseEvent) {
         boolean handle = false;
         for (int i = children.size() - 1; i >= 0; i--){
             View child = children.get(i);
@@ -90,7 +90,8 @@ public class ViewGroup extends View {
                 handle = child.dispatchMouseEvent(mouseEvent);
                 mouseEvent.transform(bx, by);
             }
-            if (handle)break;
+            if (handle)
+                break;
         }
         return handle || super.dispatchMouseEvent(mouseEvent);
     }

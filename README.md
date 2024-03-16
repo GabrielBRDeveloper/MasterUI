@@ -11,7 +11,7 @@ That project uses OpenGLES 2.0 for render, so that is compatible with many actua
 
 public class Example extends Activity {
     public static void main(String[] args) {
-        Application.initialize(new Example());
+        Application.initialize(Example::new);
     }
 
     @Override
@@ -37,4 +37,20 @@ public class Example extends Activity {
 
 # Status
 
-[WIP] But working basic things
+i = initial\
+f = full\
+n = need implement
+
+- (i) XML UI
+- (i) Events: Mouse, Keyboard
+- (i) Activity
+- (i) Multi window
+- (i) Basic components.
+- (i) Read bitmap.
+- (n) Write bitmap.
+- (n) Read drawables.
+- (n) Clip based in path.
+- (n) Themes
+- (n) Attributes
+
+Full project status: [WIP]

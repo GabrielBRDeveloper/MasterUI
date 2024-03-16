@@ -12,6 +12,10 @@ public class Activity extends Context {
     public void onPause(){}
     public void onResume(){}
 
+    public void setContentView(String layoutName){
+        setContentView(getLayoutInflater().inflate(layoutName));
+    }
+
     public void setContentView(View view){
         mWindow.setContentView(view);
     }

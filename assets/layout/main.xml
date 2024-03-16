@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<LinearLayout
+    width="match_parent"
+    height="match_parent"
+    background="#383838"
+    orientation="vertical">
+    <Button
+        width="match_parent"
+        height="wrap_content"
+        padding="20dp"
+        textSize="16dp"
+        text="Basic xml code"/>
+    <include layout="text"/>
+</LinearLayout>

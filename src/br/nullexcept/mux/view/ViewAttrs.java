@@ -15,4 +15,10 @@ public class ViewAttrs {
     public static final String tag = "tag";
     public static final String alpha = "alpha";
     public static final String orientation = "orientation";
+    public static final String singleLine = "singleLine";
+    public static final String x = "x";
+    public static final String y = "y";
+    public static final String gravity = "gravity";
+    public static final String rotation = "rotation";
+    public static final String scale = "scale";
 }

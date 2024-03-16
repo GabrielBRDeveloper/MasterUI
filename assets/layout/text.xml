@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<LinearLayout
+    width="wrap_content"
+    height="wrap_content"
+    padding="10dp">
+    <TextView
+            width="match_parent"
+            height="wrap_content"
+            padding="10dp"
+            gravity="center|top"
+            background="#000"
+            text="Hello include"/>
+</LinearLayout>

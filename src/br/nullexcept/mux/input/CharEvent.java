@@ -1,7 +1,4 @@
-package br.nullexcept.mux.hardware;
-
-import br.nullexcept.mux.input.InputDevice;
-import br.nullexcept.mux.input.InputEvent;
+package br.nullexcept.mux.input;
 
 public final class CharEvent extends InputEvent {
     private final char character;

@@ -2,6 +2,10 @@ package br.nullexcept.mux.app;
 
 import br.nullexcept.mux.C;
 import br.nullexcept.mux.core.texel.TexelAPI;
+import br.nullexcept.mux.lang.Function;
+import br.nullexcept.mux.lang.Valuable;
+import br.nullexcept.mux.res.AssetsManager;
+import br.nullexcept.mux.res.Resources;
 import br.nullexcept.mux.view.Window;
 import org.lwjgl.opengles.GLES;
 
@@ -10,7 +14,7 @@ import static org.lwjgl.glfw.GLFW.*;
 public class Application {
     private static long lastGc = System.currentTimeMillis();
 
-    public static void initialize(Activity activity){
+    public static void initialize(Valuable<Activity> creator){
         glfwInit();
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
@@ -27,7 +31,7 @@ public class Application {
         Looper loop = new Looper();
         Looper.mainLooper = loop;
         loop.initialize();
-        loop.postDelayed(()->boot(activity), 0);
+        loop.postDelayed(()->boot(creator.get()), 0);
         loop.post(Application::loop);
         loop.loop();
         TexelAPI.destroy();

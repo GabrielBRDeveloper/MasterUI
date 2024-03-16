@@ -10,6 +10,7 @@ public class Paint {
     private float textSize = 18.0f;
     private float strokeWidth = 0.0f;
     private final FontMetrics metrics;
+    private Mode mode = Mode.FILL;
 
     public Paint(){
         this(0);
@@ -20,6 +21,14 @@ public class Paint {
         setTypeface(Typeface.DEFAULT);
         setTextSize(18.0f);
         metrics = new PaintMetrics(this);
+    }
+
+    public Mode getMode() {
+        return mode;
+    }
+
+    public void setMode(Mode mode){
+        this.mode = mode;
     }
 
     public int getFlags() {
@@ -70,5 +79,20 @@ public class Paint {
         protected PaintMetrics(Paint paint) {
             super(paint);
         }
+    }
+
+    public void from(Paint paint){
+        color = paint.color;
+        mode = paint.mode;
+        textSize = paint.textSize;
+        flags = paint.flags;
+        typeface = paint.typeface;
+        strokeWidth = paint.strokeWidth;
+    }
+
+    public enum Mode {
+        FILL,
+        STROKE,
+        FILL_AND_STROKE
     }
 }

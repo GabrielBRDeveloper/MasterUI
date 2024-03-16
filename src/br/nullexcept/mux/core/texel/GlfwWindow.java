@@ -3,9 +3,10 @@ package br.nullexcept.mux.core.texel;
 import br.nullexcept.mux.C;
 import br.nullexcept.mux.app.Activity;
 import br.nullexcept.mux.app.Looper;
-import br.nullexcept.mux.hardware.CharEvent;
+import br.nullexcept.mux.input.CharEvent;
 import br.nullexcept.mux.hardware.GLES;
 import br.nullexcept.mux.input.KeyEvent;
+import br.nullexcept.mux.input.MotionEvent;
 import br.nullexcept.mux.input.MouseEvent;
 import br.nullexcept.mux.view.View;
 import br.nullexcept.mux.view.Window;
@@ -20,7 +21,6 @@ class GlfwWindow extends Window {
     private boolean visible;
     private boolean initialized = false;
     private final Activity activity;
-    private char lastCharacter;
 
     public GlfwWindow(Activity context) {
         activity = context;
@@ -143,5 +143,9 @@ class GlfwWindow extends Window {
         } else {
             GLFW.glfwHideWindow(window);
         }
+    }
+
+    public void onMouseMoved(MotionEvent event) {
+        container.sendEvent(event);
     }
 }

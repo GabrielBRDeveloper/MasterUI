@@ -1,17 +1,10 @@
 package br.nullexcept.mux.core.texel;
 
-import br.nullexcept.mux.app.Looper;
 import br.nullexcept.mux.graphics.Point;
-import br.nullexcept.mux.hardware.CharEvent;
-import br.nullexcept.mux.input.InputDevice;
-import br.nullexcept.mux.input.KeyEvent;
-import br.nullexcept.mux.input.MouseEvent;
+import br.nullexcept.mux.input.*;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWCharModsCallback;
-import org.lwjgl.glfw.GLFWCharModsCallbackI;
-import org.lwjgl.system.libffi.FFICIF;
+import org.lwjgl.glfw.GLFWCursorPosCallbackI;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 class GlfwEventManager {
@@ -19,6 +12,7 @@ class GlfwEventManager {
     private final HashMap<Integer, GlfwMouseEvent> downMouseEvents = new HashMap<>();
     private final long gfwWindow;
     private final GlfwWindow window;
+    private final GlfwMouseMove mouseMove = new GlfwMouseMove();
 
     private final Point cursorPosition = new Point(0,0);
 
@@ -26,7 +20,6 @@ class GlfwEventManager {
         this.window = window;
 
         long address = window.getAddress();
-
         GLFW.glfwSetCharCallback(address, (win, charCode) -> window.onCharEvent(new CharEvent((char) charCode,System.nanoTime(),null)));
         GLFW.glfwSetKeyCallback(address, (win, i, i1, i2, i3) -> processKeyEvent(i,i1,i2, i3));
         GLFW.glfwSetMouseButtonCallback(address, (win, button, action, modes) -> processMouseEvent(button, action, modes));
@@ -74,13 +67,23 @@ class GlfwEventManager {
     public void runFrame(){
         double[][] buffer = new double[2][1];
         GLFW.glfwGetCursorPos(gfwWindow, buffer[0], buffer[1]);
+        int x = (int) Math.round(Math.max(0, buffer[0][0]));
+        int y = (int) Math.round(Math.max(0, buffer[1][0]));
 
-        cursorPosition.x = (int) Math.max(0, buffer[0][0]);
-        cursorPosition.y = (int) Math.max(0, buffer[1][0]);
-
-        for (MouseEvent event: downMouseEvents.values()){
-            onMouseEvent(event);
+        if (x > 0 && y > 0 && x < window.getWidth() && y < window.getHeight() && (x != cursorPosition.x || cursorPosition.y != y)){
+            cursorPosition.x = x;
+            cursorPosition.y = y;
+            processMouseMove();
+            for (MouseEvent event: downMouseEvents.values()){
+                onMouseEvent(event);
+            }
         }
+
+    }
+
+    private void processMouseMove() {
+        mouseMove.resetTransform();
+        window.onMouseMoved(mouseMove);
     }
 
     private class GlfwKeyEvent extends KeyEvent {
@@ -109,6 +112,38 @@ class GlfwEventManager {
         @Override
         public InputDevice getSource() {
             return null;
+        }
+    }
+
+    private class GlfwMouseMove extends MotionEvent {
+        @Override
+        public double getRawX() {
+            return cursorPosition.x;
+        }
+
+        @Override
+        public double getRawY() {
+            return cursorPosition.y;
+        }
+
+        @Override
+        public int getAction() {
+            return ACTION_MOVE;
+        }
+
+        @Override
+        public InputDevice getSource() {
+            return null;
+        }
+
+        @Override
+        public long getDownTime() {
+            return System.nanoTime();
+        }
+
+        @Override
+        public void resetTransform() {
+            super.resetTransform();
         }
     }
 

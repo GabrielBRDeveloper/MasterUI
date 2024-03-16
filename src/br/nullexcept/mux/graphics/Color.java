@@ -31,4 +31,28 @@ public class Color {
     public static int argb(int alpha, int red, int green, int blue){
         return (alpha & 255) << 24 | (red & 255) << 16 | (green & 255) << 8 | (blue & 255);
     }
+
+    public static int parseColor(String color) {
+        if (color.startsWith("#")){
+            color = color.substring(1);
+        }
+        if (color.length() == 3){
+            color = ""+
+                    color.charAt(0)+color.charAt(0)+ // RED
+                    color.charAt(1)+color.charAt(1)+ // GREEN
+                    color.charAt(2)+color.charAt(2); // BLUE
+            return parseColor(color);
+        } else if (color.length() == 4){
+            return parseColor(""+
+                    color.charAt(0)+color.charAt(0)+ // ALPHA
+                    color.charAt(1)+color.charAt(1)+ // RED
+                    color.charAt(2)+color.charAt(2)+ // GREEN
+                    color.charAt(3)+color.charAt(3));// BLUE
+        }
+
+        if (color.length() == 6){
+            color = "FF"+color;
+        }
+        return (int) Long.parseLong(color, 16);
+    }
 }

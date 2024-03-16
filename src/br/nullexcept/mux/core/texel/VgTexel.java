@@ -4,10 +4,7 @@ import br.nullexcept.mux.C;
 import br.nullexcept.mux.graphics.Color;
 import br.nullexcept.mux.graphics.Paint;
 import br.nullexcept.mux.graphics.fonts.TypefaceFactory;
-import org.lwjgl.nanovg.NVGColor;
-import org.lwjgl.nanovg.NVGPaint;
-import org.lwjgl.nanovg.NanoVG;
-import org.lwjgl.nanovg.NanoVGGLES2;
+import org.lwjgl.nanovg.*;
 
 import static org.lwjgl.nanovg.NanoVG.*;
 
@@ -39,6 +36,8 @@ class VgTexel {
     }
 
     public static void applyPaint(Paint paint){
+        globalPaint.from(paint);
+
         nvgFontFaceId(globalContext, paint.getTypeface().hashCode());
         setColor(paint.getColor());
         setTextSize(paint.getTextSize());
@@ -71,9 +70,37 @@ class VgTexel {
         return globalPaint;
     }
 
+    private static void fill(){
+        switch (globalPaint.getMode()){
+            case FILL:
+                nvgFill(globalContext);
+                break;
+            case STROKE:
+                nvgStroke(globalContext);
+                break;
+            default:
+                nvgFill(globalContext);
+                nvgStroke(globalContext);
+                break;
+        }
+    }
+
+    public static void drawRoundedRect(int x, int y, int width, int height, int radius){
+        radius = Math.min(Math.max(width,height), radius);
+        nvgRoundedRect(globalContext, x,y,width,height,radius);
+        fill();
+    }
+
+    public static void drawEllipse(int x, int y, int width, int height){
+        int mw = width/2;
+        int mh = height/2;
+        nvgEllipse(globalContext, x+mw, y+mh, mw, mh);
+        fill();
+    }
+
     public static void drawRect(int x, int y, int width, int height){
         nvgRect(globalContext, x, y, width, height);
-        nvgFill(globalContext);
+        fill();
     }
 
     public static void beginElement(){
@@ -118,5 +145,13 @@ class VgTexel {
 
     public static void drawText(int x, int y, CharSequence line) {
         nvgText(globalContext, x,y, line);
+    }
+
+    public static void rotate(float angle){
+        nvgRotate(globalContext, angle);
+    }
+
+    public static void move(int x, int y) {
+        nvgTranslate(globalContext, x, y);
     }
 }
