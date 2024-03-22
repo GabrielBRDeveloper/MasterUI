@@ -4,6 +4,7 @@ import br.nullexcept.mux.C;
 import br.nullexcept.mux.graphics.Color;
 import br.nullexcept.mux.graphics.Paint;
 import br.nullexcept.mux.graphics.fonts.TypefaceFactory;
+import br.nullexcept.mux.lang.Log;
 import org.lwjgl.nanovg.*;
 
 import static org.lwjgl.nanovg.NanoVG.*;
@@ -24,8 +25,8 @@ class VgTexel {
             TypefaceFactory.createDefaults();
             GLShaderList.build();
         } catch (Throwable e){
-            System.err.println("Error on initialize nanovg texel.");
-            e.printStackTrace(System.out);
+            Log.log("TexelAPI", "Error on initialize nanovg texel.");
+            Log.log("TexelAPI", e);
             throw new RuntimeException("CORE ERROR");
         }
     }

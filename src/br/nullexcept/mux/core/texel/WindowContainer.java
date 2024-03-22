@@ -150,7 +150,7 @@ public class WindowContainer extends ViewGroup {
         renders.clear();
     }
 
-    public void sendEvent(Event event) {
+    public void performInputEvent(Event event) {
         if (event instanceof MouseEvent){
             if(event.getTarget() == -1){
                 dispatchEvent(event);

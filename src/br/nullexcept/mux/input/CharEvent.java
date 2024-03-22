@@ -12,7 +12,7 @@ public final class CharEvent extends InputEvent {
     }
 
     @Override
-    public InputDevice getSource() {
+    public InputDevice getDevice() {
         return source;
     }
 

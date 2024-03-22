@@ -8,6 +8,21 @@ import org.lwjgl.glfw.GLFWCursorPosCallbackI;
 import java.util.HashMap;
 
 class GlfwEventManager {
+
+    private static final InputDevice dummyMouse = new InputDevice() {
+        @Override
+        public InputSource getSource() {
+            return InputSource.MOUSE;
+        }
+    };
+    private static final InputDevice dummyKeyboard = new InputDevice() {
+        @Override
+        public InputSource getSource() {
+            return InputSource.KEYBOARD;
+        }
+    };
+
+
     private final HashMap<Integer, GlfwKeyEvent> downKeyEvents = new HashMap<>();
     private final HashMap<Integer, GlfwMouseEvent> downMouseEvents = new HashMap<>();
     private final long gfwWindow;
@@ -20,7 +35,7 @@ class GlfwEventManager {
         this.window = window;
 
         long address = window.getAddress();
-        GLFW.glfwSetCharCallback(address, (win, charCode) -> window.onCharEvent(new CharEvent((char) charCode,System.nanoTime(),null)));
+        GLFW.glfwSetCharCallback(address, (win, charCode) -> window.onCharEvent(new CharEvent((char) charCode,System.nanoTime(),dummyKeyboard)));
         GLFW.glfwSetKeyCallback(address, (win, i, i1, i2, i3) -> processKeyEvent(i,i1,i2, i3));
         GLFW.glfwSetMouseButtonCallback(address, (win, button, action, modes) -> processMouseEvent(button, action, modes));
         this.gfwWindow = address;
@@ -110,40 +125,19 @@ class GlfwEventManager {
         }
 
         @Override
-        public InputDevice getSource() {
-            return null;
+        public InputDevice getDevice() {
+            return dummyKeyboard;
         }
     }
 
-    private class GlfwMouseMove extends MotionEvent {
-        @Override
-        public double getRawX() {
-            return cursorPosition.x;
-        }
-
-        @Override
-        public double getRawY() {
-            return cursorPosition.y;
+    private class GlfwMouseMove extends GlfwMouseEvent {
+        private GlfwMouseMove() {
+            super(MouseEvent.BUTTON_NONE);
         }
 
         @Override
         public int getAction() {
-            return ACTION_MOVE;
-        }
-
-        @Override
-        public InputDevice getSource() {
-            return null;
-        }
-
-        @Override
-        public long getDownTime() {
-            return System.nanoTime();
-        }
-
-        @Override
-        public void resetTransform() {
-            super.resetTransform();
+            return MotionEvent.ACTION_NONE;
         }
     }
 
@@ -187,8 +181,8 @@ class GlfwEventManager {
         }
 
         @Override
-        public InputDevice getSource() {
-            return null;
+        public InputDevice getDevice() {
+            return dummyMouse;
         }
     }
 }

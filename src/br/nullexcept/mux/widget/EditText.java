@@ -7,8 +7,10 @@ import br.nullexcept.mux.graphics.fonts.FontMetrics;
 import br.nullexcept.mux.input.CharEvent;
 import br.nullexcept.mux.input.KeyEvent;
 import br.nullexcept.mux.input.MouseEvent;
+import br.nullexcept.mux.lang.Log;
 import br.nullexcept.mux.lang.TextLayout;
 import br.nullexcept.mux.res.AttributeList;
+import br.nullexcept.mux.view.PointerIcon;
 import br.nullexcept.mux.view.View;
 import br.nullexcept.mux.view.ViewAttrs;
 
@@ -30,11 +32,12 @@ public class EditText extends View {
     {
         setFocusable(true);
         setOnClickListener(v-> requestFocus());
+        setPointerIcon(new PointerIcon(PointerIcon.Model.TEXT_SELECTION));
     }
 
     @Override
-    protected void onRequestAttribute(AttributeList attr) {
-        super.onRequestAttribute(attr);
+    protected void onInflate(AttributeList attr) {
+        super.onInflate(attr);
         attr.searchText(ViewAttrs.text, this::setText);
         attr.searchColor(ViewAttrs.textColor, this::setTextColor);
         attr.searchBoolean(ViewAttrs.singleLine, this::setSingleLine);
@@ -46,7 +49,6 @@ public class EditText extends View {
         if (mouseEvent.getAction() == MouseEvent.ACTION_UP){
             int y = (int) (mouseEvent.getY() - getPaddingTop());
             int line = (int)(y/font().getLineHeight());
-            System.err.println(line);
             if (line >= 0 && line < text.getLineCount()){
                 int x = (int) (mouseEvent.getX() - getPaddingLeft());
                 int start = text.getLineStart(line);

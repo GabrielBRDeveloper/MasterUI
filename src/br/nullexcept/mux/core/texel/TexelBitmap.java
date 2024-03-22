@@ -3,6 +3,7 @@ package br.nullexcept.mux.core.texel;
 import br.nullexcept.mux.C;
 import br.nullexcept.mux.graphics.Bitmap;
 import br.nullexcept.mux.hardware.GLES;
+import br.nullexcept.mux.lang.Log;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.nanovg.NanoVGGLES2;
 
@@ -25,7 +26,7 @@ class TexelBitmap implements Bitmap {
     }
 
     private void setupImage(int texture){
-        System.err.println("Implement GLES setup for: "+texture);
+        Log.log("TexelBitmap","@TODO: Implement GLES setup for: "+texture);
     }
 
     @Override

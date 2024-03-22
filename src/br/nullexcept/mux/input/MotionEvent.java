@@ -6,7 +6,7 @@ public abstract class MotionEvent extends InputEvent {
     public static final int ACTION_DOWN = 2;
     public static final int ACTION_UP = 4;
     public static final int ACTION_MOVE = 8;
-    public static final int ACTION_PRESSED = ACTION_DOWN | ACTION_UP;
+    public static final int ACTION_NONE = 16;
 
     private final Point transform = new Point();
     public float getX() {

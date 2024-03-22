@@ -7,14 +7,51 @@ import org.lwjgl.glfw.GLFWVidMode;
 
 import java.util.HashMap;
 
+
+/**
+ * Stylesheet for views:
+ * CustomView -> ClassParent -> ClassParent... -> Theme
+ * Stylesheet basics:
+ * Stylesheet -> parent -> parent -> theme
+ */
+
+
 public final class Resources {
     private DisplayMetrics metrics;
     private static final HashMap<String, XmlElement> cache = new HashMap<>();
+    private final HashMap<String, StylePreset> styles = new HashMap<>();
+
     private final LayoutInflater inflater;
+    private final Context context;
+    private FallbackAttributes theme;
 
     public Resources(Context ctx){
+        this.context = ctx;
         metrics = new DisplayMetrics();
         inflater = new LayoutInflater(ctx);
+        importStylesheet(requestXml("style/defaults"));
+        setTheme("Base.Theme");
+    }
+
+    private void importStylesheet(XmlElement xml){
+        for (int i = 0; i < xml.childCount(); i++){
+            StylePreset style = new StylePreset(this, xml.childAt(i));
+            if (styles.containsKey(style.getName())){
+                throw new RuntimeException("Style name duplicate: "+style.getName());
+            }
+            styles.put(style.getName(), style);
+        }
+    }
+
+    public AttributeList obtainStyled(String name){
+        if (styles.containsKey(name)){
+            return styles.get(name).generate(theme);
+        }
+        return theme;
+    }
+
+    public void setTheme(String styleId){
+        theme = styles.get(styleId).generate(null);
     }
 
     public LayoutInflater getInflater() {
@@ -31,6 +68,14 @@ public final class Resources {
         }
         cache.put(path, XmlElement.parse(AssetsManager.openDocument(path+".xml")));
         return requestXml(path);
+    }
+
+    StylePreset obtainStyle(String id) {
+        return styles.get(id);
+    }
+
+    public Context getContext() {
+        return context;
     }
 
     public static class DisplayMetrics {

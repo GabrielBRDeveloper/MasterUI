@@ -5,22 +5,35 @@ import br.nullexcept.mux.graphics.Drawable;
 import br.nullexcept.mux.lang.Function;
 import br.nullexcept.mux.lang.xml.XmlElement;
 
-class AttributeAgent implements AttributeList {
+import java.util.Map;
+
+class FallbackAttributes implements AttributeList {
     private final Context context;
     private final Resources resources;
-    private final XmlElement xml;
-    private final AttributeList fallback;
+    private final Map<String, String> map;
+    private final FallbackAttributes fallback;
 
-    public AttributeAgent(XmlElement element, AttributeList fallback, Context context){
+    public FallbackAttributes(Map<String, String> attrs, FallbackAttributes fallback, Context context){
         this.context = context;
         this.resources = context.getResources();
-        this.xml = element;
+        this.map = attrs;
         this.fallback = fallback;
+    }
+
+    public FallbackAttributes(XmlElement xml, FallbackAttributes fallback, Context context){
+        this(xml.attrs(), fallback, context);
     }
 
     private String resolve(String value){
         if (value.startsWith("?")){
-
+            String name = value.substring(1);
+            if (map.containsKey(name)){
+                return resolve(map.get(name));
+            }
+            if (fallback != null){
+                return fallback.resolve(value);
+            }
+            throw new RuntimeException("Cannot resolve reference: "+name);
         }
         return value;
     }
@@ -65,7 +78,7 @@ class AttributeAgent implements AttributeList {
     @Override
     public void searchRaw(String name, Function<String> apply) {
         if (contains(name)){
-            apply.call(resolve(xml.attr(name)));
+            apply.call(resolve(map.get(name)));
         } else if (fallback != null){
             fallback.searchRaw(name, apply);
         }
@@ -78,18 +91,18 @@ class AttributeAgent implements AttributeList {
 
     @Override
     public String[] names() {
-        return xml.attrNames();
+        return map.keySet().toArray(new String[0]);
     }
 
     @Override
     public String getRawValue(String name) {
-        return xml.attr(name);
+        return map.get(name);
     }
 
     @Override
     public CharSequence getText(String name) {
         if (contains(name)){
-            return resolve(xml.attr(name));
+            return resolve(map.get(name));
         } else if (fallback != null){
             return fallback.getText(name);
         }
@@ -99,7 +112,7 @@ class AttributeAgent implements AttributeList {
     @Override
     public int getColor(String name, int defaultValue) {
         if (contains(name)){
-            return Parser.parseColor(resolve(xml.attr(name)));
+            return Parser.parseColor(resolve(map.get(name)));
         }  else if (fallback != null){
             return fallback.getColor(name, defaultValue);
         }
@@ -109,7 +122,7 @@ class AttributeAgent implements AttributeList {
     @Override
     public float getDimension(String name, float defaultValue) {
         if (contains(name)){
-            return Parser.parseDimension(resources, resolve(xml.attr(name)));
+            return Parser.parseDimension(resources, resolve(map.get(name)));
         } else if (fallback != null){
             return fallback.getDimension(name, defaultValue);
         }
@@ -119,7 +132,7 @@ class AttributeAgent implements AttributeList {
     @Override
     public Drawable getDrawable(String name) {
         if (contains(name)){
-            return Parser.parseDrawable(resources, resolve(xml.attr(name)));
+            return Parser.parseDrawable(resources, resolve(map.get(name)));
         } else if (fallback != null){
             return fallback.getDrawable(name);
         }
@@ -128,6 +141,6 @@ class AttributeAgent implements AttributeList {
 
     @Override
     public boolean contains(String name) {
-        return xml.has(name);
+        return map.containsKey(name);
     }
 }

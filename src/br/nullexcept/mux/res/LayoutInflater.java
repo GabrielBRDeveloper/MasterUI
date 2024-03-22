@@ -30,7 +30,7 @@ public class LayoutInflater {
         if ("include".equals(xml.name())){
             return inflate(xml.attr("layout"));
         }
-        AttributeAgent agent = new AttributeAgent(xml,null, context);
+        FallbackAttributes agent = new FallbackAttributes(xml, (FallbackAttributes) context.getResources().obtainStyled("Widget."+xml.name()), context);
         if (!registers.containsKey(xml.name())){
             throw new RuntimeException("Invalid view class "+xml.name()+" you need register class before use.");
         }

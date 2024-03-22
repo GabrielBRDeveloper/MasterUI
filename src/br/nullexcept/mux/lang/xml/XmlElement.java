@@ -1,6 +1,5 @@
 package br.nullexcept.mux.lang.xml;
 
-import com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -11,6 +10,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class XmlElement {
     private static final DocumentBuilderFactory factory;
@@ -36,6 +36,10 @@ public class XmlElement {
                 attributes.put(attr.getNodeName(), attr.getNodeValue());
             }
         }
+    }
+
+    public String value(){
+        return node.getTextContent();
     }
 
     public String name() {
@@ -79,5 +83,9 @@ public class XmlElement {
 
     static {
         factory = DocumentBuilderFactory.newInstance();
+    }
+
+    public Map<String, String> attrs() {
+        return new HashMap<>(attributes);
     }
 }

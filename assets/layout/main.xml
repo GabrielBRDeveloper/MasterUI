@@ -3,6 +3,7 @@
     width="match_parent"
     height="match_parent"
     background="#383838"
+    padding="20dp"
     orientation="vertical">
     <Button
         width="match_parent"
@@ -11,4 +12,9 @@
         textSize="16dp"
         text="Basic xml code"/>
     <include layout="text"/>
+    <EditText
+        width="256dp"
+        height="wrap_content"
+        padding="20dp"
+        background="?primaryColor"/>
 </LinearLayout>

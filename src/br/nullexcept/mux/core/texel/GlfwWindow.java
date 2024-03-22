@@ -27,7 +27,7 @@ class GlfwWindow extends Window {
         window = GLFW.glfwCreateWindow(512, 512, "[title]", 0, C.GLFW_CONTEXT);
         container = new WindowContainer(context, this);
         eventManager = new GlfwEventManager(this);
-        Looper.getMainLooper().postDelayed(this::update, 10);
+        Looper.getMainLooper().postDelayed(this::update, 5);
     }
 
     long getAddress(){
@@ -117,15 +117,15 @@ class GlfwWindow extends Window {
     }
 
     public void onMouseEvent(MouseEvent event) {
-        container.sendEvent(event);
+        container.performInputEvent(event);
     }
 
     public void onKeyEvent(KeyEvent event) {
-        container.sendEvent(event);
+        container.performInputEvent(event);
     }
 
     public void onCharEvent(CharEvent charEvent) {
-        container.sendEvent(charEvent);
+        container.performInputEvent(charEvent);
     }
 
     public boolean isFocused(){
@@ -146,6 +146,10 @@ class GlfwWindow extends Window {
     }
 
     public void onMouseMoved(MotionEvent event) {
-        container.sendEvent(event);
+        container.performInputEvent(event);
+        View child = container.getChildAt((int)event.getX(), (int)event.getY());
+        if (child != null){
+            GLFW.glfwSetCursor(window, TexelAPI.getCursorPointer(child.getPointerIcon().getModel()));
+        }
     }
 }

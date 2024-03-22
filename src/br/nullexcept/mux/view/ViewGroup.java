@@ -4,6 +4,7 @@ import br.nullexcept.mux.app.Context;
 import br.nullexcept.mux.graphics.Point;
 import br.nullexcept.mux.graphics.Rect;
 import br.nullexcept.mux.input.MotionEvent;
+import br.nullexcept.mux.input.MouseEvent;
 import br.nullexcept.mux.res.AttributeList;
 
 import java.util.ArrayList;
@@ -78,7 +79,7 @@ public class ViewGroup extends View {
     }
 
     @Override
-    protected boolean dispatchMouseEvent(MotionEvent mouseEvent) {
+    protected boolean dispatchMouseEvent(MouseEvent mouseEvent) {
         boolean handle = false;
         for (int i = children.size() - 1; i >= 0; i--){
             View child = children.get(i);
@@ -94,6 +95,25 @@ public class ViewGroup extends View {
                 break;
         }
         return handle || super.dispatchMouseEvent(mouseEvent);
+    }
+
+    public final View getChildAt(int x,int y){
+        Rect bounds = getBounds();
+        if (x >= 0 && y >= 0 && x <= bounds.width() && y <= bounds.height()){
+            for (int i = children.size()-1; i >= 0; i--){
+                View child = children.get(i);
+                Rect cb = child.getBounds();
+                if (cb.inner(x,y)){
+                    if (child instanceof ViewGroup){
+                        return ((ViewGroup) child).getChildAt(x-cb.left, y-cb.top);
+                    } else {
+                        return child;
+                    }
+                }
+            }
+            return this;
+        }
+        return null;
     }
 
     @Override

@@ -1,15 +1,8 @@
 package br.nullexcept.mux.input;
 
 public abstract class InputDevice {
-    private Type type;
+    private InputSource type;
 
-    public abstract Type getType();
+    public abstract InputSource getSource();
 
-    enum Type {
-        KEYBOARD,
-        MOUSE,
-        JOYSTICK,
-        TOUCH,
-        UNKNOWN
-    }
 }

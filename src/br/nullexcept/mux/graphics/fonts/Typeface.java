@@ -1,6 +1,7 @@
 package br.nullexcept.mux.graphics.fonts;
 
 import br.nullexcept.mux.C;
+import br.nullexcept.mux.lang.Log;
 import org.lwjgl.nanovg.NVGGlyphPosition;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.system.MemoryUtil;
@@ -48,7 +49,7 @@ public class Typeface {
 
     protected int measureChar(char ch){
         if (ch > bounds.length){
-            System.err.println("INVALID MEASURE OUTBOUNDS CHAR: "+(int)ch);
+            Log.log("Typeface","INVALID MEASURE OUTBOUNDS CHAR: "+(int)ch);
             ch = 'Z';
         }
         switch (ch){

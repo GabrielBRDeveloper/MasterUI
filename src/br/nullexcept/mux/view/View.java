@@ -7,11 +7,14 @@ import br.nullexcept.mux.graphics.Drawable;
 import br.nullexcept.mux.graphics.Point;
 import br.nullexcept.mux.graphics.Rect;
 import br.nullexcept.mux.input.*;
+import br.nullexcept.mux.lang.Log;
 import br.nullexcept.mux.res.AttributeList;
 
 import java.util.Objects;
 
 public class View {
+    private static final String LOG_TAG = "View";
+
     static final int FLAG_REQUIRES_DRAW = 2;
 
     private static int currentHash = 0;
@@ -21,6 +24,8 @@ public class View {
     private final Rect visibleBounds = new Rect();
     private boolean focusable;
     private boolean clickable;
+    private boolean hovered;
+
     private final Point measured = new Point();
     private final int hashCode = hash();
     private final Rect rect = new Rect();
@@ -34,6 +39,7 @@ public class View {
     private ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     private OnClickListener clickListener;
+    private PointerIcon pointerIcon = new PointerIcon(PointerIcon.Model.ARROW);
     private final Context context;
 
     public View(Context context) {
@@ -42,12 +48,14 @@ public class View {
 
     public View(Context context, AttributeList attrs) {
         this.context = context;
-        if (attrs != null) {
-            Looper.getMainLooper().post(() -> onRequestAttribute(attrs));
+        if (attrs == null){
+            attrs = context.getResources().obtainStyled("Widget."+getClass().getSimpleName());
         }
+        final AttributeList nAttr = attrs;
+        Looper.getMainLooper().post(() -> onInflate(nAttr));
     }
 
-    protected void onRequestAttribute(AttributeList attr) {
+    protected void onInflate(AttributeList attr) {
         { // SETUP PADDING
             attr.searchDimension(ViewAttrs.padding, value -> setPadding(value.intValue(), value.intValue(), value.intValue(), value.intValue()));
             attr.searchDimension(ViewAttrs.paddingLeft, value -> padding.left = value.intValue());
@@ -96,11 +104,26 @@ public class View {
         invalidate();
     }
 
+    public PointerIcon getPointerIcon() {
+        return pointerIcon;
+    }
+
     protected View getFocused() {
         if (parent != null) {
             return getParent().getFocused();
         }
         return null;
+    }
+
+    public boolean isHovered() {
+        return hovered;
+    }
+
+    public final void setHovered(boolean hovered) {
+        if (hovered != this.hovered){
+            this.hovered = hovered;
+            onHoveredChanged(hovered);
+        }
     }
 
     protected boolean isFocused() {
@@ -129,6 +152,10 @@ public class View {
     public void setGravity(int gravity) {
         this.gravity = gravity;
         invalidate();
+    }
+
+    public void setPointerIcon(PointerIcon pointerIcon) {
+        this.pointerIcon = pointerIcon;
     }
 
     public final void setPadding(int left, int top, int right, int bottom) {
@@ -190,6 +217,10 @@ public class View {
                 runnable.run();
             }
         }, time);
+    }
+
+    protected void onHoveredChanged(boolean hovered){
+
     }
 
     public final void requestFocus() {
@@ -264,17 +295,21 @@ public class View {
         onKeyEvent(event);
     }
 
-    protected boolean dispatchMouseEvent(MotionEvent event) {
-        if (event.getAction() != MotionEvent.ACTION_MOVE) {
-            if ((focusable || clickable) && this.onMouseEvent((MouseEvent) event)) {
-                event.setTarget(hashCode);
-                return true;
-            }
-            if (event.getTarget() == hashCode) {
-                event.setTarget(-1);
-            }
-        } else {
-            onMouseMoved(event);
+    protected boolean dispatchMouseEvent(MouseEvent event) {
+        switch (event.getAction()){
+            case MotionEvent.ACTION_NONE:
+                onMouseMoved(event);
+                break;
+            case MotionEvent.ACTION_DOWN:
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_MOVE:
+                if((clickable || focusable) && this.onMouseEvent(event)){
+                    event.setTarget(hashCode);
+                    return true;
+                } else if(event.getTarget() == hashCode){
+                    event.setTarget(Event.NONE_TARGET);
+                }
+                break;
         }
         return false;
     }
@@ -433,14 +468,22 @@ public class View {
     }
 
     public final void dispatchEvent(Event event) {
-        if (event instanceof MotionEvent) {
-            dispatchMouseEvent((MotionEvent) event);
-        } else if (event instanceof KeyEvent) {
-            dispatchKeyEvent((KeyEvent) event);
-        } else if (event instanceof CharEvent) {
-            onCharEvent((CharEvent) event);
-        } else {
-          System.err.println("Unknown event: "+event);
+        if (event instanceof InputEvent){
+            switch (((InputEvent) event).getSource()){
+                case MOUSE:
+                    dispatchMouseEvent((MouseEvent) event);
+                    break;
+                case KEYBOARD:
+                    if (event instanceof CharEvent) {
+                        onCharEvent((CharEvent) event);
+                    } else {
+                        dispatchKeyEvent((KeyEvent) event);
+                    }
+                    break;
+                default:
+                    Log.log(LOG_TAG, "unimplemented dispatcher for event type: "+event);
+                    break;
+            }
         }
     }
 

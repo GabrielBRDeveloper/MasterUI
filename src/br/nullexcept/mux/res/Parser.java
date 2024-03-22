@@ -3,6 +3,7 @@ package br.nullexcept.mux.res;
 import br.nullexcept.mux.graphics.Color;
 import br.nullexcept.mux.graphics.Drawable;
 import br.nullexcept.mux.graphics.drawable.ColorDrawable;
+import br.nullexcept.mux.lang.Log;
 
 class Parser {
     public static float parseFloat(String value){
@@ -41,7 +42,7 @@ class Parser {
         if (value.startsWith("#")){
             return new ColorDrawable(Color.parseColor(value));
         } else {
-            System.err.println("Invalid background value: "+value);
+            Log.log("ResourceParser","Invalid background value: "+value);
         }
         return null;
     }

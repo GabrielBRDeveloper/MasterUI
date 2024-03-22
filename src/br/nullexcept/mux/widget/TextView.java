@@ -21,8 +21,8 @@ public class TextView extends View {
     }
 
     @Override
-    protected void onRequestAttribute(AttributeList attr) {
-        super.onRequestAttribute(attr);
+    protected void onInflate(AttributeList attr) {
+        super.onInflate(attr);
         attr.searchText(ViewAttrs.text, this::setText);
         attr.searchColor(ViewAttrs.textColor, this::setTextColor);
         attr.searchDimension(ViewAttrs.textSize, this::setTextSize);

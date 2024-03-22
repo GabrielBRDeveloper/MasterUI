@@ -24,8 +24,8 @@ public class LinearLayout extends ViewGroup {
     }
 
     @Override
-    protected void onRequestAttribute(AttributeList attr) {
-        super.onRequestAttribute(attr);
+    protected void onInflate(AttributeList attr) {
+        super.onInflate(attr);
         attr.searchRaw(ViewAttrs.orientation, value -> {
             if ("horizontal".equals(value)){
                 setOrientation(ORIENTATION_HORIZONTAL);
