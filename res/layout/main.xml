@@ -14,8 +14,9 @@
         width="256dp"
         height="wrap_content"
         padding="20dp"/>
-    <View
-        width="256dp"
-        height="160dp"
-        background="@drawable/panda"/>
+    <ImageView
+        width="200dp"
+        height="200dp"
+        background="?primaryColor"
+        src="@drawable/panda"/>
 </LinearLayout>

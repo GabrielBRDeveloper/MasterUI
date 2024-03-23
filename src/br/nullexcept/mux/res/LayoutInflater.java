@@ -79,6 +79,7 @@ public class LayoutInflater {
         registerView("AbsoluteLayout", AbsoluteLayout::new);
         registerView("LinearLayout", LinearLayout::new);
 
+        registerView("ImageView", ImageView::new);
         registerView("EditText", EditText::new);
         registerView("Button", Button::new);
         registerView("TextView", TextView::new);

@@ -68,4 +68,9 @@ public class Typeface {
     public String toString() {
         return id;
     }
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+    }
 }

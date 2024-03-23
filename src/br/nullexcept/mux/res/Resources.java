@@ -25,12 +25,13 @@ public final class Resources {
 
     private final LayoutInflater inflater;
     private final Context context;
+    private final AssetsManager assetsManager;
     private FallbackAttributes theme;
 
     static final AssetsManager Manager;
 
     static {
-        Manager = new AssetsManager("/res/");
+        Manager = new AssetsManager("/res/", Resources.class);
         Typeface.DEFAULT = TypefaceFactory.create(Manager.openDocument("fonts/Roboto/Roboto-Regular.ttf"));
     }
 
@@ -38,8 +39,13 @@ public final class Resources {
         this.context = ctx;
         metrics = new DisplayMetrics();
         inflater = new LayoutInflater(ctx);
+        assetsManager = new AssetsManager("/assets/", ctx.getClass());
         importStylesheet(requestXml("style/defaults"));
         setTheme("Base.Theme");
+    }
+
+    public AssetsManager getAssetsManager() {
+        return assetsManager;
     }
 
     private void importStylesheet(XmlElement xml){

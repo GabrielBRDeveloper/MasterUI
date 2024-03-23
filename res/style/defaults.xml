@@ -18,4 +18,8 @@
         <item name="textColor">?colorOnSurfaceSecondary</item>
         <item name="pointerIcon">hand</item>
     </style>
+
+    <style name="Widget.ImageView">
+        <item name="gravity">center</item>
+    </style>
 </style>

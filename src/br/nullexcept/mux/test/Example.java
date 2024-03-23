@@ -28,6 +28,7 @@ public class Example extends Activity {
         super.onCreate();
         Log.log("OK", "Hello world");
         setContentView("main");
+        setTitle("Example");
     }
 
     @Override

@@ -6,7 +6,6 @@ import br.nullexcept.mux.view.Window;
 public class Activity extends Context {
     Window mWindow;
 
-
     public void onCreate(){}
     public void onDestroy(){}
     public void onPause(){}

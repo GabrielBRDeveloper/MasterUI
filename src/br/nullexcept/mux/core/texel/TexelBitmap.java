@@ -26,7 +26,6 @@ class TexelBitmap implements Bitmap {
     }
 
     private void setupImage(int texture){
-        Log.log("TexelBitmap","@TODO: Implement GLES setup for: "+texture);
     }
 
     @Override
@@ -41,12 +40,13 @@ class TexelBitmap implements Bitmap {
 
     @Override
     public int getPixel(int x, int y) {
+        Log.log("TexelBitmap","Requires implement get pixels");
         return 0;
     }
 
     @Override
     public void setPixel(int x, int y) {
-
+        Log.log("TexelBitmap","Requires implement set pixels");
     }
 
     @Override

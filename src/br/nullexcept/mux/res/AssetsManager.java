@@ -4,14 +4,16 @@ import java.io.InputStream;
 
 public class AssetsManager {
     private final String prefix;
+    private final Class clazz;
 
-    AssetsManager(String prefix) {
+    AssetsManager(String prefix, Class clazz) {
         this.prefix = prefix;
+        this.clazz = clazz;
     }
 
     /** @TODO: NEED FIX FOR NATIVE COMPILE */
     public InputStream openDocument(String dir){
-        return AssetsManager.class.getResourceAsStream((prefix+"/"+dir).replaceAll("//","/"));
+        return clazz.getResourceAsStream((prefix+"/"+dir).replaceAll("//","/"));
     }
 
     public boolean exists(String dir) {

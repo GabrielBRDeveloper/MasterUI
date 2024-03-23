@@ -41,10 +41,18 @@ public class Example extends Activity {
 🟨 **Initial support**\
 🟩 **Full implemented**
 
+### Components
+
+- 🟩 AbsoluteLayout
+- 🟩 LinearLayout
+- 🟩 Button
+- 🟩 TextView
+- 🟨 EditText
+- 🟨 ImageView
+
 ### Interface
 
 - 🟨 XML UI
-- 🟨 Basic components.
 - 🟨 Themes
 - 🟨 Multi window
 - 🟨 Attributes

@@ -13,6 +13,16 @@ public class BitmapDrawable extends Drawable {
     }
 
     @Override
+    public int getWidth() {
+        return bitmap.getWidth();
+    }
+
+    @Override
+    public int getHeight() {
+        return bitmap.getHeight();
+    }
+
+    @Override
     public void draw(Canvas canvas) {
         canvas.drawBitmap(getBounds(),bitmap,paint);
     }

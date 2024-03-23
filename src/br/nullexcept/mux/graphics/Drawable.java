@@ -18,6 +18,14 @@ public abstract class Drawable {
         return false;
     }
 
+    public int getWidth(){
+        return 1;
+    }
+
+    public int getHeight(){
+        return 1;
+    }
+
     public DrawableState getState() {
         return state;
     }

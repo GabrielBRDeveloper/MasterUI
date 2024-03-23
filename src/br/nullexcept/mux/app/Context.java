@@ -1,5 +1,6 @@
 package br.nullexcept.mux.app;
 
+import br.nullexcept.mux.res.AssetsManager;
 import br.nullexcept.mux.res.LayoutInflater;
 import br.nullexcept.mux.res.Resources;
 
@@ -11,6 +12,10 @@ public class Context {
 
     public LayoutInflater getLayoutInflater(){
         return mResource.getInflater();
+    }
+
+    public AssetsManager getAssetsManager() {
+        return getResources().getAssetsManager();
     }
 
     public Resources getResources() {
