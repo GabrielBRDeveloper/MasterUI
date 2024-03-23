@@ -21,7 +21,7 @@ public class LayoutInflater {
 
     public <T extends View> T inflate(String resource){
         Resources res = context.getResources();
-        XmlElement element = res.requestXml("layout/"+resource);
+        XmlElement element = res.requestXml("layout/" +resource);
         return inflate(element);
     }
 

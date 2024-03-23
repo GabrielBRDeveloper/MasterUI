@@ -3,12 +3,18 @@ package br.nullexcept.mux.res;
 import java.io.InputStream;
 
 public class AssetsManager {
-    /** @TODO: NEED FIX FOR NATIVE COMPILE */
-    public static InputStream openDocument(String dir){
-        return AssetsManager.class.getResourceAsStream(("/assets/"+dir).replaceAll("//","/"));
+    private final String prefix;
+
+    AssetsManager(String prefix) {
+        this.prefix = prefix;
     }
 
-    public static boolean exists(String dir) {
+    /** @TODO: NEED FIX FOR NATIVE COMPILE */
+    public InputStream openDocument(String dir){
+        return AssetsManager.class.getResourceAsStream((prefix+"/"+dir).replaceAll("//","/"));
+    }
+
+    public boolean exists(String dir) {
         try {
             InputStream input = openDocument(dir);
             if (input.read() != -1){

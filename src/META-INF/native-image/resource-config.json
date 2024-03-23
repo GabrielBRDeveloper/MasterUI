@@ -6,6 +6,11 @@
       {"pattern": "assets/.*/.*/.*"},
       {"pattern": "assets/.*/.*/.*/.*"},
 
+      {"pattern": "res/.*"},
+      {"pattern": "res/.*/.*"},
+      {"pattern": "res/.*/.*/.*"},
+      {"pattern": "res/.*/.*/.*/.*"},
+
       {"pattern": ".*/*.so"},
       {"pattern": ".*/.*/*.so"},
       {"pattern": ".*/.*/.*/*.so"},

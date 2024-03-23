@@ -138,13 +138,15 @@
         <patternset refid="compiler.resources"/>
         <type type="file"/>
       </fileset>
-      <fileset dir="${module.masterui.basedir}/res">
+    </copy>
+    <copy todir="${masterui.output.dir}/assets">
+      <fileset dir="${module.masterui.basedir}/assets">
         <patternset refid="compiler.resources"/>
         <type type="file"/>
       </fileset>
     </copy>
-    <copy todir="${masterui.output.dir}/assets">
-      <fileset dir="${module.masterui.basedir}/assets">
+    <copy todir="${masterui.output.dir}/res">
+      <fileset dir="${module.masterui.basedir}/res">
         <patternset refid="compiler.resources"/>
         <type type="file"/>
       </fileset>
@@ -177,7 +179,6 @@
     <property name="artifact.temp.output.masterui:jar" value="${artifacts.temp.dir}/MasterUI_jar"/>
     <mkdir dir="${artifact.temp.output.masterui:jar}"/>
     <jar destfile="${temp.jar.path.MasterUI.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
-      <zipfileset dir="${masterui.output.dir}"/>
       <zipfileset src="${basedir}/lib/lwjgl.jar"/>
       <zipfileset src="${basedir}/lib/lwjgl-egl.jar"/>
       <zipfileset src="${basedir}/lib/lwjgl-glfw.jar"/>
@@ -187,6 +188,7 @@
       <zipfileset src="${basedir}/lib/natives/lwjgl-glfw-natives-linux.jar"/>
       <zipfileset src="${basedir}/lib/natives/lwjgl-nanovg-natives-linux.jar"/>
       <zipfileset src="${basedir}/lib/natives/lwjgl-opengles-natives-linux.jar"/>
+      <zipfileset dir="${masterui.output.dir}"/>
     </jar>
     <copy file="${temp.jar.path.MasterUI.jar}" tofile="${artifact.temp.output.masterui:jar}/MasterUI.jar"/>
   </target>

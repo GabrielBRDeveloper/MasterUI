@@ -3,8 +3,11 @@ package br.nullexcept.mux.graphics.fonts;
 import br.nullexcept.mux.res.AssetsManager;
 import br.nullexcept.mux.utils.BufferUtils;
 
+import java.io.InputStream;
+
 public class TypefaceFactory {
-    public static void createDefaults() {
-        Typeface.DEFAULT = new Typeface(BufferUtils.allocateStream(AssetsManager.openDocument("fonts/Roboto/Roboto-Regular.ttf")));
+
+    public static Typeface create(InputStream stream){
+        return new Typeface(BufferUtils.allocateStream(stream));
     }
 }

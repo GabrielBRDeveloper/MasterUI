@@ -22,7 +22,6 @@ class VgTexel {
             globalPaint.setTextSize(-1f);
             C.VG_CONTEXT = globalContext;
             C.BITMAP_FACTORY = new TexelBitmapFactory();
-            TypefaceFactory.createDefaults();
             GLShaderList.build();
         } catch (Throwable e){
             Log.log("TexelAPI", "Error on initialize nanovg texel.");

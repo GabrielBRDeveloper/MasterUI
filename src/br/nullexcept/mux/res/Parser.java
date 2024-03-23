@@ -103,15 +103,15 @@ class Parser {
             return new ColorDrawable(Color.parseColor(value));
         } else if (value.startsWith("@")){
             value = value.substring(1);
-            if (AssetsManager.exists(value+".xml")){
+            if (Resources.Manager.exists(value+".xml")){
                 return inflateXmlDrawable(resources, resources.requestXml(value));
             } else {
                 String[] supportedImages = new String[]{
                         "png", "jpg", "jpeg"
                 };
                 for (String format: supportedImages){
-                    if (AssetsManager.exists(value+"."+format)){
-                        return new BitmapDrawable(BitmapFactory.openBitmap(AssetsManager.openDocument(value+"."+format)));
+                    if (Resources.Manager.exists(value+"."+format)){
+                        return new BitmapDrawable(BitmapFactory.openBitmap(Resources.Manager.openDocument(value+"."+format)));
                     }
                 }
             }

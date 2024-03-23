@@ -6,7 +6,7 @@
     padding="20dp"
     orientation="vertical">
     <Button
-        width="wrap_content"
+        width="match_parent"
         height="wrap_content"
         text="Basic xml code"/>
     <include layout="text"/>

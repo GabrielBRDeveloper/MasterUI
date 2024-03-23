@@ -1,6 +1,8 @@
 package br.nullexcept.mux.res;
 
 import br.nullexcept.mux.app.Context;
+import br.nullexcept.mux.graphics.fonts.Typeface;
+import br.nullexcept.mux.graphics.fonts.TypefaceFactory;
 import br.nullexcept.mux.lang.xml.XmlElement;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -24,6 +26,13 @@ public final class Resources {
     private final LayoutInflater inflater;
     private final Context context;
     private FallbackAttributes theme;
+
+    static final AssetsManager Manager;
+
+    static {
+        Manager = new AssetsManager("/res/");
+        Typeface.DEFAULT = TypefaceFactory.create(Manager.openDocument("fonts/Roboto/Roboto-Regular.ttf"));
+    }
 
     public Resources(Context ctx){
         this.context = ctx;
@@ -70,7 +79,7 @@ public final class Resources {
         if (cache.containsKey(path)){
             return cache.get(path);
         }
-        cache.put(path, XmlElement.parse(AssetsManager.openDocument(path+".xml")));
+        cache.put(path, XmlElement.parse(Resources.Manager.openDocument(path+".xml")));
         return requestXml(path);
     }
 

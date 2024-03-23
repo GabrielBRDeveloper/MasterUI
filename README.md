@@ -37,20 +37,31 @@ public class Example extends Activity {
 
 # Status
 
-i = initial\
-f = full\
-n = need implement
+🟥 **Need implement**\
+🟨 **Initial support**\
+🟩 **Full implemented**
 
-- (i) XML UI
-- (i) Events: Mouse, Keyboard
-- (i) Activity
-- (i) Multi window
-- (i) Basic components.
-- (i) Read bitmap.
-- (n) Write bitmap.
-- (i) Read drawables.
-- (n) Clip based in path.
-- (i) Themes
-- (i) Attributes
+### Interface
+
+- 🟨 XML UI
+- 🟨 Basic components.
+- 🟨 Themes
+- 🟨 Multi window
+- 🟨 Attributes
+- 🟨 Read drawables.
+- 🟥 Clip based in path.
+
+### General
+
+- 🟩 Looper
+- 🟨 Activity
+- 🟨 Read bitmap.
+- 🟥 Write bitmap.
+
+### Events
+
+- 🟨 Keyboard
+- 🟩 Mouse
+- 🟥 Joystick
 
 Full project status: [WIP]
