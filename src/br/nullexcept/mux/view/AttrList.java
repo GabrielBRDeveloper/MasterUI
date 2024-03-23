@@ -1,6 +1,6 @@
 package br.nullexcept.mux.view;
 
-public class ViewAttrs {
+public class AttrList {
     public static final String textColor = "textColor";
     public static final String text = "text";
     public static final String textSize = "textSize";
@@ -21,4 +21,9 @@ public class ViewAttrs {
     public static final String gravity = "gravity";
     public static final String rotation = "rotation";
     public static final String scale = "scale";
+    public static final String pointerIcon = "pointerIcon";
+    public static final String color = "color";
+    public static final String stroke = "stroke";
+    public static final String radius = "radius";
+    public static final String mode = "mode";
 }

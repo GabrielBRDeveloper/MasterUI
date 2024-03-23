@@ -6,15 +6,16 @@
     padding="20dp"
     orientation="vertical">
     <Button
-        width="match_parent"
+        width="wrap_content"
         height="wrap_content"
-        padding="20dp"
-        textSize="16dp"
         text="Basic xml code"/>
     <include layout="text"/>
     <EditText
         width="256dp"
         height="wrap_content"
-        padding="20dp"
-        background="?primaryColor"/>
+        padding="20dp"/>
+    <View
+        width="256dp"
+        height="160dp"
+        background="@drawable/panda"/>
 </LinearLayout>

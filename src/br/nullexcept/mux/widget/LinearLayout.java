@@ -5,7 +5,7 @@ import br.nullexcept.mux.graphics.Point;
 import br.nullexcept.mux.graphics.Rect;
 import br.nullexcept.mux.res.AttributeList;
 import br.nullexcept.mux.view.View;
-import br.nullexcept.mux.view.ViewAttrs;
+import br.nullexcept.mux.view.AttrList;
 import br.nullexcept.mux.view.ViewGroup;
 
 public class LinearLayout extends ViewGroup {
@@ -26,7 +26,7 @@ public class LinearLayout extends ViewGroup {
     @Override
     protected void onInflate(AttributeList attr) {
         super.onInflate(attr);
-        attr.searchRaw(ViewAttrs.orientation, value -> {
+        attr.searchRaw(AttrList.orientation, value -> {
             if ("horizontal".equals(value)){
                 setOrientation(ORIENTATION_HORIZONTAL);
             } else {

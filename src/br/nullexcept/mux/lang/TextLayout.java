@@ -82,6 +82,11 @@ public class TextLayout implements CharSequence {
     }
 
     public void setSelection(int start, int end) {
+        if (end < start){
+            int s = start;
+            start = end;
+            end = s;
+        }
         selection[0] = start;
         selection[1] = end;
         fixSelection();

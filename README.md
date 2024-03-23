@@ -48,9 +48,9 @@ n = need implement
 - (i) Basic components.
 - (i) Read bitmap.
 - (n) Write bitmap.
-- (n) Read drawables.
+- (i) Read drawables.
 - (n) Clip based in path.
-- (n) Themes
-- (n) Attributes
+- (i) Themes
+- (i) Attributes
 
 Full project status: [WIP]

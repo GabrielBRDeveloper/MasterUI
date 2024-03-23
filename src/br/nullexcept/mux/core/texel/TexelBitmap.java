@@ -65,6 +65,17 @@ class TexelBitmap implements Bitmap {
         NanoVG.nvgDeleteImage(C.VG_CONTEXT,id);
     }
 
+    @Override
+    protected void finalize() throws Throwable {
+        try {
+            if (!disposed){
+                dispose();
+                Log.log("TexelBitmap", "System GC detected!!");
+            }
+        } catch (Exception e){}
+        super.finalize();
+    }
+
     public int id() {
         return id;
     }

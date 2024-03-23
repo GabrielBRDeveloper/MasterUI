@@ -7,12 +7,10 @@ import br.nullexcept.mux.graphics.fonts.FontMetrics;
 import br.nullexcept.mux.input.CharEvent;
 import br.nullexcept.mux.input.KeyEvent;
 import br.nullexcept.mux.input.MouseEvent;
-import br.nullexcept.mux.lang.Log;
 import br.nullexcept.mux.lang.TextLayout;
 import br.nullexcept.mux.res.AttributeList;
-import br.nullexcept.mux.view.PointerIcon;
 import br.nullexcept.mux.view.View;
-import br.nullexcept.mux.view.ViewAttrs;
+import br.nullexcept.mux.view.AttrList;
 
 public class EditText extends View {
     private final TextLayout text = new TextLayout();
@@ -32,40 +30,44 @@ public class EditText extends View {
     {
         setFocusable(true);
         setOnClickListener(v-> requestFocus());
-        setPointerIcon(new PointerIcon(PointerIcon.Model.TEXT_SELECTION));
     }
 
     @Override
     protected void onInflate(AttributeList attr) {
         super.onInflate(attr);
-        attr.searchText(ViewAttrs.text, this::setText);
-        attr.searchColor(ViewAttrs.textColor, this::setTextColor);
-        attr.searchBoolean(ViewAttrs.singleLine, this::setSingleLine);
-        attr.searchDimension(ViewAttrs.textSize, this::setTextSize);
+        attr.searchText(AttrList.text, this::setText);
+        attr.searchColor(AttrList.textColor, this::setTextColor);
+        attr.searchBoolean(AttrList.singleLine, this::setSingleLine);
+        attr.searchDimension(AttrList.textSize, this::setTextSize);
     }
 
     @Override
     protected boolean onMouseEvent(MouseEvent mouseEvent) {
         if (mouseEvent.getAction() == MouseEvent.ACTION_UP){
-            int y = (int) (mouseEvent.getY() - getPaddingTop());
-            int line = (int)(y/font().getLineHeight());
-            if (line >= 0 && line < text.getLineCount()){
-                int x = (int) (mouseEvent.getX() - getPaddingLeft());
-                int start = text.getLineStart(line);
-                int end = text.getLineEnd(line);
-                int px = 0;
-                while (start < end){
-                    int w = (int) font().measureChar(text.charAt(start));
-                    if (px + w > x){
-                        break;
-                    }
-                    px += w;
-                    start++;
-                }
-                text.setSelection(start);
-            }
+            text.setSelection(getCharIndex(Math.round(mouseEvent.getX()), Math.round(mouseEvent.getY())));
         }
         return super.onMouseEvent(mouseEvent);
+    }
+
+    private int getCharIndex(int x, int y){
+        y -= getPaddingTop();
+        x -= getPaddingLeft();
+        int line = (int)(y/font().getLineHeight());
+
+        line = Math.max(0, Math.min(text.getLineCount(), line));
+
+        int start = text.getLineStart(line);
+        int end = text.getLineEnd(line);
+        int px = 0;
+        while (start < end){
+            int w = (int) font().measureChar(text.charAt(start));
+            if (px + w > x){
+                break;
+            }
+            px += w;
+            start++;
+        }
+        return start;
     }
 
     private FontMetrics font() {
@@ -187,7 +189,9 @@ public class EditText extends View {
         FontMetrics metrics = paint.getFontMetrics();
         int lineHeight = (int) metrics.getLineHeight();
         int y = getPaddingTop();
-        drawCaret(canvas);
+        if (text.getSelectionLength() == 0) {
+            drawCaret(canvas);
+        }
         for (int i = 0; i < text.getLineCount(); i++) {
             drawLine(canvas, getPaddingLeft(), y, i);
             y += lineHeight;

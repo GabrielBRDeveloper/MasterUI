@@ -43,6 +43,10 @@ public final class Resources {
         }
     }
 
+    public AttributeList obtainStyled(XmlElement xml){
+        return new FallbackAttributes(xml, theme, context);
+    }
+
     public AttributeList obtainStyled(String name){
         if (styles.containsKey(name)){
             return styles.get(name).generate(theme);

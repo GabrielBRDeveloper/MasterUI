@@ -9,7 +9,7 @@ import br.nullexcept.mux.widget.*;
 
 import java.util.HashMap;
 
-import static br.nullexcept.mux.view.ViewAttrs.*;
+import static br.nullexcept.mux.view.AttrList.*;
 
 public class LayoutInflater {
     private static final HashMap<String, ViewRegister> registers = new HashMap<>();

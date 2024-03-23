@@ -15,6 +15,18 @@ public class PointerIcon {
         HAND,
         RESIZE,
         TEXT_SELECTION,
-        CUSTOM
+        CUSTOM;
+
+        public static Model fromName(String value) {
+            switch (value){
+                case "hand":
+                    return HAND;
+                case "resize":
+                    return RESIZE;
+                case "textSelection":
+                    return TEXT_SELECTION;
+            }
+            return ARROW;
+        }
     }
 }

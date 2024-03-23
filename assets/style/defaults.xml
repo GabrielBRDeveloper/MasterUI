@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <style>
     <style name="Base.Theme">
-        <item name="primaryColor">#0FF</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="primaryColor">#1F9EDE</item>
+        <item name="colorOnSurfaceSecondary">#FFFFFF</item>
+        <item name="colorSurfaceSecondary">#404040</item>
+    </style>
+
+    <style name="Widget.EditText">
+        <item name="pointerIcon">textSelection</item>
+    </style>
+
+    <style name="Widget.Button">
+        <item name="background">@drawable/button</item>
+        <item name="gravity">center</item>
+        <item name="padding">8dp</item>
+        <item name="textColor">?colorOnSurfaceSecondary</item>
+        <item name="pointerIcon">hand</item>
     </style>
 </style>

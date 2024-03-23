@@ -4,6 +4,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 public class Log {
+    private static final long start = System.currentTimeMillis();
+
+    private static final String time(){
+        long time = (System.currentTimeMillis() - start)/1000;
+        return String.format("%02d:%02d", (time/60), time % 60);
+    }
+
     private static String toString(Object obj){
         if (obj == null){
             return "~null";
@@ -23,9 +30,11 @@ public class Log {
         }
         return String.valueOf(obj);
     }
-    public static void log(String tag, Object... values){
+
+
+    private synchronized static void print(PrintStream out, Level level, String tag, Object... values) {
         StringBuilder builder = new StringBuilder();
-        builder.append(String.format("[%5s]: ", tag));
+        builder.append(String.format("%s %5s %5s ", time(), level.name(), tag));
         int index = 1;
         for (Object obj: values){
             builder.append(toString(obj));
@@ -34,6 +43,21 @@ public class Log {
                 builder.append(",");
             index++;
         }
-        System.out.println(builder.toString());
+        out.println(builder.toString());
+        out.flush();
+    }
+
+    public static void error(String tag, Object... values){
+        print(System.err,Level.ERROR, tag, values);
+    }
+
+    public static void log(String tag, Object... values){
+        print(System.out, Level.LOG, tag, values);
+    }
+
+    private enum Level {
+        ERROR,
+        LOG,
+        WARN
     }
 }

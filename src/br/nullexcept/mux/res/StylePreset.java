@@ -15,7 +15,6 @@ class StylePreset {
         HashMap<String, String> map = new HashMap<>();
         for (int i = 0; i < element.childCount(); i++){
             XmlElement node = element.childAt(i);
-            System.err.println("import: "+node.name()+" => "+node.value());
             map.put(node.attr("name"), node.value());
         }
         this.parent = element.has("parent") ? element.attr("parent") : null;

@@ -2,10 +2,7 @@ package br.nullexcept.mux.view;
 
 import br.nullexcept.mux.app.Context;
 import br.nullexcept.mux.app.Looper;
-import br.nullexcept.mux.graphics.Canvas;
-import br.nullexcept.mux.graphics.Drawable;
-import br.nullexcept.mux.graphics.Point;
-import br.nullexcept.mux.graphics.Rect;
+import br.nullexcept.mux.graphics.*;
 import br.nullexcept.mux.input.*;
 import br.nullexcept.mux.lang.Log;
 import br.nullexcept.mux.res.AttributeList;
@@ -22,6 +19,8 @@ public class View {
     private final Rect bounds = new Rect();
     private final Rect padding = new Rect();
     private final Rect visibleBounds = new Rect();
+    private final DrawableState state = new DrawableState();
+
     private boolean focusable;
     private boolean clickable;
     private boolean hovered;
@@ -57,19 +56,20 @@ public class View {
 
     protected void onInflate(AttributeList attr) {
         { // SETUP PADDING
-            attr.searchDimension(ViewAttrs.padding, value -> setPadding(value.intValue(), value.intValue(), value.intValue(), value.intValue()));
-            attr.searchDimension(ViewAttrs.paddingLeft, value -> padding.left = value.intValue());
-            attr.searchDimension(ViewAttrs.paddingTop, value -> padding.top = value.intValue());
-            attr.searchDimension(ViewAttrs.paddingRight, value -> padding.right = value.intValue());
-            attr.searchDimension(ViewAttrs.paddingBottom, value -> padding.bottom = value.intValue());
+            attr.searchDimension(AttrList.padding, value -> setPadding(value.intValue(), value.intValue(), value.intValue(), value.intValue()));
+            attr.searchDimension(AttrList.paddingLeft, value -> padding.left = value.intValue());
+            attr.searchDimension(AttrList.paddingTop, value -> padding.top = value.intValue());
+            attr.searchDimension(AttrList.paddingRight, value -> padding.right = value.intValue());
+            attr.searchDimension(AttrList.paddingBottom, value -> padding.bottom = value.intValue());
             setPadding(padding.left, padding.top, padding.right, padding.bottom);
         }
-        attr.searchFloat(ViewAttrs.scale, value -> setScale(value));
-        attr.searchFloat(ViewAttrs.rotation, value -> setRotation(value));
-        attr.searchText(ViewAttrs.tag, (value) -> setTag(String.valueOf(tag)));
-        attr.searchFloat(ViewAttrs.alpha, this::setAlpha);
-        attr.searchDrawable(ViewAttrs.background, this::setBackground);
-        attr.searchRaw(ViewAttrs.gravity, value -> {
+        attr.searchFloat(AttrList.scale, value -> setScale(value));
+        attr.searchFloat(AttrList.rotation, value -> setRotation(value));
+        attr.searchText(AttrList.tag, (value) -> setTag(String.valueOf(tag)));
+        attr.searchFloat(AttrList.alpha, this::setAlpha);
+        attr.searchDrawable(AttrList.background, this::setBackground);
+        attr.searchRaw(AttrList.pointerIcon, value -> setPointerIcon(new PointerIcon(PointerIcon.Model.fromName(value))));
+        attr.searchRaw(AttrList.gravity, value -> {
             String[] types = value.split("\\|");
             int gravity = 0;
             for (String type : types) {
@@ -220,7 +220,8 @@ public class View {
     }
 
     protected void onHoveredChanged(boolean hovered){
-
+        state.hovered = hovered;
+        changeDrawableState();
     }
 
     public final void requestFocus() {
@@ -315,6 +316,8 @@ public class View {
     }
 
     public void onFocusChanged(boolean focused) {
+        state.focused = focused;
+        changeDrawableState();
         invalidate();
     }
 
@@ -328,6 +331,9 @@ public class View {
     }
 
     protected boolean onMouseEvent(MouseEvent mouseEvent) {
+        state.pressed = MouseEvent.ACTION_UP != mouseEvent.getAction();
+        changeDrawableState();
+
         if (clickable && mouseEvent.getAction() == MouseEvent.ACTION_UP &&
                 clickListener != null) {
             if (focusable && getParent() != null) {
@@ -336,6 +342,14 @@ public class View {
             clickListener.onClick(this);
         }
         return mouseEvent.getAction() == MouseEvent.ACTION_DOWN;
+    }
+
+    protected void changeDrawableState() {
+        if (background != null){
+            if (background.setState(state)){
+                invalidate();
+            }
+        }
     }
 
     public final void measureBounds() {

@@ -1,8 +1,12 @@
 package br.nullexcept.mux.app;
 
+import br.nullexcept.mux.lang.Log;
+
 import java.util.HashMap;
 
 public class Looper {
+    private static final String LOG_TAG = "Looper";
+
     private final HashMap<Long, Runnable> executions = new HashMap<>();
     static Looper mainLooper;
     private boolean stop = false;
@@ -35,8 +39,8 @@ public class Looper {
                     try {
                         runnable.run();
                     } catch (Throwable e) {
-                        System.err.println("ERROR ON EXECUTE: " + e);
-                        e.printStackTrace(System.err);
+                        Log.error(LOG_TAG, "[ERROR ON LOOPER]");
+                        Log.error(LOG_TAG, e);
                         stop = true;
                     }
                 }

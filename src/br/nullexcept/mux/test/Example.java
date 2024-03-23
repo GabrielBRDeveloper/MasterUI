@@ -2,6 +2,7 @@ package br.nullexcept.mux.test;
 
 import br.nullexcept.mux.app.Activity;
 import br.nullexcept.mux.app.Application;
+import br.nullexcept.mux.lang.Log;
 import br.nullexcept.mux.lang.xml.XmlElement;
 
 public class Example extends Activity {
@@ -25,6 +26,7 @@ public class Example extends Activity {
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.log("OK", "Hello world");
         setContentView("main");
     }
 

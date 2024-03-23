@@ -152,6 +152,7 @@ public class WindowContainer extends ViewGroup {
 
     public void performInputEvent(Event event) {
         if (event instanceof MouseEvent){
+            performHover((MouseEvent)event);
             if(event.getTarget() == -1){
                 dispatchEvent(event);
             } else {
@@ -169,6 +170,22 @@ public class WindowContainer extends ViewGroup {
         } else {
             dispatchEvent(event);
         }
+    }
+
+    private View lastHover;
+    private void performHover(MouseEvent event) {
+        View view = getChildAt((int)event.getX(), (int)event.getY());
+
+        if (view != null) {
+            if (view.equals(lastHover)) {
+                return;
+            }
+            view.setHovered(true);
+        }
+        if (lastHover != null){
+            lastHover.setHovered(false);
+        }
+        lastHover = view;
     }
 
     public CanvasTexel getCanvas() {

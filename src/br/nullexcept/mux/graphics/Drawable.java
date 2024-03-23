@@ -1,9 +1,7 @@
 package br.nullexcept.mux.graphics;
 
-import br.nullexcept.mux.res.AttributeList;
-import br.nullexcept.mux.res.Resources;
-
 public abstract class Drawable {
+    private DrawableState state;
     private final Rect bounds = new Rect();
     public abstract void draw(Canvas canvas);
 
@@ -15,8 +13,12 @@ public abstract class Drawable {
         bounds.set(rect);
     }
 
+    public boolean setState(DrawableState state) {
+        this.state = state;
+        return false;
+    }
 
-    protected void inflate(Resources res, AttributeList attributes) {
-
+    public DrawableState getState() {
+        return state;
     }
 }

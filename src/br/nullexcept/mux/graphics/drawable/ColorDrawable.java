@@ -14,4 +14,8 @@ public class ColorDrawable extends Drawable {
     public void draw(Canvas canvas) {
         canvas.drawColor(color);
     }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
 }

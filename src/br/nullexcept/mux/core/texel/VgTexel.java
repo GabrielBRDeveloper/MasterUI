@@ -45,6 +45,7 @@ class VgTexel {
 
         nvgPaint.innerColor(globalColor);
         nvgPaint.outerColor(globalColor);
+
         nvgFillPaint(globalContext, nvgPaint);
         nvgStrokeColor(globalContext, globalColor);
     }

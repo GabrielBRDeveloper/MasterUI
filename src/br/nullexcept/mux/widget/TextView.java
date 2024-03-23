@@ -8,7 +8,7 @@ import br.nullexcept.mux.graphics.fonts.FontMetrics;
 import br.nullexcept.mux.res.AttributeList;
 import br.nullexcept.mux.view.Gravity;
 import br.nullexcept.mux.view.View;
-import br.nullexcept.mux.view.ViewAttrs;
+import br.nullexcept.mux.view.AttrList;
 
 public class TextView extends View {
     private final Paint paint = new Paint();
@@ -23,9 +23,9 @@ public class TextView extends View {
     @Override
     protected void onInflate(AttributeList attr) {
         super.onInflate(attr);
-        attr.searchText(ViewAttrs.text, this::setText);
-        attr.searchColor(ViewAttrs.textColor, this::setTextColor);
-        attr.searchDimension(ViewAttrs.textSize, this::setTextSize);
+        attr.searchText(AttrList.text, this::setText);
+        attr.searchColor(AttrList.textColor, this::setTextColor);
+        attr.searchDimension(AttrList.textSize, this::setTextSize);
     }
 
     public TextView(Context context, AttributeList attrs) {
