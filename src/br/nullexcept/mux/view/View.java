@@ -255,8 +255,8 @@ public class View {
             int h = 1;
             if (params.width >= 0) {
                 w = params.width;
-            } else if (params.height == ViewGroup.LayoutParams.MATCH_PARENT) {
-                w = Math.max(0, parentWidth - location.x);
+            } else if (params.width == ViewGroup.LayoutParams.MATCH_PARENT) {
+                w = Math.max(0, parentWidth - location.x + parent.getPaddingLeft());
             } else {
                 w = calculateWidth();
             }
@@ -264,7 +264,7 @@ public class View {
             if (params.height >= 0) {
                 h = params.height;
             } else if (params.height == ViewGroup.LayoutParams.MATCH_PARENT) {
-                h = Math.max(0, parentHeight - location.y);
+                h = Math.max(0, parentHeight - location.y + parent.getPaddingTop());
             } else {
                 h = calculateHeight();
             }

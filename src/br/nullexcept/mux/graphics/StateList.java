@@ -1,7 +1,5 @@
 package br.nullexcept.mux.graphics;
 
-import org.lwjgl.system.linux.Stat;
-
 import java.util.HashMap;
 
 public class StateList {

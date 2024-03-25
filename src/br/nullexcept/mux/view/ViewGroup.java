@@ -155,6 +155,7 @@ public class ViewGroup extends View {
         view.setParent(this);
         onChildAdded(view);
         view.addFlag(View.FLAG_REQUIRES_DRAW);
+        requestLayout();
         notifyTreeChanged();
     }
 
@@ -164,13 +165,18 @@ public class ViewGroup extends View {
         }
     }
 
+    public void removeChild(View view){
+        if (children.contains(view)){
+            children.remove(view);
+            view.setParent(null);
+            notifyTreeChanged();
+            onChildRemoved(view);
+        }
+    }
+
     public void removeAllViews(){
         while (children.size() > 0){
-            View child = children.get(0);
-            children.remove(0);
-            child.setParent(null);
-            notifyTreeChanged();
-            onChildRemoved(child);
+            removeChild(children.get(0));
         }
     }
 
