@@ -13,6 +13,10 @@ public class Button extends TextView {
         super(context, attrs);
     }
 
+    {
+        setOnClickListener(v -> {});
+    }
+
     @Override
     protected void onMouseMoved(MotionEvent event) {
         super.onMouseMoved(event);

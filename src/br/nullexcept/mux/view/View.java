@@ -19,7 +19,7 @@ public class View {
     private final Rect bounds = new Rect();
     private final Rect padding = new Rect();
     private final Rect visibleBounds = new Rect();
-    private final DrawableState state = new DrawableState();
+    private final StateList state = new StateList();
 
     private boolean focusable;
     private boolean clickable;
@@ -220,7 +220,7 @@ public class View {
     }
 
     protected void onHoveredChanged(boolean hovered){
-        state.hovered = hovered;
+        state.set(StateList.HOVERED, hovered);
         changeDrawableState();
     }
 
@@ -304,7 +304,10 @@ public class View {
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_MOVE:
-                if((clickable || focusable) && this.onMouseEvent(event)){
+                boolean pressed = (clickable || focusable) && this.onMouseEvent(event);
+                state.set(StateList.PRESSED, pressed);
+                changeDrawableState();
+                if(pressed){
                     event.setTarget(hashCode);
                     return true;
                 } else if(event.getTarget() == hashCode){
@@ -316,7 +319,7 @@ public class View {
     }
 
     public void onFocusChanged(boolean focused) {
-        state.focused = focused;
+        state.set(StateList.FOCUSED, focused);
         changeDrawableState();
         invalidate();
     }
@@ -331,7 +334,6 @@ public class View {
     }
 
     protected boolean onMouseEvent(MouseEvent mouseEvent) {
-        state.pressed = MouseEvent.ACTION_UP != mouseEvent.getAction();
         changeDrawableState();
 
         if (clickable && mouseEvent.getAction() == MouseEvent.ACTION_UP &&

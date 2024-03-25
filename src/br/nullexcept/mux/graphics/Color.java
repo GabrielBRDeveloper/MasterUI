@@ -7,6 +7,7 @@ public class Color {
     public static final int BLUE = Color.rgb(0,0,255);
     public static final int BLACK = Color.rgb(0,0,0);
     public static final int WHITE = Color.rgb(255,255,255);
+    public static final int TRANSPARENT = Color.argb(0,0,0,0);
 
     public static int red(int color){
         return color >> 16 & 255;

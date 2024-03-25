@@ -55,8 +55,8 @@ public class Example extends Activity {
 - 🟨 XML UI
 - 🟨 Themes
 - 🟨 Multi window
-- 🟨 Attributes
-- 🟨 Read drawables.
+- 🟩 Attributes
+- 🟩 Read drawables.
 - 🟥 Clip based in path.
 
 ### General

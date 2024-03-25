@@ -1,7 +1,7 @@
 package br.nullexcept.mux.graphics;
 
 public abstract class Drawable {
-    private DrawableState state;
+    private final StateList state = new StateList();
     private final Rect bounds = new Rect();
     public abstract void draw(Canvas canvas);
 
@@ -13,8 +13,8 @@ public abstract class Drawable {
         bounds.set(rect);
     }
 
-    public boolean setState(DrawableState state) {
-        this.state = state;
+    public boolean setState(StateList state) {
+        this.state.setTo(state);
         return false;
     }
 
@@ -26,7 +26,7 @@ public abstract class Drawable {
         return 1;
     }
 
-    public DrawableState getState() {
+    public StateList getState() {
         return state;
     }
 }

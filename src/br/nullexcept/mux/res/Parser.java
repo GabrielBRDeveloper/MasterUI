@@ -3,10 +3,8 @@ package br.nullexcept.mux.res;
 import br.nullexcept.mux.graphics.BitmapFactory;
 import br.nullexcept.mux.graphics.Color;
 import br.nullexcept.mux.graphics.Drawable;
-import br.nullexcept.mux.graphics.drawable.BitmapDrawable;
-import br.nullexcept.mux.graphics.drawable.ColorDrawable;
-import br.nullexcept.mux.graphics.drawable.LayerListDrawable;
-import br.nullexcept.mux.graphics.drawable.ShapeDrawable;
+import br.nullexcept.mux.graphics.StateList;
+import br.nullexcept.mux.graphics.drawable.*;
 import br.nullexcept.mux.graphics.shape.OvalShape;
 import br.nullexcept.mux.graphics.shape.RectShape;
 import br.nullexcept.mux.graphics.shape.RoundedShape;
@@ -15,6 +13,8 @@ import br.nullexcept.mux.lang.Log;
 import br.nullexcept.mux.lang.xml.XmlElement;
 import br.nullexcept.mux.view.AttrList;
 import org.w3c.dom.Attr;
+
+import java.util.HashMap;
 
 class Parser {
     private static final String LOG_TAG = "ResourcesParser";
@@ -85,6 +85,27 @@ class Parser {
                     default:
                         drawable.setShape(new RectShape());
                         break;
+                }
+                return drawable;
+            }
+            case "selector": {
+                SelectorDrawable drawable = new SelectorDrawable();
+                for (int i = 0; i < xml.childCount(); i++){
+                    XmlElement item = xml.childAt(i);
+                    HashMap<String, String> stateAttrs = new HashMap<>(item.attrs());
+                    Drawable child;
+                    if (item.has("src")) {
+                        child = parseDrawable(res, item.attr("src"));
+                    } else {
+                        child = inflateXmlDrawable(res, item.childAt(0));
+                    }
+
+                    stateAttrs.remove("src");
+                    StateList states = new StateList();
+                    for (String key: stateAttrs.keySet()){
+                        states.set(StateList.fromName(key), Boolean.parseBoolean(stateAttrs.get(key)));
+                    }
+                    drawable.add(child, states);
                 }
                 return drawable;
             }
