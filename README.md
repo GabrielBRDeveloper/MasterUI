@@ -33,7 +33,7 @@ public class Example extends Activity {
 
 # Previews
 
-![Example](https://i.imgur.com/oNq8URc.png)
+![Example](https://i.imgur.com/xCUdAGS.png)
 
 # User requirements
 
@@ -53,6 +53,7 @@ public class Example extends Activity {
 - 🟩 Button
 - 🟩 Switch
 - 🟩 TextView
+- 🟨 ScrollView
 - 🟨 EditText
 - 🟨 ImageView
 

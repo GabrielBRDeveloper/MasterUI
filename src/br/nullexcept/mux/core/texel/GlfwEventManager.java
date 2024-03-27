@@ -2,10 +2,7 @@ package br.nullexcept.mux.core.texel;
 
 import br.nullexcept.mux.graphics.Point;
 import br.nullexcept.mux.input.*;
-import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWCursorPosCallbackI;
-import org.lwjgl.glfw.GLFWImage;
-import org.lwjgl.glfw.GLFWKeyCallback;
+import org.lwjgl.glfw.*;
 
 import java.util.HashMap;
 
@@ -29,9 +26,12 @@ class GlfwEventManager {
     private final HashMap<Integer, GlfwMouseEvent> downMouseEvents = new HashMap<>();
     private final long gfwWindow;
     private final GlfwWindow window;
-    private final GlfwMouseMove mouseMove = new GlfwMouseMove();
+    private final double[] mouseScrollRaw = new double[2];
+    private final Point mouseScroll = new Point();
 
+    private final GlfwMouseMove mouseMove = new GlfwMouseMove();
     private final Point cursorPosition = new Point(0,0);
+    private boolean needMouseUpdate = false;
 
     public GlfwEventManager(GlfwWindow window){
         this.window = window;
@@ -41,6 +41,13 @@ class GlfwEventManager {
         GLFW.glfwSetCharCallback(address, (win, charCode) -> window.onCharEvent(new CharEvent((char) charCode,System.nanoTime(),dummyKeyboard)));
         GLFW.glfwSetKeyCallback(address, (win, i, i1, i2, i3) -> processKeyEvent(i,i1,i2, i3));
         GLFW.glfwSetMouseButtonCallback(address, (win, button, action, modes) -> processMouseEvent(button, action, modes));
+        GLFW.glfwSetScrollCallback(address, (l, x, y) -> {
+            mouseScrollRaw[0] += x;
+            mouseScrollRaw[1] += y;
+
+            mouseScroll.set((int)Math.round(mouseScrollRaw[0]), (int)Math.round(mouseScrollRaw[1]));
+            needMouseUpdate |= true;
+        });
         this.gfwWindow = address;
     }
 
@@ -89,9 +96,10 @@ class GlfwEventManager {
         int x = (int) Math.round(Math.max(0, buffer[0][0]));
         int y = (int) Math.round(Math.max(0, buffer[1][0]));
 
-        if (x > 0 && y > 0 && x < window.getWidth() && y < window.getHeight() && (x != cursorPosition.x || cursorPosition.y != y)){
+        if (x > 0 && y > 0 && x < window.getWidth() && y < window.getHeight() && (x != cursorPosition.x || cursorPosition.y != y |needMouseUpdate)){
             cursorPosition.x = x;
             cursorPosition.y = y;
+            needMouseUpdate = false;
             processMouseMove();
             for (MouseEvent event: downMouseEvents.values()){
                 onMouseEvent(event);
@@ -173,6 +181,11 @@ class GlfwEventManager {
         @Override
         public int getButton() {
             return button;
+        }
+
+        @Override
+        public Point getScroll() {
+            return mouseScroll;
         }
 
         @Override

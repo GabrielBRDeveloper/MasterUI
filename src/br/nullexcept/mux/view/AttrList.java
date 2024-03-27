@@ -29,4 +29,5 @@ public class AttrList {
     public static final String src = "src";
     public static final String selectionColor = "selectionColor";
     public static final String checked = "checked";
+    public static final String scrollbar = "scrollbar";
 }

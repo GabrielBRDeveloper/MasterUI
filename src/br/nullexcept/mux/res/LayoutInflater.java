@@ -91,6 +91,7 @@ public class LayoutInflater {
     static {
         registerView("AbsoluteLayout", AbsoluteLayout::new);
         registerView("LinearLayout", LinearLayout::new);
+        registerView("ScrollView", ScrollView::new);
 
         registerView("ImageView", ImageView::new);
         registerView("EditText", EditText::new);

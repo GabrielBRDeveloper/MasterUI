@@ -8,7 +8,12 @@
         <item name="colorSurfaceVariant">#404040</item>
         <item name="colorSurface">#383838</item>
         <item name="colorOutline">#2B2B2B</item>
+        <item name="colorHint">#30FFFFFF</item>
         <item name="textSize">14dp</item>
+    </style>
+
+    <style name="Widget.ScrollView">
+        <item name="scrollbar">@drawable/scrollbar_thumb</item>
     </style>
 
     <style name="Widget.EditText">
