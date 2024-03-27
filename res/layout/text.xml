@@ -2,18 +2,20 @@
 <LinearLayout
     width="wrap_content"
     height="wrap_content"
+    orientation="vertical"
     padding="10dp">
     <TextView
         width="wrap_content"
         height="wrap_content"
         padding="10dp"
         gravity="center|top"
+        alpha="0.5"
         text="That is a title"/>
     <TextView
         width="wrap_content"
         height="wrap_content"
         padding="10dp"
         gravity="center|top"
-        alpha="0.2"
+        alpha="0.5"
         text="That is a description"/>
 </LinearLayout>

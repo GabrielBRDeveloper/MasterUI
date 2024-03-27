@@ -9,4 +9,14 @@ public abstract class Window {
     public abstract View getContentView();
     public abstract void setContentView(View view);
     public abstract void setVisible(boolean visible);
+    public abstract void setWindowObserver(WindowObserver observer);
+    public abstract void create();
+    public abstract void destroy();
+
+    public interface WindowObserver {
+        void onCreated();
+        void onVisibilityChanged(boolean visible);
+        void onResize(int width, int height);
+        void onDestroy();
+    }
 }

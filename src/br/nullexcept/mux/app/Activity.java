@@ -1,5 +1,7 @@
 package br.nullexcept.mux.app;
 
+import br.nullexcept.mux.lang.Function;
+import br.nullexcept.mux.lang.Valuable;
 import br.nullexcept.mux.view.View;
 import br.nullexcept.mux.view.Window;
 
@@ -10,6 +12,17 @@ public class Activity extends Context {
     public void onDestroy(){}
     public void onPause(){}
     public void onResume(){}
+
+    public void finish() {
+        mWindow.destroy();
+        mWindow = null;
+    }
+
+    public void switchActivity(Valuable<Activity> provider) {
+        Window window = mWindow;
+        finish();
+        Application.boot(window, provider.get());
+    }
 
     public void setContentView(String layoutName){
         setContentView(getLayoutInflater().inflate(layoutName));

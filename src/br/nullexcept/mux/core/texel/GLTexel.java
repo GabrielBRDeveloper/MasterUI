@@ -54,7 +54,7 @@ class GLTexel {
 
     public static void drawViewLayers(float[][] vertices, int[] textures, float[] alphas){
         glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_BLEND_SRC_ALPHA);
+        glBlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
         GLProgram program = GLShaderList.VIEW;
 
         program.bind();

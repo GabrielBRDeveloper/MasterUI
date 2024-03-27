@@ -3,6 +3,7 @@ package br.nullexcept.mux.core.texel;
 import br.nullexcept.mux.C;
 import br.nullexcept.mux.app.Activity;
 import br.nullexcept.mux.app.Looper;
+import br.nullexcept.mux.graphics.Point;
 import br.nullexcept.mux.input.CharEvent;
 import br.nullexcept.mux.hardware.GLES;
 import br.nullexcept.mux.input.KeyEvent;
@@ -11,23 +12,22 @@ import br.nullexcept.mux.input.MouseEvent;
 import br.nullexcept.mux.view.View;
 import br.nullexcept.mux.view.Window;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.opengles.GLES20;
 
 class GlfwWindow extends Window {
     private final long window;
     private final GlfwEventManager eventManager;
-    private int[][] sizes = new int[2][1];
-    private WindowContainer container;
-    private boolean destroyed;
-    private boolean visible;
-    private boolean initialized = false;
-    private final Activity activity;
+    private final Point windowSize = new Point();
 
-    public GlfwWindow(Activity context) {
-        activity = context;
+    private WindowContainer container;
+    private boolean destroyed = true;
+    private boolean visible;
+    private boolean running = false;
+    private WindowObserver observer;
+
+    public GlfwWindow() {
         window = GLFW.glfwCreateWindow(512, 512, "[title]", 0, C.GLFW_CONTEXT);
-        container = new WindowContainer(context, this);
         eventManager = new GlfwEventManager(this);
-        Looper.getMainLooper().postDelayed(this::update, 5);
     }
 
     long getAddress(){
@@ -36,59 +36,69 @@ class GlfwWindow extends Window {
 
     @Override
     public int getWidth() {
-        GLFW.glfwGetWindowSize(window, sizes[0], sizes[1]);
-        return sizes[0][0];
+        return windowSize.x;
     }
 
     @Override
     public int getHeight() {
-        GLFW.glfwGetWindowSize(window, sizes[0], sizes[1]);
-        return sizes[1][0];
+        return windowSize.y;
     }
 
-    private int ow = -1, oh = -1, frames = 0;
+    private void refresh() {
+        int[][] buffer = new int[2][1];
+        GLFW.glfwGetWindowSize(window, buffer[0], buffer[1]);
+        windowSize.set(buffer[0][0], buffer[1][0]);;
+    }
+
+    private int frames = 0;
     private long last = System.currentTimeMillis();
 
     private void update() {
+        if(destroyed)
+            return;
+        running = true;
+
         if (System.currentTimeMillis() - last >= 1000) {
             last = System.currentTimeMillis();
             frames = 0;
         }
         frames++;
         eventManager.runFrame();
+
         long time = System.currentTimeMillis();
         if (isVisible()) {
-            if (!initialized) {
-                activity.onCreate();
-                initialized = true;
+            int ow = windowSize.x;
+            int oh = windowSize.y;
+            refresh();
+            if (ow != windowSize.x || oh != windowSize.y) {
+                onResize(windowSize.x, windowSize.y);
             }
             container.drawFrame();
-            getWidth();
-            if (ow != sizes[0][0] || oh != sizes[1][0]) {
-                ow = sizes[0][0];
-                oh = sizes[1][0];
-                container.resize(ow, oh);
-            }
             GLFW.glfwSwapBuffers(C.GLFW_CONTEXT);
             GLFW.glfwMakeContextCurrent(window);
             GLES.glViewport(0, 0, ow, oh);
+            GLES.glClearColor(0,0,0,1);
+            GLES.glClear(GLES20.GL_COLOR_BUFFER_BIT| GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_STENCIL_BUFFER_BIT);
             GLTexel.drawTexture(0, 0, ow, oh, container.getCanvas().getFramebuffer().getTexture());
             GLFW.glfwSwapBuffers(window);
             GLFW.glfwMakeContextCurrent(C.GLFW_CONTEXT);
         }
         if (GLFW.glfwWindowShouldClose(window)) {
-            setVisible(false);
-            destroyed = true;
-            activity.onDestroy();
-            container.removeAllViews();
-            container.dispose();
+            destroy();
         }
         time = System.currentTimeMillis() - time;
         // Window with focus = 60fps | without focus = 24fps
         time = Math.max(0, (isFocused() ? 16 : 41) - time);
         if (!destroyed) {
             Looper.getMainLooper().postDelayed(this::update, time);
+        } else {
+            running = false;
         }
+    }
+
+    private void onResize(int width, int height) {
+        container.resize(width, height);
+        container.invalidateAll();
     }
 
     @Override
@@ -113,6 +123,11 @@ class GlfwWindow extends Window {
 
     @Override
     public void setContentView(View view) {
+        if (container != null){
+            container.dispose();
+            container= null;
+        }
+        container = new WindowContainer(view.getContext(), this);
         container.addChild(view);
     }
 
@@ -143,6 +158,42 @@ class GlfwWindow extends Window {
         } else {
             GLFW.glfwHideWindow(window);
         }
+    }
+
+    @Override
+    public void setWindowObserver(WindowObserver observer) {
+        this.observer = observer;
+    }
+
+    @Override
+    public void create() {
+        if(!destroyed){
+            throw new RuntimeException("Window already created");
+        }
+        destroyed = false;
+        windowSize.set(-1,-1);
+        observer.onCreated();
+        setVisible(true);
+        if (!running){
+            update();
+        }
+    }
+
+    public void destroy() {
+        setVisible(false);
+        destroyed = true;
+
+        if (observer != null){
+            observer.onDestroy();
+        }
+
+        if (container != null ){
+            container.dispose();
+            container.removeAllViews();
+        }
+
+        container = null;
+        observer = null;
     }
 
     public void onMouseMoved(MotionEvent event) {

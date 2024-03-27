@@ -18,7 +18,7 @@
     </style>
 
     <style name="Widget.Button">
-        <item name="background">@drawable/button</item>
+        <item name="background">@drawable/button_background</item>
         <item name="gravity">center</item>
         <item name="padding">8dp</item>
         <item name="textColor">?colorOnSurfaceVariant</item>

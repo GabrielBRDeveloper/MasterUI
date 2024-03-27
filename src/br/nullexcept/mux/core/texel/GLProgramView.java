@@ -16,6 +16,7 @@ class GLProgramView extends GLProgram {
                 "void main(){\n" +
                 "    vec4 pixel = texture2D(__texture__, xuv);\n" +
                 "    pixel.a *= alpha;\n" +
+                "    if(pixel.a < 0.001) discard; " +
                 "    gl_FragColor = pixel;\n" +
                 "}";
         vertex =

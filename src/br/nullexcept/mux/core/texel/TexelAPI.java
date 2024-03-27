@@ -27,7 +27,7 @@ public class TexelAPI {
         return pointers.get(model);
     }
 
-    public static Window createWindow(Activity context) {
-        return new GlfwWindow(context);
+    public static Window createWindow() {
+        return new GlfwWindow();
     }
 }

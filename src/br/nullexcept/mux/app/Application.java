@@ -31,7 +31,7 @@ public class Application {
         Looper loop = new Looper();
         Looper.mainLooper = loop;
         loop.initialize();
-        loop.postDelayed(()->boot(creator.get()), 0);
+        loop.postDelayed(()->boot(TexelAPI.createWindow(), creator.get()), 0);
         loop.post(Application::loop);
         loop.loop();
         TexelAPI.destroy();
@@ -49,9 +49,34 @@ public class Application {
         Looper.getMainLooper().post(Application::loop);
     }
 
-    private static void boot(Activity activity) {
-        Window window = TexelAPI.createWindow(activity);
+    static void boot(Window window, Activity activity) {
+        window.destroy();
+        window.setWindowObserver(new Window.WindowObserver() {
+            @Override
+            public void onCreated() {
+                activity.onCreate();
+            }
+
+            @Override
+            public void onVisibilityChanged(boolean visible) {
+                if (visible) {
+                    activity.onResume();
+                } else {
+                    activity.onPause();
+                }
+            }
+
+            @Override
+            public void onResize(int width, int height) {
+            }
+
+            @Override
+            public void onDestroy() {
+                activity.onDestroy();
+            }
+        });
         activity.mWindow = window;
+        window.create();
         window.setVisible(true);
     }
 
