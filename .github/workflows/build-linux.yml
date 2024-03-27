@@ -17,9 +17,9 @@ jobs:
       - name: Install dependencies
         run: sudo apt install openjdk-8-jdk ant -y
       - name: Chmod build.sh
-        run: chmod +x .github/workflows/build.sh
+        run: chmod +x .github/build.sh
       - name: Build project
-        run: .github/workflows/build.sh
+        run: .github/build.sh
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
