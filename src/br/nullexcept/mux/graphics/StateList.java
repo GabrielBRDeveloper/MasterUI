@@ -6,6 +6,7 @@ public class StateList {
     public static final State FOCUSED = State.FOCUSED;
     public static final State PRESSED = State.PRESSED;
     public static final State HOVERED = State.HOVERED;
+    public static final State CHECKED = State.CHECKED;
 
     private final HashMap<State, Boolean> states = new HashMap<>();
 
@@ -61,6 +62,7 @@ public class StateList {
     private enum State {
         FOCUSED,
         PRESSED,
-        HOVERED
+        HOVERED,
+        CHECKED
     }
 }

@@ -7,6 +7,7 @@ import org.lwjgl.opengles.GLES20;
 class CanvasTexel implements Canvas {
     private static long CURRENT_CANVAS = -1;
     private final GLFramebuffer framebuffer;
+    private float alpha = 1.0f;
     private final long id = (long) (Math.random() * Long.MAX_VALUE);
 
     public CanvasTexel(int width, int height) {
@@ -16,6 +17,7 @@ class CanvasTexel implements Canvas {
     public void begin() {
         if (CURRENT_CANVAS != id) {
             VgTexel.endFrame();
+            VgTexel.setAlpha(alpha);
             framebuffer.bind();
             VgTexel.beginFrame(framebuffer.getWidth(), framebuffer.getHeight());
         }
@@ -23,6 +25,7 @@ class CanvasTexel implements Canvas {
 
     @Override
     public void reset() {
+        this.alpha = 1.0f;
         GLES.glClearColor(0, 0, 0, 0);
         GLES.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT | GLES.GL_STENCIL_BUFFER_BIT);
     }
@@ -31,6 +34,12 @@ class CanvasTexel implements Canvas {
     public void end() {
         VgTexel.endFrame();
         framebuffer.unbind();
+    }
+
+
+    public void alpha(float alpha){
+        this.alpha *= alpha;
+        VgTexel.setAlpha(alpha);
     }
 
     @Override

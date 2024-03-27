@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<selector>
+    <item checked="true">
+        <layer-list>
+            <item>
+                <shape
+                    type="rounded"
+                    radius="12dp"
+                    color="?colorPrimary"/>
+            </item>
+            <item padding="1dp">
+                <shape
+                    type="rounded"
+                    radius="12dp"
+                    color="?colorPrimary"/>
+            </item>
+            <item padding="4dp" left="17dp">
+                <shape
+                    type="rounded"
+                    radius="999dp"
+                    color="?colorOnPrimary"/>
+            </item>
+        </layer-list>
+    </item>    <item>
+        <layer-list>
+            <item>
+                <shape
+                    type="rounded"
+                    radius="12dp"
+                    color="?colorOutline"/>
+            </item>
+            <item padding="1dp">
+                <shape
+                    type="rounded"
+                    radius="12dp"
+                    color="?colorSurfaceVariant"/>
+            </item>
+            <item padding="4dp" right="17dp">
+                <shape
+                    type="rounded"
+                    radius="999dp"
+                    color="?colorOutline"/>
+            </item>
+        </layer-list>
+    </item>
+</selector>

@@ -8,16 +8,19 @@
     <Button
         width="match_parent"
         height="wrap_content"
-        text="Basic xml code"/>
+        text="Example Button"/>
     <include layout="text"/>
     <EditText
         width="256dp"
         height="wrap_content"
         textColor="#FFF"
         padding="20dp"/>
+    <View width="10dp" height="10dp"/>
     <ImageView
         width="200dp"
         height="200dp"
         background="?colorPrimary"
         src="@drawable/panda"/>
+    <View width="10dp" height="10dp"/>
+    <Switch/>
 </LinearLayout>

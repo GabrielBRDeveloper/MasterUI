@@ -59,7 +59,7 @@ public final class Resources {
     }
 
     public AttributeList obtainStyled(XmlElement xml){
-        return new FallbackAttributes(xml, theme, context);
+        return new FallbackAttributes(xml, theme, this);
     }
 
     public AttributeList obtainStyled(String name){

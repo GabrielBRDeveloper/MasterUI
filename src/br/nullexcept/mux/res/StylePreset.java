@@ -30,6 +30,6 @@ class StylePreset {
         if (parent != null){
             fallback = resources.obtainStyle(parent).generate(fallback);
         }
-        return new FallbackAttributes(presets,fallback,resources.getContext());
+        return new FallbackAttributes(presets,fallback,resources);
     }
 }

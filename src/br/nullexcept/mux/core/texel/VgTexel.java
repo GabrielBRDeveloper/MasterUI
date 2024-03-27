@@ -15,6 +15,7 @@ class VgTexel {
     private static final NVGColor globalColor = NVGColor.create();
     private static final NVGPaint nvgPaint = NVGPaint.create();
     private static final NVGPaint tmpPaint = NVGPaint.create();
+    private static float alpha = 1.0f;
 
     public static void initialize(){
         try {
@@ -62,7 +63,7 @@ class VgTexel {
                 Color.red(color) / 255.0f,
                 Color.green(color) / 255.0f,
                 Color.blue(color) / 255.0f,
-                Color.alpha(color) / 255.0f,
+                (Color.alpha(color) / 255.0f) * alpha,
                 globalColor
         );
     }
@@ -125,6 +126,7 @@ class VgTexel {
         nvgResetTransform(globalContext);
         nvgReset(globalContext);
         nvgResetScissor(globalContext);
+        alpha = 1.0f;
     }
 
     public static void drawImage(TexelBitmap image, float destX, float destY, float destW, float destH, float srcX, float srcY, float srcW, float srcH) {
@@ -137,11 +139,15 @@ class VgTexel {
         float imgX = destX - ((srcX / image.getWidth()) * imgW);
         float imgY = destY - ((srcY / image.getHeight()) * imgH);
 
-        nvgImagePattern(globalContext, imgX, imgY, imgW, imgH, 0, image.id(), 1.0f, tmpPaint);
+        nvgImagePattern(globalContext, imgX, imgY, imgW, imgH, 0, image.id(), alpha, tmpPaint);
         nvgRect(globalContext, destX, destY, destW, destH);
         nvgFillPaint(globalContext, tmpPaint);
         nvgFill(globalContext);
         nvgFillPaint(globalContext, nvgPaint);
+    }
+
+    public static void setAlpha(float alpha) {
+        VgTexel.alpha = alpha;
     }
 
     public static void drawText(int x, int y, CharSequence line) {

@@ -30,7 +30,12 @@ public class Example extends Activity {
     }
 }
 ```
-# User requeriments
+
+# Previews
+
+![Example](https://i.imgur.com/oNq8URc.png)
+
+# User requirements
 
 - OpenGLES 2.0
 - Java 8
@@ -46,6 +51,7 @@ public class Example extends Activity {
 - 🟩 AbsoluteLayout
 - 🟩 LinearLayout
 - 🟩 Button
+- 🟩 Switch
 - 🟩 TextView
 - 🟨 EditText
 - 🟨 ImageView
@@ -57,6 +63,7 @@ public class Example extends Activity {
 - 🟨 Multi window
 - 🟩 Attributes
 - 🟩 Read drawables.
+- 🟩 Scalable UI.
 - 🟥 Clip based in path.
 
 ### General

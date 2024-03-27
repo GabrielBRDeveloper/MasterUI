@@ -224,6 +224,10 @@ public class View {
         changeDrawableState();
     }
 
+    protected StateList getStateList() {
+        return state;
+    }
+
     public final void requestFocus() {
         if (parent != null) {
             parent.requestFocus(this);

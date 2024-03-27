@@ -7,15 +7,13 @@
     <TextView
         width="wrap_content"
         height="wrap_content"
-        padding="10dp"
         gravity="center|top"
-        alpha="0.5"
-        text="That is a title"/>
+        text="Title"/>
     <TextView
         width="wrap_content"
         height="wrap_content"
-        padding="10dp"
         gravity="center|top"
         alpha="0.5"
+        textSize="13dp"
         text="That is a description"/>
 </LinearLayout>

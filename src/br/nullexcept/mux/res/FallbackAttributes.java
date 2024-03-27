@@ -8,20 +8,18 @@ import br.nullexcept.mux.lang.xml.XmlElement;
 import java.util.Map;
 
 class FallbackAttributes implements AttributeList {
-    private final Context context;
     private final Resources resources;
     private final Map<String, String> map;
     private final FallbackAttributes fallback;
 
-    public FallbackAttributes(Map<String, String> attrs, FallbackAttributes fallback, Context context){
-        this.context = context;
-        this.resources = context.getResources();
+    public FallbackAttributes(Map<String, String> attrs, FallbackAttributes fallback, Resources res){
+        this.resources = res;
         this.map = attrs;
         this.fallback = fallback;
     }
 
-    public FallbackAttributes(XmlElement xml, FallbackAttributes fallback, Context context){
-        this(xml.attrs(), fallback, context);
+    public FallbackAttributes(XmlElement xml, FallbackAttributes fallback, Resources res){
+        this(xml.attrs(), fallback, res);
     }
 
     private String resolve(String value){

@@ -28,6 +28,7 @@ class ViewRenderer {
         }
         canvas.begin();
         canvas.reset();
+        canvas.alpha(view.getAlpha());
         view.onDraw(canvas);
         if (view instanceof ViewGroup){
             canvas.end();

@@ -1,6 +1,7 @@
 package br.nullexcept.mux.res;
 
 import br.nullexcept.mux.app.Context;
+import br.nullexcept.mux.lang.Function;
 import br.nullexcept.mux.lang.ValuedFunction;
 import br.nullexcept.mux.lang.xml.XmlElement;
 import br.nullexcept.mux.view.View;
@@ -30,7 +31,8 @@ public class LayoutInflater {
         if ("include".equals(xml.name())){
             return inflate(xml.attr("layout"));
         }
-        FallbackAttributes agent = new FallbackAttributes(xml, (FallbackAttributes) context.getResources().obtainStyled("Widget."+xml.name()), context);
+        Resources res = context.getResources();
+        FallbackAttributes agent = new FallbackAttributes(xml, (FallbackAttributes) res.obtainStyled("Widget."+xml.name()), res);
         if (!registers.containsKey(xml.name())){
             throw new RuntimeException("Invalid view class "+xml.name()+" you need register class before use.");
         }
@@ -59,14 +61,25 @@ public class LayoutInflater {
         }
 
         ValuedFunction<String, Integer> parseParams = (key)->{
-            String value = attr.getRawValue(key);
-            switch (value){
-                case "match_parent":
-                    return ViewGroup.LayoutParams.MATCH_PARENT;
-                case "wrap_content":
-                    return ViewGroup.LayoutParams.WRAP_CONTENT;
+            int[] result = new int[]{Integer.MIN_VALUE};
+            attr.searchRaw(key, (value)->{
+                switch (value){
+                    case "match_parent":
+                        result[0] = ViewGroup.LayoutParams.MATCH_PARENT;
+                        break;
+                    case "wrap_content":
+                        result[0] = ViewGroup.LayoutParams.WRAP_CONTENT;
+                        break;
+                    default:
+                        attr.searchDimension(key, x -> {
+                            result[0] = Math.round(x);
+                        });
+                }
+            });
+            if (result[0] == Integer.MIN_VALUE) {
+                throw new IllegalArgumentException("Not found "+key+" params");
             }
-            return (int)attr.getDimension(key, 0.0f);
+            return result[0];
         };
 
         params.width = parseParams.run(width);
@@ -83,6 +96,7 @@ public class LayoutInflater {
         registerView("EditText", EditText::new);
         registerView("Button", Button::new);
         registerView("TextView", TextView::new);
+        registerView("Switch", Switch::new);
         registerView("View", View::new);
     }
 

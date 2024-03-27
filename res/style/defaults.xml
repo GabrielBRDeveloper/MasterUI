@@ -8,6 +8,7 @@
         <item name="colorSurfaceVariant">#404040</item>
         <item name="colorSurface">#383838</item>
         <item name="colorOutline">#2B2B2B</item>
+        <item name="textSize">14dp</item>
     </style>
 
     <style name="Widget.EditText">
@@ -23,6 +24,12 @@
         <item name="padding">8dp</item>
         <item name="textColor">?colorOnSurfaceVariant</item>
         <item name="pointerIcon">hand</item>
+    </style>
+
+    <style name="Widget.Switch">
+        <item name="width">38dp</item>
+        <item name="height">26dp</item>
+        <item name="background">@drawable/switch_background</item>
     </style>
 
     <style name="Widget.ImageView">
