@@ -127,8 +127,8 @@ public class ViewGroup extends View {
     protected int calculateWidth() {
         int width = 0;
         for (View child: children){
-            Point location = getChildLocation(child);
-            width = Math.max(location.x+child.getMeasuredWidth(), width);
+            int x = Math.max(0, getChildLocation(child).x - getPaddingLeft());
+            width = Math.max(x+child.getMeasuredWidth(), width);
         }
         return width + getPaddingLeft() + getPaddingRight();
     }
@@ -137,8 +137,8 @@ public class ViewGroup extends View {
     protected int calculateHeight() {
         int height = 0;
         for (View child: children){
-            Point location = getChildLocation(child);
-            height = Math.max(location.y+child.getMeasuredHeight(), height);
+            int y = Math.max(0, getChildLocation(child).y - getPaddingTop());
+            height = Math.max(y+child.getMeasuredHeight(), height);
         }
         return height + getPaddingTop() + getPaddingBottom();
     }

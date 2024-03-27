@@ -23,5 +23,5 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: Linux
+          name: MasterUI-Linux
           path: ./out/artifacts/MasterUI/MasterUI.jar
