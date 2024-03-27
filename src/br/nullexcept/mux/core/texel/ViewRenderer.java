@@ -1,6 +1,7 @@
 package br.nullexcept.mux.core.texel;
 
 import br.nullexcept.mux.graphics.Rect;
+import br.nullexcept.mux.lang.Log;
 import br.nullexcept.mux.view.View;
 import br.nullexcept.mux.view.ViewGroup;
 
@@ -16,6 +17,11 @@ class ViewRenderer {
     }
 
     public void drawInternal(CanvasTexel canvas, View view){
+
+        if (!view.hasFlag(FLAG_REQUIRES_DRAW)) {
+            return;
+        }
+
         Rect bounds = view.getBounds();
         if (bounds.width() != canvas.getWidth() || bounds.height() != canvas.getHeight()) {
             canvas.getFramebuffer().resize(bounds.width(), bounds.height());
@@ -29,9 +35,7 @@ class ViewRenderer {
             int drawables = 0;
             for (View child: children){
                 if (child.isVisible()) {
-                    if (child.hasFlag(FLAG_REQUIRES_DRAW)) {
-                        this.draw(child);
-                    }
+                    this.draw(child);
                     drawables++;
                 }
             }

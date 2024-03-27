@@ -4,6 +4,8 @@ import br.nullexcept.mux.graphics.Point;
 import br.nullexcept.mux.input.*;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCursorPosCallbackI;
+import org.lwjgl.glfw.GLFWImage;
+import org.lwjgl.glfw.GLFWKeyCallback;
 
 import java.util.HashMap;
 
@@ -35,6 +37,7 @@ class GlfwEventManager {
         this.window = window;
 
         long address = window.getAddress();
+
         GLFW.glfwSetCharCallback(address, (win, charCode) -> window.onCharEvent(new CharEvent((char) charCode,System.nanoTime(),dummyKeyboard)));
         GLFW.glfwSetKeyCallback(address, (win, i, i1, i2, i3) -> processKeyEvent(i,i1,i2, i3));
         GLFW.glfwSetMouseButtonCallback(address, (win, button, action, modes) -> processMouseEvent(button, action, modes));
@@ -58,6 +61,7 @@ class GlfwEventManager {
         }
 
         GlfwKeyEvent keyEvent = downKeyEvents.get(keycode);
+        keyEvent.modifiers = modifiers;
         if (action == 0){
             downKeyEvents.remove(keycode);
         }
@@ -103,6 +107,7 @@ class GlfwEventManager {
 
     private class GlfwKeyEvent extends KeyEvent {
         private final int keyCode;
+        public int modifiers = 0;
         private final long downTime = System.nanoTime();
 
         public GlfwKeyEvent(int keycode) {
@@ -117,6 +122,11 @@ class GlfwEventManager {
         @Override
         public int getAction() {
             return downKeyEvents.containsKey(keyCode) ? KeyEvent.ACTION_DOWN : KeyEvent.ACTION_UP;
+        }
+
+        @Override
+        public int getModifiers() {
+            return modifiers;
         }
 
         @Override

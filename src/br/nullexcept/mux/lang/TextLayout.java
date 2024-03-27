@@ -23,7 +23,7 @@ public class TextLayout implements CharSequence {
             return;
         }
 
-        while ((index = builder.indexOf("\n", index + 1)) >= 0) {
+        while ((index = builder.indexOf("\n", ++index)) >= 0) {
             lines[lineCount][0] = start;
             lines[lineCount][1] = index;
             lineCount++;

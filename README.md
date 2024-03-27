@@ -68,8 +68,14 @@ public class Example extends Activity {
 
 ### Events
 
-- 🟨 Keyboard
+- 🟩 Keyboard
 - 🟩 Mouse
 - 🟥 Joystick
 
 Full project status: [WIP]
+
+### Licenses | About
+
+LWJGL: https://github.com/LWJGL/lwjgl3/blob/master/LICENSE.md \
+NanoVG: https://github.com/memononen/nanovg/blob/master/LICENSE.txt \
+OpenGLES: https://www.khronos.org/opengles/

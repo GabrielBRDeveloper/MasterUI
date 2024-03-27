@@ -1,9 +1,6 @@
 package br.nullexcept.mux.res;
 
-import br.nullexcept.mux.graphics.BitmapFactory;
-import br.nullexcept.mux.graphics.Color;
-import br.nullexcept.mux.graphics.Drawable;
-import br.nullexcept.mux.graphics.StateList;
+import br.nullexcept.mux.graphics.*;
 import br.nullexcept.mux.graphics.drawable.*;
 import br.nullexcept.mux.graphics.shape.OvalShape;
 import br.nullexcept.mux.graphics.shape.RectShape;
@@ -58,11 +55,23 @@ class Parser {
                 LayerListDrawable drawable = new LayerListDrawable();
                 for (int i = 0; i < xml.childCount(); i++){
                     XmlElement child = xml.childAt(i);
+                    Drawable childDrawable;
+                    Rect padding = new Rect();
                     if (child.has("src")){
-                        drawable.addLayer(parseDrawable(res, child.attr("src")));
+                        childDrawable = parseDrawable(res, child.attr("src"));
                     } else {
-                        drawable.addLayer(inflateXmlDrawable(res, child.childAt(0)));
+                        childDrawable = inflateXmlDrawable(res, child.childAt(0));
                     }
+                    attrs = res.obtainStyled(child);
+                    attrs.searchDimension(AttrList.padding, v -> {
+                        int x = Math.round(v);
+                        padding.set(x,x,x,x);
+                    });
+                    attrs.searchDimension("left", v -> padding.left = Math.round(v));
+                    attrs.searchDimension("right", v -> padding.right = Math.round(v));
+                    attrs.searchDimension("bottom", v -> padding.bottom = Math.round(v));
+                    attrs.searchDimension("top", v -> padding.top = Math.round(v));
+                    drawable.addLayer(childDrawable, padding);
                 }
                 return drawable;
             }

@@ -57,11 +57,6 @@ public class LinearLayout extends ViewGroup {
         return point;
     }
 
-    @Override
-    public void measure() {
-        super.measure();
-    }
-
     public void setOrientation(int orientation) {
         this.orientation = orientation;
         requestLayout();

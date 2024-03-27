@@ -36,6 +36,15 @@ public class ViewGroup extends View {
         }
     }
 
+    private void measureChildren(){
+        for (View child : children) {
+            child.measure();
+        }
+        for (View child : children) {
+            child.measureBounds();
+        }
+    }
+
     @Override
     public void measure() {
         LayoutParams params = getLayoutParams();
@@ -50,6 +59,7 @@ public class ViewGroup extends View {
         Point location = parent.getChildLocation(this);
         int width, height;
         if (params.hasWrap()) {
+            measureChildren();
             if (params.width == LayoutParams.WRAP_CONTENT) {
                 width = calculateWidth();
             } else {
@@ -66,15 +76,12 @@ public class ViewGroup extends View {
             width = Math.max(0, width);
             height = Math.max(0, height);
         }
-        for (View child : children) {
-            child.measure();
-        }
-        for (View child : children) {
-            child.measureBounds();
-        }
+
+        measureChildren();
         if (width != ow || height != oh) {
             onMeasure(width, height);
             measure();
+            invalidate();
         }
     }
 

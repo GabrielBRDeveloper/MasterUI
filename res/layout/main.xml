@@ -13,10 +13,11 @@
     <EditText
         width="256dp"
         height="wrap_content"
+        textColor="#FFF"
         padding="20dp"/>
     <ImageView
         width="200dp"
         height="200dp"
-        background="?primaryColor"
+        background="?colorPrimary"
         src="@drawable/panda"/>
 </LinearLayout>

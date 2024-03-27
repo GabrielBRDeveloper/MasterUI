@@ -2,20 +2,26 @@
 <style>
     <style name="Base.Theme">
         <item name="colorOnPrimary">#FFFFFF</item>
-        <item name="primaryColor">#1F9EDE</item>
-        <item name="colorOnSurfaceSecondary">#FFFFFF</item>
-        <item name="colorSurfaceSecondary">#404040</item>
+        <item name="colorPrimary">#1F9EDE</item>
+        <item name="colorOnSurface">#FFF</item>
+        <item name="colorOnSurfaceVariant">#FFFFFF</item>
+        <item name="colorSurfaceVariant">#404040</item>
+        <item name="colorSurface">#383838</item>
+        <item name="colorOutline">#2B2B2B</item>
     </style>
 
     <style name="Widget.EditText">
         <item name="pointerIcon">textSelection</item>
+        <item name="textColor">?colorOnSurface</item>
+        <item name="selectionColor">?colorPrimary</item>
+        <item name="background">@drawable/textarea_background</item>
     </style>
 
     <style name="Widget.Button">
         <item name="background">@drawable/button</item>
         <item name="gravity">center</item>
         <item name="padding">8dp</item>
-        <item name="textColor">?colorOnSurfaceSecondary</item>
+        <item name="textColor">?colorOnSurfaceVariant</item>
         <item name="pointerIcon">hand</item>
     </style>
 

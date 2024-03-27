@@ -1,7 +1,6 @@
 package br.nullexcept.mux.widget;
 
 import br.nullexcept.mux.app.Context;
-import br.nullexcept.mux.input.MotionEvent;
 import br.nullexcept.mux.res.AttributeList;
 
 public class Button extends TextView {
@@ -15,15 +14,5 @@ public class Button extends TextView {
 
     {
         setOnClickListener(v -> {});
-    }
-
-    @Override
-    protected void onMouseMoved(MotionEvent event) {
-        super.onMouseMoved(event);
-    }
-
-    @Override
-    protected void onInflate(AttributeList attr) {
-        super.onInflate(attr);
     }
 }

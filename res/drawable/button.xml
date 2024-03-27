@@ -1,21 +1,52 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <selector>
+
     <item pressed="true">
-        <shape
-            type="rounded"
-            radius="4dp"
-            color="#000"/>
+        <layer-list>
+            <item>
+                <shape
+                    type="rounded"
+                    radius="5dp"
+                    color="?colorSurfaceVariant"/>
+            </item>
+            <item padding="1dp">
+                <shape
+                    type="rounded"
+                    radius="5dp"
+                    color="?colorOutline"/>
+            </item>
+        </layer-list>
     </item>
     <item hovered="true">
-        <shape
-            type="rounded"
-            radius="4dp"
-            color="?primaryColor"/>
+        <layer-list>
+            <item>
+                <shape
+                        type="rounded"
+                        radius="5dp"
+                        color="?colorOutline"/>
+            </item>
+            <item padding="1dp">
+                <shape
+                        type="rounded"
+                        radius="5dp"
+                        color="?colorSurfaceVariant"/>
+            </item>
+        </layer-list>
     </item>
     <item>
-        <shape
-            type="rounded"
-            radius="4dp"
-            color="?colorSurfaceSecondary"/>
+        <layer-list>
+            <item>
+                <shape
+                        type="rounded"
+                        radius="5dp"
+                        color="?colorOutline"/>
+            </item>
+            <item padding="1dp">
+                <shape
+                        type="rounded"
+                        radius="5dp"
+                        color="?colorSurface"/>
+            </item>
+        </layer-list>
     </item>
 </selector>

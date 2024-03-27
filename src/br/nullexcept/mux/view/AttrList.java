@@ -27,4 +27,5 @@ public class AttrList {
     public static final String radius = "radius";
     public static final String mode = "mode";
     public static final String src = "src";
+    public static final String selectionColor = "selectionColor";
 }

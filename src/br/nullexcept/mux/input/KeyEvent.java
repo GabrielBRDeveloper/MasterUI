@@ -125,9 +125,33 @@ public abstract class KeyEvent extends InputEvent {
     public static final int KEY_MENU = 348;
     public static final int KEY_LAST = 348;
 
+    public static final int MOD_SHIFT = 1;
+    public static final int MOD_CONTROL = 2;
+    public static final int MOD_ALT = 4;
+    public static final int MOD_SUPER = 8;
+    public static final int MOD_CAPS_LOCK = 16;
+    public static final int MOD_NUM_LOCK = 32;
+
     public static int ACTION_DOWN = 0;
     public static int ACTION_UP = 1;
 
     public abstract int getKeyCode();
     public abstract int getAction();
+    public abstract int getModifiers();
+
+    public boolean hasCtrl(){
+        return (getModifiers() & MOD_CONTROL) != 0;
+    }
+
+    public boolean hasShift(){
+        return (getModifiers() & MOD_SHIFT) != 0;
+    }
+
+    public boolean hasSuper(){
+        return (getModifiers() & MOD_SUPER) != 0;
+    }
+
+    public boolean hasAlt() {
+        return (getModifiers() & MOD_ALT) != 0;
+    }
 }

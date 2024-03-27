@@ -48,8 +48,8 @@ class FallbackAttributes implements AttributeList {
 
     @Override
     public void searchColor(String name, Function<Integer> apply) {
-        int color = getColor(name, -1);
-        if (color != -1){
+        int color = getColor(name, Integer.MIN_VALUE);
+        if (color != Integer.MIN_VALUE){
             apply.call(color);
         }
     }

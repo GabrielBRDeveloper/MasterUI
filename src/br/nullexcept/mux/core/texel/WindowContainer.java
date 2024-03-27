@@ -121,10 +121,7 @@ public class WindowContainer extends ViewGroup {
             invalidateAll();
             lastRefresh = System.currentTimeMillis();
         }
-        invalidateAll();
-        if (hasFlag(FLAG_REQUIRES_DRAW)) {
-            drawer.drawInternal(rootCanvas, this);
-        }
+        drawer.drawInternal(rootCanvas, this);
     }
 
     @Override

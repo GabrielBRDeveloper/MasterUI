@@ -4,10 +4,16 @@
     height="wrap_content"
     padding="10dp">
     <TextView
-            width="match_parent"
-            height="wrap_content"
-            padding="10dp"
-            gravity="center|top"
-            background="#000"
-            text="Hello include"/>
+        width="wrap_content"
+        height="wrap_content"
+        padding="10dp"
+        gravity="center|top"
+        text="That is a title"/>
+    <TextView
+        width="wrap_content"
+        height="wrap_content"
+        padding="10dp"
+        gravity="center|top"
+        alpha="0.2"
+        text="That is a description"/>
 </LinearLayout>

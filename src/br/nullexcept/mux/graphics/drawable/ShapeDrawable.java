@@ -3,6 +3,7 @@ package br.nullexcept.mux.graphics.drawable;
 import br.nullexcept.mux.graphics.Canvas;
 import br.nullexcept.mux.graphics.Drawable;
 import br.nullexcept.mux.graphics.Paint;
+import br.nullexcept.mux.graphics.Rect;
 import br.nullexcept.mux.graphics.shape.Shape;
 
 public class ShapeDrawable extends Drawable {
@@ -31,9 +32,12 @@ public class ShapeDrawable extends Drawable {
 
     @Override
     public void draw(Canvas canvas) {
+        Rect bounds = getBounds();
         if (shape != null){
-            shape.resize(getBounds().width(), getBounds().height());
+            canvas.translate(bounds.left, bounds.top);
+            shape.resize(bounds.width(), bounds.height());
             shape.draw(canvas,paint);
+            canvas.translate(-bounds.left, -bounds.top);
         }
     }
 }
