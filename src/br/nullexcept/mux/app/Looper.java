@@ -1,6 +1,6 @@
 package br.nullexcept.mux.app;
 
-import br.nullexcept.mux.lang.Log;
+import br.nullexcept.mux.utils.Log;
 
 import java.util.HashMap;
 

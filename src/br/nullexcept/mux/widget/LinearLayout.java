@@ -16,17 +16,13 @@ public class LinearLayout extends ViewGroup {
     private final Rect rect = new Rect();
 
     public LinearLayout(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public LinearLayout(Context context, AttributeList attrs) {
         super(context, attrs);
-    }
-
-    @Override
-    protected void onInflate(AttributeList attr) {
-        super.onInflate(attr);
-        attr.searchRaw(AttrList.orientation, value -> {
+        attrs = initialAttributes();
+        attrs.searchRaw(AttrList.orientation, value -> {
             if ("horizontal".equals(value)){
                 setOrientation(ORIENTATION_HORIZONTAL);
             } else {
@@ -34,6 +30,7 @@ public class LinearLayout extends ViewGroup {
             }
         });
     }
+
 
     @Override
     public void addChild(View view) {

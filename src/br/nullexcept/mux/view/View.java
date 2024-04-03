@@ -4,8 +4,8 @@ import br.nullexcept.mux.app.Context;
 import br.nullexcept.mux.app.Looper;
 import br.nullexcept.mux.graphics.*;
 import br.nullexcept.mux.input.*;
-import br.nullexcept.mux.lang.Log;
 import br.nullexcept.mux.res.AttributeList;
+import br.nullexcept.mux.utils.Log;
 
 import java.util.Objects;
 
@@ -40,9 +40,10 @@ public class View {
     private OnClickListener clickListener;
     private PointerIcon pointerIcon = new PointerIcon(PointerIcon.Model.ARROW);
     private final Context context;
+    private AttributeList attributes;
 
     public View(Context context) {
-        this(context, null);
+        this(context,null);
     }
 
     public View(Context context, AttributeList attrs) {
@@ -50,26 +51,22 @@ public class View {
         if (attrs == null){
             attrs = context.getResources().obtainStyled("Widget."+getClass().getSimpleName());
         }
-        final AttributeList nAttr = attrs;
-        Looper.getMainLooper().post(() -> onInflate(nAttr));
-    }
 
-    protected void onInflate(AttributeList attr) {
         { // SETUP PADDING
-            attr.searchDimension(AttrList.padding, value -> setPadding(value.intValue(), value.intValue(), value.intValue(), value.intValue()));
-            attr.searchDimension(AttrList.paddingLeft, value -> padding.left = value.intValue());
-            attr.searchDimension(AttrList.paddingTop, value -> padding.top = value.intValue());
-            attr.searchDimension(AttrList.paddingRight, value -> padding.right = value.intValue());
-            attr.searchDimension(AttrList.paddingBottom, value -> padding.bottom = value.intValue());
+            attrs.searchDimension(AttrList.padding, value -> setPadding(value.intValue(), value.intValue(), value.intValue(), value.intValue()));
+            attrs.searchDimension(AttrList.paddingLeft, value -> padding.left = value.intValue());
+            attrs.searchDimension(AttrList.paddingTop, value -> padding.top = value.intValue());
+            attrs.searchDimension(AttrList.paddingRight, value -> padding.right = value.intValue());
+            attrs.searchDimension(AttrList.paddingBottom, value -> padding.bottom = value.intValue());
             setPadding(padding.left, padding.top, padding.right, padding.bottom);
         }
-        attr.searchFloat(AttrList.scale, value -> setScale(value));
-        attr.searchFloat(AttrList.rotation, value -> setRotation(value));
-        attr.searchText(AttrList.tag, (value) -> setTag(String.valueOf(tag)));
-        attr.searchFloat(AttrList.alpha, this::setAlpha);
-        attr.searchDrawable(AttrList.background, this::setBackground);
-        attr.searchRaw(AttrList.pointerIcon, value -> setPointerIcon(new PointerIcon(PointerIcon.Model.fromName(value))));
-        attr.searchRaw(AttrList.gravity, value -> {
+        attrs.searchFloat(AttrList.scale, value -> setScale(value));
+        attrs.searchFloat(AttrList.rotation, value -> setRotation(value));
+        attrs.searchRaw(AttrList.tag, (value) -> setTag(String.valueOf(value)));
+        attrs.searchFloat(AttrList.alpha, this::setAlpha);
+        attrs.searchDrawable(AttrList.background, this::setBackground);
+        attrs.searchRaw(AttrList.pointerIcon, value -> setPointerIcon(new PointerIcon(PointerIcon.Model.fromName(value))));
+        attrs.searchRaw(AttrList.gravity, value -> {
             String[] types = value.split("\\|");
             int gravity = 0;
             for (String type : types) {
@@ -93,6 +90,14 @@ public class View {
             }
             setGravity(gravity);
         });
+
+
+        attributes = attrs;
+        Looper.getMainLooper().post(()-> attributes = null);
+    }
+
+    protected AttributeList initialAttributes() {
+        return attributes;
     }
 
     public final Context getContext() {
@@ -204,6 +209,10 @@ public class View {
 
     public ViewGroup getParent() {
         return parent;
+    }
+
+    public boolean onCreateContextMenu(Menu menu){
+        return false;
     }
 
     public void setOnClickListener(OnClickListener clickListener) {
@@ -433,7 +442,7 @@ public class View {
     public boolean isVisible() {
         boolean basic = parent != null && parent.isVisible() &&
                 bounds.width() > 0 && bounds.height() > 0;
-        if (!basic) {
+        if (basic) {
             basic &= bounds.left < parent.getMeasuredWidth();
             basic &= bounds.top < parent.getMeasuredHeight();
         }
@@ -505,6 +514,10 @@ public class View {
                     break;
             }
         }
+    }
+
+    public Object getTag() {
+        return tag;
     }
 
     public interface OnClickListener {

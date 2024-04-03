@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<shape
-    color="?colorSurfaceVariant"
-    type="rounded"
-    radius="5dp"/>
+<layer-list>
+  <item>
+    <shape
+        color="?colorOutline"
+        type="rounded"
+        radius="5dp"/>
+  </item>
+  <item padding="1dp">
+    <shape
+        color="?colorSurface"
+        type="rounded"
+        radius="5dp"/>
+  </item>
+</layer-list>

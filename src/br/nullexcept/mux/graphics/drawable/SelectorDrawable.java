@@ -1,7 +1,6 @@
 package br.nullexcept.mux.graphics.drawable;
 
 import br.nullexcept.mux.graphics.*;
-import br.nullexcept.mux.lang.Log;
 
 import java.util.ArrayList;
 

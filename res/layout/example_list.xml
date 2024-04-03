@@ -1,48 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <LinearLayout
     width="match_parent"
-    height="wrap_content">
-
-    <include layout="text"/>
-    <include layout="text"/>
-    <include layout="text"/>
-    <include layout="text"/>
-    <include layout="text"/>
-    <include layout="text"/>
-    <include layout="text"/>
-    <include layout="text"/>
-    <include layout="text"/>
-    <include layout="text"/>
-    <include layout="text"/>
-    <include layout="text"/>
-    <include layout="text"/>
-    <include layout="text"/>
-    <include layout="text"/>
-    <include layout="text"/>
-    <include layout="text"/>
-    <include layout="text"/>
-    <include layout="text"/>
-    <include layout="text"/>
-    <include layout="text"/>
-    <include layout="text"/>
-    <include layout="text"/>
-    <include layout="text"/>
-    <include layout="text"/>
-    <include layout="text"/>
-    <include layout="text"/>
-    <include layout="text"/>
-    <include layout="text"/>
-    <include layout="text"/>
-    <include layout="text"/>
-    <include layout="text"/>
-    <include layout="text"/>
-    <include layout="text"/>
-    <include layout="text"/>
-    <include layout="text"/>
-    <include layout="text"/>
-    <include layout="text"/>
-    <include layout="text"/>
-    <include layout="text"/>
-    <include layout="text"/>
-    <include layout="text"/>
+    height="wrap_content"
+    padding="20dp">
+    <TextView
+        width="wrap_content"
+        height="wrap_content"
+        textSize="24dp"
+        text="MasterUI"/>
 </LinearLayout>

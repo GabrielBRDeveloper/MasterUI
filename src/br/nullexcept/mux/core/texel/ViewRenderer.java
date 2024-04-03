@@ -1,7 +1,6 @@
 package br.nullexcept.mux.core.texel;
 
 import br.nullexcept.mux.graphics.Rect;
-import br.nullexcept.mux.lang.Log;
 import br.nullexcept.mux.view.View;
 import br.nullexcept.mux.view.ViewGroup;
 

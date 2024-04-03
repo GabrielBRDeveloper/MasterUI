@@ -5,11 +5,9 @@ import br.nullexcept.mux.graphics.drawable.*;
 import br.nullexcept.mux.graphics.shape.OvalShape;
 import br.nullexcept.mux.graphics.shape.RectShape;
 import br.nullexcept.mux.graphics.shape.RoundedShape;
-import br.nullexcept.mux.graphics.shape.Shape;
-import br.nullexcept.mux.lang.Log;
+import br.nullexcept.mux.utils.Log;
 import br.nullexcept.mux.lang.xml.XmlElement;
 import br.nullexcept.mux.view.AttrList;
-import org.w3c.dom.Attr;
 
 import java.util.HashMap;
 

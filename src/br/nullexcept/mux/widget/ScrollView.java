@@ -27,17 +27,13 @@ public class ScrollView extends ViewGroup {
 
     public ScrollView(Context context, AttributeList attrs) {
         super(context, attrs);
+        attrs = initialAttributes();
+        attrs.searchDrawable(AttrList.scrollbar, this::setScrollbarDrawable);
     }
 
     {
         container = new ScrollContainer(getContext());
         super.addChild(container);
-    }
-
-    @Override
-    protected void onInflate(AttributeList attr) {
-        super.onInflate(attr);
-        attr.searchDrawable(AttrList.scrollbar, this::setScrollbarDrawable);
     }
 
 
@@ -49,7 +45,8 @@ public class ScrollView extends ViewGroup {
     @Override
     public void onDrawForeground(Canvas canvas) {
         super.onDrawForeground(canvas);
-        if (space.y > 0){
+        if (space.y > 1){
+            System.err.println(space.y);
             float vh = getHeight() - getPaddingTop() - getPaddingBottom();
 
             float sh = vh / space.y;
@@ -115,6 +112,8 @@ public class ScrollView extends ViewGroup {
             return;
         }
 
+        measure();
+
         scroll[0] = Math.max(0.0, Math.min(1.0, scroll[0]));
         scroll[1] = Math.max(0.0, Math.min(1.0, scroll[1]));
 
@@ -126,6 +125,9 @@ public class ScrollView extends ViewGroup {
         int mh = getMeasuredHeight() - ch;
         int mw = getMeasuredWidth() - cw;
 
+        mh = Math.min(mh,0);
+        mw = Math.min(mw,0);
+
         int sx = (int) Math.round(mw * scroll[0]);
         int sy = (int) Math.round(mh * scroll[1]);
 
@@ -135,9 +137,9 @@ public class ScrollView extends ViewGroup {
         space.set(Math.abs(mw), Math.abs(mh));
 
         pixelScroll.set(sx, sy);
-        measure();
         container.invalidate();
         invalidate();
+        post(this::measureContent, 10);
     }
 
     @Override
@@ -172,6 +174,11 @@ public class ScrollView extends ViewGroup {
 
         {
             setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        }
+
+        @Override
+        public void measure() {
+            super.measure();
         }
 
         @Override

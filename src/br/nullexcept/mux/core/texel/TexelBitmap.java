@@ -3,7 +3,7 @@ package br.nullexcept.mux.core.texel;
 import br.nullexcept.mux.C;
 import br.nullexcept.mux.graphics.Bitmap;
 import br.nullexcept.mux.hardware.GLES;
-import br.nullexcept.mux.lang.Log;
+import br.nullexcept.mux.utils.Log;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.nanovg.NanoVGGLES2;
 

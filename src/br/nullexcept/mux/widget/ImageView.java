@@ -15,23 +15,19 @@ public class ImageView extends View {
     private final Rect rect = new Rect();
 
     public ImageView(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public ImageView(Context context, AttributeList attrs) {
         super(context, attrs);
+        attrs = initialAttributes();
+        attrs.searchDrawable(AttrList.src, this::setImageDrawable);
     }
 
     public void setImageDrawable(Drawable image) {
         this.image = image;
         measure();
         invalidate();
-    }
-
-    @Override
-    protected void onInflate(AttributeList attr) {
-        super.onInflate(attr);
-        attr.searchDrawable(AttrList.src, this::setImageDrawable);
     }
 
     @Override

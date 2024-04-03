@@ -2,38 +2,38 @@
 <LinearLayout
     width="match_parent"
     height="match_parent"
-    background="#383838"
+    background="?colorSurface"
     orientation="horizontal">
 
-    <ScrollView
-            width="300dp"
-            height="match_parent"
-            background="?colorSurfaceVariant">
-        <include layout="example_list"/>
-    </ScrollView>
+  <ScrollView
+      width="300dp"
+      height="match_parent"
+      background="?colorSurface">
+    <include layout="example_list"/>
+  </ScrollView>
 
-    <LinearLayout
+  <LinearLayout
+      width="match_parent"
+      height="match_parent"
+      padding="20dp">
+
+    <Button
         width="match_parent"
-        height="match_parent"
-        padding="20dp">
-
-        <Button
-                width="match_parent"
-                height="wrap_content"
-                text="Example Button"/>
-        <View width="10dp" height="10dp"/>
-        <EditText
-                width="256dp"
-                height="wrap_content"
-                textColor="#FFF"
-                padding="20dp"/>
-        <View width="10dp" height="10dp"/>
-        <ImageView
-                width="200dp"
-                height="200dp"
-                background="?colorPrimary"
-                src="@drawable/panda"/>
-        <View width="10dp" height="10dp"/>
-        <Switch/>
-    </LinearLayout>
+        height="wrap_content"
+        text="Example Button"/>
+    <View width="10dp" height="10dp"/>
+    <EditText
+        width="256dp"
+        height="wrap_content"
+        textColor="#FFF"
+        padding="20dp"/>
+    <View width="10dp" height="10dp"/>
+    <ImageView
+        width="200dp"
+        height="200dp"
+        background="?colorPrimary"
+        src="@drawable/panda"/>
+    <View width="10dp" height="10dp"/>
+    <Switch/>
+  </LinearLayout>
 </LinearLayout>

@@ -17,19 +17,15 @@ public class TextView extends View {
     private String[] lines = new String[0];
 
     public TextView(Context context) {
-        super(context);
-    }
-
-    @Override
-    protected void onInflate(AttributeList attr) {
-        super.onInflate(attr);
-        attr.searchText(AttrList.text, this::setText);
-        attr.searchColor(AttrList.textColor, this::setTextColor);
-        attr.searchDimension(AttrList.textSize, this::setTextSize);
+        this(context, null);
     }
 
     public TextView(Context context, AttributeList attrs) {
         super(context, attrs);
+        attrs = initialAttributes();
+        attrs.searchText(AttrList.text, this::setText);
+        attrs.searchColor(AttrList.textColor, this::setTextColor);
+        attrs.searchDimension(AttrList.textSize, this::setTextSize);
     }
 
     @Override

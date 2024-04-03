@@ -62,6 +62,7 @@ public class Example extends Activity {
 - 🟨 XML UI
 - 🟨 Themes
 - 🟨 Multi window
+- 🟨 Menus
 - 🟩 Attributes
 - 🟩 Read drawables.
 - 🟩 Scalable UI.

@@ -1,4 +1,4 @@
-package br.nullexcept.mux.lang;
+package br.nullexcept.mux.utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;

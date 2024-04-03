@@ -12,21 +12,17 @@ public class Switch extends View {
     private Function2<View, Boolean> checkedListener;
 
     public Switch(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public Switch(Context context, AttributeList attrs) {
         super(context, attrs);
+        attrs = initialAttributes();
+        attrs.searchBoolean(AttrList.checked, this::setChecked);
     }
 
     {
         setOnClickListener( v -> setChecked(!checked));
-    }
-
-    @Override
-    protected void onInflate(AttributeList attr) {
-        super.onInflate(attr);
-        attr.searchBoolean(AttrList.checked, this::setChecked);
     }
 
     public void setChecked(boolean checked){

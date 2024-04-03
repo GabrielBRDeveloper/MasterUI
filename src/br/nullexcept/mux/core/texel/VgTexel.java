@@ -3,8 +3,8 @@ package br.nullexcept.mux.core.texel;
 import br.nullexcept.mux.C;
 import br.nullexcept.mux.graphics.Color;
 import br.nullexcept.mux.graphics.Paint;
-import br.nullexcept.mux.graphics.fonts.TypefaceFactory;
-import br.nullexcept.mux.lang.Log;
+import br.nullexcept.mux.graphics.Path;
+import br.nullexcept.mux.utils.Log;
 import org.lwjgl.nanovg.*;
 
 import static org.lwjgl.nanovg.NanoVG.*;
@@ -85,6 +85,25 @@ class VgTexel {
                 nvgStroke(globalContext);
                 break;
         }
+    }
+
+    public static void drawPath(Path path) {
+        nvgBeginPath(globalContext);
+        for (int i = 0; i < path.length(); i++) {
+            Path.Segment seg = path.segment(i);
+            nvgPathWinding(globalContext, NVG_HOLE);
+            nvgMoveTo(globalContext, seg.beginX(), seg.beginY());
+            for (int x = 0; x < seg.partCount(); x++) {
+                float[] curves = seg.part(x);
+                nvgBezierTo(globalContext, curves[0], curves[1], curves[2], curves[3], curves[4], curves[5]);
+            }
+            if (seg.closed()) {
+                nvgLineTo(globalContext,seg.beginX(), seg.beginY());
+            }
+        }
+        nvgClosePath(globalContext);
+        fill();
+        nvgPathWinding(globalContext, NVG_SOLID);
     }
 
     public static void drawRoundedRect(int x, int y, int width, int height, int radius){

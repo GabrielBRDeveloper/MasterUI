@@ -1,10 +1,10 @@
-package br.nullexcept.mux.lang;
+package br.nullexcept.mux.text;
 
 public class TextLayout implements CharSequence {
     private final StringBuilder builder = new StringBuilder();
     private int lineCount = 0;
     private final int[][] lines = new int[4096][2];
-    private final int[] selection = new int[2];
+    private final TextSelection selection = new TextSelection(this);
 
     public TextLayout() {
         measure();
@@ -19,7 +19,7 @@ public class TextLayout implements CharSequence {
             lineCount = 1;
             lines[0][0] = 0;
             lines[0][1] = 0;
-            fixSelection();
+            selection.update();
             return;
         }
 
@@ -35,12 +35,7 @@ public class TextLayout implements CharSequence {
             lines[lineCount][1] = builder.length();
             lineCount++;
         }
-        fixSelection();
-    }
-
-    private void fixSelection() {
-        selection[0] = Math.max(0, Math.min(selection[0], builder.length()));
-        selection[1] = Math.max(selection[0], Math.min(selection[1], builder.length()));
+        selection.update();
     }
 
     public int getLineLength(int line) {
@@ -64,51 +59,28 @@ public class TextLayout implements CharSequence {
         return 0;
     }
 
-    public int getSelectionStart() {
-        return selection[0];
-    }
-
-    public int getSelectionEnd() {
-        return selection[1];
-    }
-
-    public int getSelectionLength() {
-        fixSelection();
-        return selection[1] - selection[0];
-    }
-
-    public void setSelection(int index) {
-        setSelection(index, index);
-    }
-
-    public void setSelection(int start, int end) {
-        if (end < start){
-            int s = start;
-            start = end;
-            end = s;
-        }
-        selection[0] = start;
-        selection[1] = end;
-        fixSelection();
-    }
 
     public void insert(CharSequence text) {
-        insert(selection[0], text);
-        selection[0] += text.length();
-        fixSelection();
+        insert(selection.low(), text);
+        selection.set(selection.low()+text.length());
+        selection.update();
+    }
+
+    public TextSelection getSelection() {
+        return selection;
     }
 
     public void delete() {
-        int start = selection[0];
-        int end = selection[1];
+        int start = selection.low();
+        int end = selection.high();
         if (start == end) {
             if (start > 0) {
                 delete(start - 1, 1);
-                setSelection(start - 1);
+                selection.set(start - 1);
             }
         } else {
             delete(start, end - start);
-            setSelection(start);
+            selection.set(start);
         }
     }
 
@@ -155,4 +127,6 @@ public class TextLayout implements CharSequence {
         }
         measure();
     }
+
+
 }

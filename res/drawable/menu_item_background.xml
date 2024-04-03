@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<selector>
+  <item hovered="true">
+    <layer-list>
+      <item>
+        <shape
+            type="rounded"
+            radius="6dp"
+            color="?colorOutline"/>
+      </item>
+    </layer-list>
+  </item>
+</selector>

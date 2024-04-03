@@ -1,6 +1,7 @@
 package br.nullexcept.mux.widget;
 
 import br.nullexcept.mux.app.Context;
+import br.nullexcept.mux.app.applets.ClipboardApplet;
 import br.nullexcept.mux.graphics.Canvas;
 import br.nullexcept.mux.graphics.Color;
 import br.nullexcept.mux.graphics.Paint;
@@ -9,13 +10,16 @@ import br.nullexcept.mux.graphics.fonts.FontMetrics;
 import br.nullexcept.mux.input.CharEvent;
 import br.nullexcept.mux.input.KeyEvent;
 import br.nullexcept.mux.input.MouseEvent;
-import br.nullexcept.mux.lang.TextLayout;
 import br.nullexcept.mux.res.AttributeList;
+import br.nullexcept.mux.text.TextLayout;
+import br.nullexcept.mux.text.TextSelection;
 import br.nullexcept.mux.view.AttrList;
+import br.nullexcept.mux.view.Menu;
 import br.nullexcept.mux.view.View;
 
 public class EditText extends View {
     private final TextLayout text = new TextLayout();
+    private final TextSelection selection = text.getSelection();
     private final Paint paint = new Paint();
     private int selectionColor = Color.RED;
     private int textColor = Color.GREEN;
@@ -26,26 +30,23 @@ public class EditText extends View {
     private final Point mouseDownPoint = new Point();
 
     public EditText(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public EditText(Context context, AttributeList attrs) {
         super(context, attrs);
+        attrs = initialAttributes();
+
+        attrs.searchText(AttrList.text, this::setText);
+        attrs.searchColor(AttrList.textColor, this::setTextColor);
+        attrs.searchColor(AttrList.selectionColor, this::setSelectionColor);
+        attrs.searchBoolean(AttrList.singleLine, this::setSingleLine);
+        attrs.searchDimension(AttrList.textSize, this::setTextSize);
     }
 
     {
         setFocusable(true);
         setOnClickListener(v-> requestFocus());
-    }
-
-    @Override
-    protected void onInflate(AttributeList attr) {
-        super.onInflate(attr);
-        attr.searchText(AttrList.text, this::setText);
-        attr.searchColor(AttrList.textColor, this::setTextColor);
-        attr.searchColor(AttrList.selectionColor, this::setSelectionColor);
-        attr.searchBoolean(AttrList.singleLine, this::setSingleLine);
-        attr.searchDimension(AttrList.textSize, this::setTextSize);
     }
 
     @Override
@@ -58,9 +59,9 @@ public class EditText extends View {
         long downTime = (System.nanoTime() - mouseEvent.getDownTime())/1000;
 
         if (downTime < 200 && mouseEvent.getAction() == MouseEvent.ACTION_UP){
-            text.setSelection(getCharIndex(Math.round(mouseEvent.getX()), Math.round(mouseEvent.getY())));
+            selection.set(getCharIndex(Math.round(mouseEvent.getX()), Math.round(mouseEvent.getY())));
         } else if (downTime > 200){
-            text.setSelection(
+            selection.set(
                     getCharIndex(mouseDownPoint.x, mouseDownPoint.y),
                     getCharIndex(Math.round(mouseEvent.getX()), Math.round(mouseEvent.getY()))
             );
@@ -166,12 +167,55 @@ public class EditText extends View {
     }
 
     @Override
+    public boolean onCreateContextMenu(Menu menu) {
+        Menu.Group main = new Menu.Group("");
+
+        main.add(new Menu.Item("copy", "Copy", null));
+        main.add(new Menu.Item("cut", "Cut", null));
+        main.add(new Menu.Item("paste", "Paste", null));
+
+        menu.setOnClickListener(item -> {
+            ClipboardApplet clipboard = getContext().getApplet(Context.CLIPBOARD_APPLET);
+            switch (item.getId()) {
+                case "paste": {
+                    pasteFromClipboard();
+                }break;
+                case "copy": {
+                    copyToClipboard();
+                }break;
+                case "cut": {
+                    copyToClipboard();
+                    if (selection.length() > 0) text.delete();
+                    updateText();
+                }break;
+            }
+        });
+
+        menu.add(main);
+        return true;
+    }
+
+    @Override
     protected void onCharEvent(CharEvent charEvent) {
         super.onCharEvent(charEvent);
-        if (text.getSelectionLength() > 0){
+        if (selection.length() > 0){
             text.delete();
         }
         text.insert(String.valueOf(charEvent.getCharacter()));
+        updateText();
+    }
+
+    private void copyToClipboard() {
+        if (selection.length() != 0) {
+            CharSequence sub = text.subSequence(selection.low(), selection.high());
+            ((ClipboardApplet)getContext().getApplet(Context.CLIPBOARD_APPLET)).setContent(""+sub);
+        }
+        updateText();
+    }
+
+    private void pasteFromClipboard() {
+        String content = ((ClipboardApplet)getContext().getApplet(Context.CLIPBOARD_APPLET)).getContent();
+        text.insert(content);
         updateText();
     }
 
@@ -187,29 +231,45 @@ public class EditText extends View {
                         updateText();
                     }
                     break;
+                case KeyEvent.KEY_C:
+                    if (keyEvent.hasCtrl()) copyToClipboard();
+                    break;
+                case KeyEvent.KEY_X:
+                    if (keyEvent.hasCtrl()) {
+                        copyToClipboard();
+                        if (text.length() > 0)
+                            text.delete();
+                    }
+                    break;
+                case KeyEvent.KEY_V:
+                    if (keyEvent.hasCtrl()) {
+                        pasteFromClipboard();
+                    }
+                    break;
                 case KeyEvent.KEY_A:
                     if (keyEvent.hasCtrl()){
-                        text.setSelection(0, text.length());
+                        selection.set(0, text.length());
+                        invalidate();
                     }
                     break;
                 case KeyEvent.KEY_RIGHT:
                     if (keyEvent.hasShift()) {
-                        text.setSelection(text.getSelectionStart(), text.getSelectionEnd() + 1);
+                        selection.set(selection.start(), selection.end()+1);
                     } else {
-                        text.setSelection(text.getSelectionEnd() + 1);
+                        selection.set(selection.low()+1);
                     }
                     invalidate();
                     break;
                 case KeyEvent.KEY_LEFT:
                     if (keyEvent.hasShift()) {
-                        text.setSelection(text.getSelectionStart(), text.getSelectionEnd() - 1);
+                        selection.set(selection.start(), selection.end()-1);
                     } else {
-                        text.setSelection(text.getSelectionEnd() - 1);
+                        selection.set(selection.low()-1);
                     }
                     invalidate();
                     break;
                 case KeyEvent.KEY_BACKSPACE:
-                    if (text.getSelectionStart() > 0 || text.getSelectionLength() > 1) {
+                    if (selection.low() > 0 || selection.length() > 1) {
                         text.delete();
                         updateText();
                     }
@@ -235,7 +295,7 @@ public class EditText extends View {
         FontMetrics metrics = paint.getFontMetrics();
         int lineHeight = (int) metrics.getLineHeight();
         int y = 0;
-        if (text.getSelectionLength() == 0) {
+        if (selection.length() == 0) {
             drawCaret(canvas);
         } else {
             drawSelection(canvas);
@@ -249,16 +309,16 @@ public class EditText extends View {
     }
 
     private void drawSelection(Canvas canvas) {
-        int ls = text.getLineIndex(text.getSelectionStart());
-        int le = text.getLineIndex(text.getSelectionEnd());
+        int ls = text.getLineIndex(selection.low());
+        int le = text.getLineIndex(selection.high());
         paint.setColor(selectionColor);
         if (ls == le){
-            drawSelection(canvas, text.getSelectionStart(), text.getSelectionEnd(),Math.round(ls * font().getLineHeight()));
+            drawSelection(canvas, selection.low(), selection.high(),Math.round(ls * font().getLineHeight()));
         } else {
             int y = Math.round(font().getLineHeight()*ls);
             drawSelection(
                     canvas,
-                    text.getSelectionStart(),
+                    selection.low(),
                     text.getLineEnd(ls),
                     y
             );
@@ -278,7 +338,7 @@ public class EditText extends View {
 
             drawSelection(canvas,
                     text.getLineStart(ls),
-                    text.getSelectionEnd(),
+                    selection.high(),
                     y);
         }
     }
@@ -307,9 +367,9 @@ public class EditText extends View {
         int w = (int) (font().measureChar('l') / 3);
         int x = 0, y = 0;
 
-        int line = text.getLineIndex(text.getSelectionStart()-1);
+        int line = text.getLineIndex(selection.low()-1);
         int start = text.getLineStart(line);
-        while (start < text.getSelectionStart()) {
+        while (start < selection.low()) {
             x += font().measureChar(text.charAt(start));
             start++;
         }

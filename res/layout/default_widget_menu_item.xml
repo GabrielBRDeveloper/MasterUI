@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<LinearLayout
+  width="200dp"
+  height="wrap_content"
+  orientation="horizontal"
+  background="@drawable/menu_item_background"
+  gravity="left|center"
+  padding="0dp">
+
+  <ImageView
+    tag="icon"
+    width="24dp"
+    height="24dp"/>
+
+  <TextView
+      tag="title"
+      width="wrap_content"
+      padding="5dp"
+      paddingLeft="20dp"
+      height="wrap_content"/>
+
+</LinearLayout>

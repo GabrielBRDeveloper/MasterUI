@@ -1,7 +1,7 @@
 package br.nullexcept.mux.graphics.fonts;
 
 import br.nullexcept.mux.C;
-import br.nullexcept.mux.lang.Log;
+import br.nullexcept.mux.utils.Log;
 import org.lwjgl.nanovg.NVGGlyphPosition;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.system.MemoryUtil;

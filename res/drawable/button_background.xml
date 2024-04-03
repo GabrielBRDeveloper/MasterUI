@@ -1,52 +1,33 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <selector>
-
-    <item pressed="true">
-        <layer-list>
-            <item>
-                <shape
-                    type="rounded"
-                    radius="5dp"
-                    color="?colorSurfaceVariant"/>
-            </item>
-            <item padding="1dp">
-                <shape
-                    type="rounded"
-                    radius="5dp"
-                    color="?colorOutline"/>
-            </item>
-        </layer-list>
-    </item>
-    <item hovered="true">
-        <layer-list>
-            <item>
-                <shape
-                        type="rounded"
-                        radius="5dp"
-                        color="?colorOutline"/>
-            </item>
-            <item padding="1dp">
-                <shape
-                        type="rounded"
-                        radius="5dp"
-                        color="?colorSurfaceVariant"/>
-            </item>
-        </layer-list>
-    </item>
-    <item>
-        <layer-list>
-            <item>
-                <shape
-                        type="rounded"
-                        radius="5dp"
-                        color="?colorOutline"/>
-            </item>
-            <item padding="1dp">
-                <shape
-                        type="rounded"
-                        radius="5dp"
-                        color="?colorSurface"/>
-            </item>
-        </layer-list>
-    </item>
+  <item pressed="true">
+    <layer-list>
+      <item>
+        <shape
+            type="rounded"
+            radius="14dp"
+            color="?colorSurfaceVariant"/>
+      </item>
+    </layer-list>
+  </item>
+  <item hovered="true">
+    <layer-list>
+      <item>
+        <shape
+            type="rounded"
+            radius="14dp"
+            color="?colorOutline"/>
+      </item>
+    </layer-list>
+  </item>
+  <item>
+    <layer-list>
+      <item>
+        <shape
+            type="rounded"
+            radius="14dp"
+            color="?colorOutline"/>
+      </item>
+    </layer-list>
+  </item>
 </selector>
