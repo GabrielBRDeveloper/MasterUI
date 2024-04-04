@@ -38,7 +38,7 @@ public class Example extends Activity {
 # User requirements
 
 - OpenGLES 2.0
-- Java 8
+- Java 11 (Need some native fixes in nanovg, to work in java 8)
 
 # Status
 

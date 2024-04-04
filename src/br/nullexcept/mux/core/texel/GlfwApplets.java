@@ -18,7 +18,7 @@ class GlfwApplets {
             }
 
             @Override
-            public void setContent(String content) {
+            public void setContent(String content) { 
                 GLFW.glfwSetClipboardString(C.GLFW_CONTEXT, content);
             }
         });

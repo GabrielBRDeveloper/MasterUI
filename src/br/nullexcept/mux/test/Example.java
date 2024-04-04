@@ -34,6 +34,5 @@ public class Example extends Activity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Application.stop();
     }
 }

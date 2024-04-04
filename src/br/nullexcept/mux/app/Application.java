@@ -13,6 +13,7 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class Application {
     private static long lastGc = System.currentTimeMillis();
+    private static int RUNNING_ACTIVITIES = 0;
 
     public static void initialize(Valuable<Activity> creator){
         glfwInit();
@@ -46,6 +47,9 @@ public class Application {
             System.gc();
             lastGc = System.currentTimeMillis();
         }
+        if (RUNNING_ACTIVITIES == 0) {
+            stop();
+        }
         Looper.getMainLooper().post(Application::loop);
     }
 
@@ -55,6 +59,7 @@ public class Application {
             @Override
             public void onCreated() {
                 activity.onCreate();
+                RUNNING_ACTIVITIES++;
             }
 
             @Override
@@ -72,6 +77,7 @@ public class Application {
 
             @Override
             public void onDestroy() {
+                RUNNING_ACTIVITIES--;
                 activity.onDestroy();
             }
         });

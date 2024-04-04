@@ -215,6 +215,9 @@ public class EditText extends View {
 
     private void pasteFromClipboard() {
         String content = ((ClipboardApplet)getContext().getApplet(Context.CLIPBOARD_APPLET)).getContent();
+        if(selection.length() > 0){
+            text.delete();
+        }
         text.insert(content);
         updateText();
     }
@@ -282,6 +285,10 @@ public class EditText extends View {
         if (getLayoutParams().hasWrap()) {
             measure();
         }
+
+        if (singleLine)
+            text.removeBreaks();
+
         invalidate();
     }
 
