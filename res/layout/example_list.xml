@@ -4,8 +4,9 @@
     height="wrap_content"
     padding="20dp">
     <TextView
-        width="wrap_content"
-        height="wrap_content"
+        width="200dp"
+        height="200dp"
         textSize="24dp"
+        background="@drawable/test_path"
         text="MasterUI"/>
 </LinearLayout>

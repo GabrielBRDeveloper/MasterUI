@@ -66,6 +66,7 @@ public class Example extends Activity {
 - 🟩 Attributes
 - 🟩 Read drawables.
 - 🟩 Scalable UI.
+- 🟩 Path (A like SVG) Drawables
 - 🟥 Clip based in path.
 
 ### General

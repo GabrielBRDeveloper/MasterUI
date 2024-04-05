@@ -4,38 +4,6 @@ import java.util.ArrayList;
 
 /**
  * CODE TO CONVERT SVG TO Path
- NSVGImage img = NanoSVG.nsvgParseFromFile(__DIR__,"px",0.0f);
- NSVGShape shape = img.shapes();
- NSVGPath _path = shape.paths();
- ArrayList<NSVGPath> paths = new ArrayList<>();
- while (_path != null){
- paths.add(_path);
- try {
- _path = _path.next();
- } catch (Exception e){
- break;
- }
- }
-
-
- Path p = new Path();
-
- ArrayList<float[]> points = new ArrayList<>();
- for (NSVGPath path: paths) {
- FloatBuffer buffer = path.pts();
- float bx = buffer.get(0);
- float by = buffer.get(1);
-
- for (int x = 0; x < path.npts() - 1; x += 3) {
- int i = x * 2;
- points.add(new float[]{buffer.get(i+2), buffer.get(i+3),
- buffer.get(i+4), buffer.get(i+5),
- buffer.get(i+6), buffer.get(i+7)
- });
- }
-
- p.add(bx, by, path.closed() == 1, points.toArray(new float[0][]));
- points.clear();
  }
  */
 
@@ -56,14 +24,28 @@ public class Path {
         segments.add(new Segment(beginX, beginY, closed, points));
     }
 
+    public void scale(float x, float y) {
+        for (Segment seg: segments) {
+            seg.begin[0] *= x;
+            seg.begin[1] *= y;
+            for (float[] point: seg.points) {
+                for (int i = 0; i < point.length; i+= 2) {
+                    point[i] *= x;
+                    point[i+1] *= y;
+                }
+            }
+        }
+    }
+
     public static final class Segment {
-        private final float x,y;
+        private final float[] begin = new float[2];
         private final boolean closed;
-        private float[][] points;
+        private final float[][] points;
 
         public Segment(float x, float y, boolean closed, float[][] points) {
-            this.x = x;
-            this.y = y;
+            begin[0] = x;
+            begin[1] = y;
+
             this.closed = closed;
             this.points = points;
         }
@@ -73,11 +55,11 @@ public class Path {
         }
 
         public float beginX() {
-            return x;
+            return begin[0];
         }
 
         public float beginY(){
-            return y;
+            return begin[1];
         }
 
         public float[] part(int index) {

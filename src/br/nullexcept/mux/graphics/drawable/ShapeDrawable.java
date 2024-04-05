@@ -8,7 +8,6 @@ import br.nullexcept.mux.graphics.shape.Shape;
 
 public class ShapeDrawable extends Drawable {
     private Shape shape;
-    private final Paint paint = new Paint();
 
     public ShapeDrawable(Shape shape){
         this.shape = shape;

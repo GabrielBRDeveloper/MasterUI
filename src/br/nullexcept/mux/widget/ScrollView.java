@@ -46,7 +46,6 @@ public class ScrollView extends ViewGroup {
     public void onDrawForeground(Canvas canvas) {
         super.onDrawForeground(canvas);
         if (space.y > 1){
-            System.err.println(space.y);
             float vh = getHeight() - getPaddingTop() - getPaddingBottom();
 
             float sh = vh / space.y;

@@ -4,6 +4,7 @@ import br.nullexcept.mux.C;
 import br.nullexcept.mux.graphics.Color;
 import br.nullexcept.mux.graphics.Paint;
 import br.nullexcept.mux.graphics.Path;
+import br.nullexcept.mux.graphics.Point;
 import br.nullexcept.mux.utils.Log;
 import org.lwjgl.nanovg.*;
 
@@ -16,6 +17,7 @@ class VgTexel {
     private static final NVGPaint nvgPaint = NVGPaint.create();
     private static final NVGPaint tmpPaint = NVGPaint.create();
     private static float alpha = 1.0f;
+    private static final Point VIEWPORT = new Point();
 
     public static void initialize(){
         try {
@@ -87,11 +89,17 @@ class VgTexel {
         }
     }
 
+    /**
+     * @TODO:
+     * nvgFill causes white rect when fill with framebuffer
+     * Need fix framebuffer to work with stencil + depth
+     */
     public static void drawPath(Path path) {
         nvgBeginPath(globalContext);
+
         for (int i = 0; i < path.length(); i++) {
-            Path.Segment seg = path.segment(i);
             nvgPathWinding(globalContext, NVG_HOLE);
+            Path.Segment seg = path.segment(i);
             nvgMoveTo(globalContext, seg.beginX(), seg.beginY());
             for (int x = 0; x < seg.partCount(); x++) {
                 float[] curves = seg.part(x);
@@ -101,9 +109,10 @@ class VgTexel {
                 nvgLineTo(globalContext,seg.beginX(), seg.beginY());
             }
         }
+
         nvgClosePath(globalContext);
         fill();
-        nvgPathWinding(globalContext, NVG_SOLID);
+
     }
 
     public static void drawRoundedRect(int x, int y, int width, int height, int radius){
@@ -138,6 +147,7 @@ class VgTexel {
 
     public static void beginFrame(int w, int h) {
         nvgBeginFrame(globalContext, w,h,1.0f);
+        VIEWPORT.set(w,h);
     }
 
     public static void endFrame() {

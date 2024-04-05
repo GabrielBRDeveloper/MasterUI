@@ -7,7 +7,6 @@ import br.nullexcept.mux.graphics.Paint;
 
 public class BitmapDrawable extends Drawable {
     private final Bitmap bitmap;
-    private final Paint paint = new Paint();
     public BitmapDrawable(Bitmap bitmap){
         this.bitmap = bitmap;
     }

@@ -25,6 +25,8 @@ public interface Canvas {
         drawRoundRect(rect.left, rect.top, rect.right, rect.bottom, radius, paint);
     }
 
+    void drawPath(Path path, int x, int y, Paint paint);
+
     void begin();
     void reset();
     void end();

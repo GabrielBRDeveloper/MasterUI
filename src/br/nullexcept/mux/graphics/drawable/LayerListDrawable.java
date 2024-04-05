@@ -11,7 +11,6 @@ public class LayerListDrawable extends Drawable {
     private final Rect tmp = new Rect();
     private final ArrayList<Layer> layers = new ArrayList<>();
 
-
     public void addLayer(Drawable drawable){
         addLayer(drawable, new Rect());
     }

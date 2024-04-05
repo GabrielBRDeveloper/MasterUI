@@ -8,7 +8,13 @@ import br.nullexcept.mux.graphics.shape.RoundedShape;
 import br.nullexcept.mux.utils.Log;
 import br.nullexcept.mux.lang.xml.XmlElement;
 import br.nullexcept.mux.view.AttrList;
+import org.lwjgl.nanovg.NSVGImage;
+import org.lwjgl.nanovg.NSVGPath;
+import org.lwjgl.nanovg.NSVGShape;
+import org.lwjgl.nanovg.NanoSVG;
 
+import java.nio.FloatBuffer;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 class Parser {
@@ -73,6 +79,15 @@ class Parser {
                 }
                 return drawable;
             }
+            case "path": {
+                int width = Integer.parseInt(attrs.getRawValue("width"));
+                int height = Integer.parseInt(attrs.getRawValue("height"));
+
+                Path path = parseVectorPath(attrs.getRawValue("src"), width,height);
+                PathDrawable drawable = new PathDrawable(path, width,height);
+                attrs.searchColor(AttrList.color, drawable::setColor);
+                return drawable;
+            }
             case "shape":{
                 ShapeDrawable drawable = new ShapeDrawable();;
                 attrs.searchColor(AttrList.color, drawable::setColor);
@@ -124,6 +139,53 @@ class Parser {
             default:
                 throw new RuntimeException("Cannot support drawable type: "+xml.name());
         }
+    }
+
+    private static Path parseVectorPath(String src, int w, int h) {
+
+        String code =
+                "<svg xmlns=\"http://www.w3.org/2000/svg\" " +
+                        "width=\""+w+"\" " +
+                        "height=\""+h+"\" " +
+                        "viewBox=\"0 0 "+w+" "+h+"\">" +
+                        "<path d=\""+src+"\"/>" +
+                "</svg>";
+
+        NSVGImage img = NanoSVG.nsvgParse(code, "px", 24);
+        NSVGShape shape = img.shapes();
+        NSVGPath _path = shape.paths();
+        ArrayList<NSVGPath> paths = new ArrayList<>();
+        while (_path != null) {
+            paths.add(_path);
+            try {
+                _path = _path.next();
+            } catch (Exception e) {
+                break;
+            }
+        }
+
+
+        Path p = new Path();
+
+        ArrayList<float[]> points = new ArrayList<>();
+        for (NSVGPath path : paths) {
+            FloatBuffer buffer = path.pts();
+            float bx = buffer.get(0);
+            float by = buffer.get(1);
+
+            for (int x = 0; x < path.npts() - 1; x += 3) {
+                int i = x * 2;
+                points.add(new float[]{
+                        buffer.get(i + 2), buffer.get(i + 3),
+                        buffer.get(i + 4), buffer.get(i + 5),
+                        buffer.get(i + 6), buffer.get(i + 7)
+                });
+            }
+
+            p.add(bx, by, path.closed() == 1, points.toArray(new float[0][0]));
+            points.clear();
+        }
+        return p;
     }
 
     public static Drawable parseDrawable(Resources resources, String value) {

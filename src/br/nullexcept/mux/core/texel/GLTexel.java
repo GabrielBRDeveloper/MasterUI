@@ -49,7 +49,7 @@ class GLTexel {
     }
 
     public static void drawTexture(float x, float y, float width, float height, GLTexture texture){
-        drawTexture(x, y, width, height, GLShaderList.TEXTURE, texture);
+        drawTexture(x, y, width, height, GLShaderList.TEXTURE, texture.getTexture());
     }
 
     public static void drawViewLayers(float[][] vertices, int[] textures, float[] alphas){
@@ -87,7 +87,7 @@ class GLTexel {
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
-    public static void drawTexture(float x, float y, float width, float height, GLProgram program, GLTexture texture){
+    public static void drawTexture(float x, float y, float width, float height, GLProgram program, int texture){
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         prepareRect(x, y, width, height);
@@ -100,7 +100,7 @@ class GLTexel {
 
         //int vColor = program.uniform(GLProgram.ATTRIBUTE_COLOR);
 
-        texture.bind();
+        glBindTexture(GL_TEXTURE_2D, texture);
         glVertexAttribPointer(vPosition, 2, GL_FLOAT, false, 0, bufferRect);
         glVertexAttribPointer(vTextureCoords, 2, GL_FLOAT, false, 0, bufferUV);
 
@@ -112,7 +112,7 @@ class GLTexel {
 
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         program.unbind();
-        texture.unbind();
+        glBindTexture(GL_TEXTURE_2D,0);
         glDisable(GL_DEPTH_TEST);
     }
 }

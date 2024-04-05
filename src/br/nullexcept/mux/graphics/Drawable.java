@@ -3,6 +3,8 @@ package br.nullexcept.mux.graphics;
 public abstract class Drawable {
     private final StateList state = new StateList();
     private final Rect bounds = new Rect();
+    protected final Paint paint = new Paint();
+
     public abstract void draw(Canvas canvas);
 
     public Rect getBounds() {

@@ -5,7 +5,6 @@ import br.nullexcept.mux.graphics.Drawable;
 import br.nullexcept.mux.graphics.Paint;
 
 public class ColorDrawable extends Drawable {
-    private final Paint paint = new Paint();
 
     public ColorDrawable(int color){
         paint.setColor(color);
