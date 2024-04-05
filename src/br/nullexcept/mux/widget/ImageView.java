@@ -33,8 +33,8 @@ public class ImageView extends View {
     @Override
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        float w = canvas.getWidth();
-        float h = canvas.getHeight();
+        float w = getWidth()-getPaddingLeft()-getPaddingRight();
+        float h = getHeight()-getPaddingTop()-getPaddingBottom();
         float iw, ih;
 
         if (image != null){
@@ -47,6 +47,7 @@ public class ImageView extends View {
                 ih = pw * image.getHeight();
             }
             Gravity.applyGravity(getGravity(),Math.round(iw),Math.round(ih),Math.round(w), Math.round(h),rect);
+            rect.move(getPaddingLeft(), getPaddingTop());
             image.setBounds(rect);
             image.draw(canvas);
         }

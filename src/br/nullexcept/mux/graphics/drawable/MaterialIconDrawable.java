@@ -53,7 +53,7 @@ public class MaterialIconDrawable extends Drawable {
             int h = Math.round(paint.getFontMetrics().getLineHeight());
             Gravity.applyGravity(Gravity.CENTER, h, h, bounds.width(), bounds.height(), rect);
             String ic = codePoints.get(icon).toString();
-            canvas.drawText(ic, rect.left, (int) (rect.top + h), paint);
+            canvas.drawText(ic, rect.left+bounds.left, rect.top + h +bounds.top, paint);
         }
     }
 
