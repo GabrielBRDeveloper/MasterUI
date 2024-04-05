@@ -131,6 +131,13 @@ class Parser {
                 }
                 return drawable;
             }
+            case "material-icon": {
+                MaterialIconDrawable drawable  = new MaterialIconDrawable();
+                attrs.searchRaw("name", drawable::setIcon);
+                attrs.searchColor("color", drawable::setColor);
+
+                return drawable;
+            }
             case "color":{
                 ColorDrawable drawable = new ColorDrawable(0);
                 attrs.searchColor(AttrList.color, drawable::setColor);

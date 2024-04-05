@@ -1,6 +1,7 @@
 package br.nullexcept.mux.res;
 
 import br.nullexcept.mux.app.Context;
+import br.nullexcept.mux.graphics.Drawable;
 import br.nullexcept.mux.graphics.fonts.Typeface;
 import br.nullexcept.mux.graphics.fonts.TypefaceFactory;
 import br.nullexcept.mux.lang.xml.XmlElement;
@@ -95,6 +96,10 @@ public final class Resources {
 
     public Context getContext() {
         return context;
+    }
+
+    public Drawable getDrawable(String id) {
+        return Parser.parseDrawable(this, "@drawable/"+id);
     }
 
     public static class DisplayMetrics {

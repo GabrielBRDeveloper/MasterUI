@@ -3,6 +3,7 @@
   <style name="Base.Theme">
     <item name="colorOnPrimary">#FFFFFF</item>
     <item name="colorPrimary">#1F9EDE</item>
+    <item name="colorPrimaryVariant">#0B384F</item>
     <item name="colorOnSurface">#FFF</item>
     <item name="colorOnSurfaceVariant">#FFFFFF</item>
     <item name="colorSurfaceVariant">#29282E</item>
@@ -18,6 +19,8 @@
 
   <style name="Widget.MenuLayout">
     <style name="background">@drawable/menu_background</style>
+    <style name="paddingTop">10dp</style>
+    <style name="paddingBottom">10dp</style>
   </style>
 
   <style name="Widget.EditText">

@@ -2,10 +2,8 @@ package br.nullexcept.mux.widget;
 
 import br.nullexcept.mux.app.Context;
 import br.nullexcept.mux.app.applets.ClipboardApplet;
-import br.nullexcept.mux.graphics.Canvas;
-import br.nullexcept.mux.graphics.Color;
-import br.nullexcept.mux.graphics.Paint;
-import br.nullexcept.mux.graphics.Point;
+import br.nullexcept.mux.graphics.*;
+import br.nullexcept.mux.graphics.drawable.MaterialIconDrawable;
 import br.nullexcept.mux.graphics.fonts.FontMetrics;
 import br.nullexcept.mux.input.CharEvent;
 import br.nullexcept.mux.input.KeyEvent;
@@ -27,6 +25,7 @@ public class EditText extends View {
     private boolean singleLine = false;
     private boolean loopState = false;
     private long mouseDownTime = 0L;
+    private final Menu.Group menu;
     private final Point mouseDownPoint = new Point();
 
     public EditText(Context context) {
@@ -42,6 +41,11 @@ public class EditText extends View {
         attrs.searchColor(AttrList.selectionColor, this::setSelectionColor);
         attrs.searchBoolean(AttrList.singleLine, this::setSingleLine);
         attrs.searchDimension(AttrList.textSize, this::setTextSize);
+
+        menu = new Menu.Group("");
+        menu.add(new Menu.Item("copy", "Copy", new MaterialIconDrawable("content_copy", textColor)));
+        menu.add(new Menu.Item("cut", "Cut", new MaterialIconDrawable("content_cut", textColor)));
+        menu.add(new Menu.Item("paste", "Paste", new MaterialIconDrawable("content_paste", textColor)));
     }
 
     {
@@ -168,12 +172,6 @@ public class EditText extends View {
 
     @Override
     public boolean onCreateContextMenu(Menu menu) {
-        Menu.Group main = new Menu.Group("");
-
-        main.add(new Menu.Item("copy", "Copy", null));
-        main.add(new Menu.Item("cut", "Cut", null));
-        main.add(new Menu.Item("paste", "Paste", null));
-
         menu.setOnClickListener(item -> {
             ClipboardApplet clipboard = getContext().getApplet(Context.CLIPBOARD_APPLET);
             switch (item.getId()) {
@@ -191,7 +189,7 @@ public class EditText extends View {
             }
         });
 
-        menu.add(main);
+        menu.add(this.menu);
         return true;
     }
 

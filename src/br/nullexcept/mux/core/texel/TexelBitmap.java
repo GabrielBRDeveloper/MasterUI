@@ -70,7 +70,6 @@ class TexelBitmap implements Bitmap {
         try {
             if (!disposed){
                 dispose();
-                Log.log("TexelBitmap", "System GC detected!!");
             }
         } catch (Exception e){}
         super.finalize();

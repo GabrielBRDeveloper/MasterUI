@@ -89,11 +89,6 @@ class VgTexel {
         }
     }
 
-    /**
-     * @TODO:
-     * nvgFill causes white rect when fill with framebuffer
-     * Need fix framebuffer to work with stencil + depth
-     */
     public static void drawPath(Path path) {
         nvgBeginPath(globalContext);
 

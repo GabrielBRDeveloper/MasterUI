@@ -10,23 +10,13 @@
       </item>
     </layer-list>
   </item>
-  <item hovered="true">
-    <layer-list>
-      <item>
-        <shape
-            type="rounded"
-            radius="14dp"
-            color="?colorOutline"/>
-      </item>
-    </layer-list>
-  </item>
   <item>
     <layer-list>
       <item>
         <shape
             type="rounded"
             radius="14dp"
-            color="?colorOutline"/>
+            color="?colorPrimaryVariant"/>
       </item>
     </layer-list>
   </item>

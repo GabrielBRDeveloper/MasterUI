@@ -5,7 +5,6 @@
       <item>
         <shape
             type="rounded"
-            radius="6dp"
             color="?colorOutline"/>
       </item>
     </layer-list>

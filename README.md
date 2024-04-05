@@ -89,3 +89,4 @@ Full project status: [WIP]
 LWJGL: https://github.com/LWJGL/lwjgl3/blob/master/LICENSE.md \
 NanoVG: https://github.com/memononen/nanovg/blob/master/LICENSE.txt \
 OpenGLES: https://www.khronos.org/opengles/
+Material icons: https://github.com/google/material-design-icons
