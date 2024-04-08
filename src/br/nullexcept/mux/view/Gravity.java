@@ -29,6 +29,14 @@ public class Gravity {
         return (gravity >> SHIFT_X) & 255;
     }
 
+    public static int applyGravity(int gravity, int viewportSize, int size) {
+        switch (gravity) {
+            case AFTER: return viewportSize - size;
+            case MIDDLE: return ( viewportSize - size )/2;
+            default: return 0;
+        }
+    }
+
     public static void applyGravity(int gravity, int width, int height, int viewportWidth, int viewportHeight, Rect dest) {
         int vertical = vertical(gravity);
         int horizontal = horizontal(gravity);

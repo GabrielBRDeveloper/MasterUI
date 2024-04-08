@@ -9,6 +9,7 @@ import br.nullexcept.mux.input.CharEvent;
 import br.nullexcept.mux.input.KeyEvent;
 import br.nullexcept.mux.input.MouseEvent;
 import br.nullexcept.mux.res.AttributeList;
+import br.nullexcept.mux.text.Editable;
 import br.nullexcept.mux.text.TextLayout;
 import br.nullexcept.mux.text.TextSelection;
 import br.nullexcept.mux.view.AttrList;
@@ -16,7 +17,7 @@ import br.nullexcept.mux.view.Menu;
 import br.nullexcept.mux.view.View;
 
 public class EditText extends View {
-    private final TextLayout text = new TextLayout();
+    private final Editable text = new Editable();
     private final TextSelection selection = text.getSelection();
     private final Paint paint = new Paint();
     private int selectionColor = Color.RED;
@@ -27,6 +28,27 @@ public class EditText extends View {
     private long mouseDownTime = 0L;
     private final Menu.Group menu;
     private final Point mouseDownPoint = new Point();
+    private final TextLayout layout = new TextLayout(text, paint, new TextLayout.TextDrawer() {
+        @Override
+        public void drawSelection(Canvas canvas, int x, int y, int width, int height) {
+            paint.setColor(selectionColor);
+            canvas.drawRect(x,y,x+width,y+height, paint);
+        }
+
+        @Override
+        public void drawCharacter(Canvas canvas, char ch, int x, int y) {
+            paint.setColor(textColor);
+            if (ch == '\n')return;
+            canvas.drawText(String.valueOf(ch),x,y, paint);
+        }
+
+        @Override
+        public void drawCaret(Canvas canvas, int x, int y) {
+            caretVisible = true;
+            int w = (int) font().measureChar('|');
+            canvas.drawRect(x - (w / 2), y, x + w, (int) (y + font().getLineHeight()), paint);
+        }
+    });
 
     public EditText(Context context) {
         this(context, null);
@@ -294,7 +316,7 @@ public class EditText extends View {
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.translate(getPaddingLeft(), getPaddingTop());
-        if (!loopState){
+        /*if (!loopState){
             caretLoop();
         }
         FontMetrics metrics = paint.getFontMetrics();
@@ -309,7 +331,9 @@ public class EditText extends View {
         for (int i = 0; i < text.getLineCount(); i++) {
             drawLine(canvas, 0, y, i);
             y += lineHeight;
-        }
+        }*/
+        layout.measure(getWidth()-getPaddingLeft()-getPaddingRight(), getHeight());
+        layout.draw(canvas);
         canvas.translate(-getPaddingLeft(), -getPaddingTop());
     }
 

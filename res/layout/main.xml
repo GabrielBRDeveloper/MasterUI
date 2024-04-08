@@ -20,10 +20,10 @@
     <Button
         width="match_parent"
         height="wrap_content"
-        text="Example Button"/>
+        text="Example Button ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"/>
     <View width="10dp" height="10dp"/>
     <EditText
-        width="256dp"
+        width="match_parent"
         height="wrap_content"
         textColor="#FFF"
         padding="20dp"/>
