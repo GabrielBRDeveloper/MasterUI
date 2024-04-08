@@ -29,6 +29,8 @@ public class View {
     private final int hashCode = hash();
     private final Rect rect = new Rect();
     private Object tag;
+    private String id;
+
     private Drawable background;
     private float alpha = 1.0f;
     private float scale = 1.0f;
@@ -66,6 +68,7 @@ public class View {
         attrs.searchFloat(AttrList.alpha, this::setAlpha);
         attrs.searchDrawable(AttrList.background, this::setBackground);
         attrs.searchRaw(AttrList.pointerIcon, value -> setPointerIcon(new PointerIcon(PointerIcon.Model.fromName(value))));
+        attrs.searchRaw(AttrList.id, value -> id = value);
         attrs.searchRaw(AttrList.gravity, value -> {
             String[] types = value.split("\\|");
             int gravity = 0;
@@ -300,6 +303,13 @@ public class View {
 
     public <T extends View> T findViewByTag(Object tag) {
         if (tag != null && Objects.equals(tag, this.tag)) {
+            return (T) this;
+        }
+        return null;
+    }
+
+    public <T extends View> T findViewById(String id) {
+        if (id != null && Objects.equals(id, this.id)) {
             return (T) this;
         }
         return null;

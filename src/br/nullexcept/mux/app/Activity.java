@@ -6,11 +6,16 @@ import br.nullexcept.mux.view.Window;
 
 public class Activity extends Context {
     Window mWindow;
+    private boolean running;
 
-    public void onCreate(){}
-    public void onDestroy(){}
-    public void onPause(){}
-    public void onResume(){}
+    public void onCreate(){ running = true; }
+    public void onDestroy(){ running = false; }
+    public void onPause(){ running = false; }
+    public void onResume(){ running = true; }
+
+    protected boolean isRunning() {
+        return running;
+    }
 
     public void finish() {
         mWindow.destroy();
@@ -21,6 +26,10 @@ public class Activity extends Context {
         Window window = mWindow;
         finish();
         Application.boot(window, provider.get());
+    }
+
+    public <T extends View> T findViewById(String id) {
+        return mWindow.getContentView().findViewById(id);
     }
 
     public void setContentView(String layoutName){

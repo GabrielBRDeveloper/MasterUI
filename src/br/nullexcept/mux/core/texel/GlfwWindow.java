@@ -23,6 +23,7 @@ class GlfwWindow extends Window {
     private boolean destroyed = true;
     private boolean visible;
     private boolean running = false;
+    private final Point position = new Point();
     private WindowObserver observer;
 
     public GlfwWindow() {
@@ -48,6 +49,8 @@ class GlfwWindow extends Window {
         int[][] buffer = new int[2][1];
         GLFW.glfwGetWindowSize(window, buffer[0], buffer[1]);
         windowSize.set(buffer[0][0], buffer[1][0]);;
+        GLFW.glfwGetWindowPos(window, buffer[0], buffer[1]);
+        position.set(buffer[0][0], buffer[1][0]);
     }
 
     private int frames = 0;
@@ -158,6 +161,8 @@ class GlfwWindow extends Window {
         } else {
             GLFW.glfwHideWindow(window);
         }
+
+        GLFW.glfwSetWindowPos(window, position.x, position.y);
     }
 
     @Override

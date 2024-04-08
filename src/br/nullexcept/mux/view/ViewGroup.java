@@ -220,6 +220,19 @@ public class ViewGroup extends View {
         return self;
     }
 
+    @Override
+    public <T extends View> T findViewById(String tag) {
+        T self = super.findViewById(tag);
+        if (self == null){
+            for (View child: children){
+                if ((self = child.findViewById(tag)) != null){
+                    return self;
+                }
+            }
+        }
+        return self;
+    }
+
     public static class LayoutParams {
         public static final int MATCH_PARENT = -1;
         public static final int WRAP_CONTENT = -2;

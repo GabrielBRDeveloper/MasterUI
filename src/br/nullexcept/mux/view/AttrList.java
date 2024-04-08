@@ -1,6 +1,7 @@
 package br.nullexcept.mux.view;
 
 public class AttrList {
+    public static final String id = "id";
     public static final String textColor = "textColor";
     public static final String text = "text";
     public static final String textSize = "textSize";
