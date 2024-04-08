@@ -1,9 +1,13 @@
 package br.nullexcept.mux.core.texel;
 
 import br.nullexcept.mux.graphics.Color;
+import br.nullexcept.mux.lang.Function;
+import br.nullexcept.mux.lang.Function2;
+import br.nullexcept.mux.view.View;
 import org.lwjgl.BufferUtils;
 
 import java.nio.FloatBuffer;
+import java.util.List;
 
 import static br.nullexcept.mux.hardware.GLES.*;
 
@@ -52,9 +56,9 @@ class GLTexel {
         drawTexture(x, y, width, height, GLShaderList.TEXTURE, texture.getTexture());
     }
 
-    public static void drawViewLayers(float[][] vertices, int[] textures, float[] alphas){
+    public static void drawViewLayers(float[][] vertices, int[] textures, View[] views){
         glEnable(GL_BLEND);
-        glBlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
         GLProgram program = GLShaderList.VIEW;
 
         program.bind();
@@ -64,11 +68,15 @@ class GLTexel {
         int uTexture = program.uniform(GLProgram.UNIFORM_TEXTURE);
         int uAlpha = program.uniform("alpha");
         int uTime = program.uniform("time");
+        int uMode = program.uniform("mode");
+        int uSize = program.uniform("size");
+        int uElevation = program.uniform("elevation");
+        int uShadowColor = program.uniform("shadowColor");
 
         glEnableVertexAttribArray(vPosition);
         glEnableVertexAttribArray(vTextureCoords);
 
-        for (int i = 0; i < vertices.length; i++) {
+        Function2<Integer, Integer> draw = (i, mode) -> {
             bufferRect.put(vertices[i]);
             bufferRect.position(0);
 
@@ -77,10 +85,27 @@ class GLTexel {
             glVertexAttribPointer(vTextureCoords, 2, GL_FLOAT, false, 0, bufferUV);
 
             glUniform1i(uTexture, GL_TEXTURE_2D);
-            glUniform1f(uAlpha, alphas[i]);
+            glUniform1i(uMode, mode);
+            glUniform1f(uElevation, views[i].getElevation());
+            glUniform1f(uAlpha, views[i].getAlpha());
+            glUniform4f(uShadowColor,
+                    Color.red(views[i].getShadowColor()) / 255.0f,
+                    Color.green(views[i].getShadowColor()) / 255.0f,
+                    Color.blue(views[i].getShadowColor()) / 255.0f,
+                    Color.alpha(views[i].getShadowColor()) / 255.0f
+            );
+
+            glUniform2f(uSize, views[i].getWidth(), views[i].getHeight());
             glUniform1f(uTime, (System.currentTimeMillis() & 1000)/1000.0f);
             glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
             glDisable(GL_DEPTH_TEST);
+        };
+
+        for (int i = 0; i < views.length; i++) {
+            if (views[i].getElevation() > 0.001f) {
+                draw.run(i, 1); // Draw shadow
+            }
+            draw.run(i, 0);
         }
 
         program.unbind();

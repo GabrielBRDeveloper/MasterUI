@@ -40,20 +40,20 @@ class ViewRenderer {
                 }
             }
             float[][] borders = new float[drawables][2*4];
-            float[] alphas = new float[drawables];
+            View[] list = new View[drawables];
             int[] textures = new int[drawables];
             int index = 0;
             for (View child: children){
                 if (child.isVisible()){
                     CanvasTexel texel = registry.get(child.hashCode()).canvas;
                     borders[index] = createMesh(canvas, child);
-                    alphas[index] = child.getAlpha();
+                    list[index] = child;
                     textures[index] = texel.getFramebuffer().getTexture().getTexture();
                     index++;
                 }
             }
             canvas.getFramebuffer().bind();
-            GLTexel.drawViewLayers(borders,textures, alphas);
+            GLTexel.drawViewLayers(borders,textures, list);
             canvas.getFramebuffer().unbind();
             canvas.begin();
         }

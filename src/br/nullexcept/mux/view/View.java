@@ -530,6 +530,14 @@ public class View {
         return tag;
     }
 
+    public int getShadowColor() {
+        return Color.argb(20,1,0,0);
+    }
+
+    public float getElevation() {
+        return 0.0f;
+    }
+
     public interface OnClickListener {
         void onClick(View view);
     }
