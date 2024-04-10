@@ -49,6 +49,16 @@ public class Menu {
             return items;
         }
 
+        public Item findItemById(String id) {
+            for (Item item: items) {
+                if (item.id == id) {
+                    return item;
+                }
+            }
+            return null;
+        }
+
+
         public String getTitle() {
             return title;
         }
@@ -58,11 +68,25 @@ public class Menu {
         private final String id;
         private final String title;
         private final Drawable icon;
+        private boolean enable;
 
         public Item(String id, String title, Drawable icon) {
+            this(id, title, icon, true);
+        }
+
+        public Item(String id, String title, Drawable icon, boolean enable) {
             this.id = id;
             this.title = title;
             this.icon = icon;
+            this.enable = enable;
+        }
+
+        public void setEnable(boolean enable) {
+            this.enable = enable;
+        }
+
+        public boolean isEnable() {
+            return enable;
         }
 
         public String getTitle() {

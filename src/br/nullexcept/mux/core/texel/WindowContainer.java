@@ -184,7 +184,7 @@ public class WindowContainer extends AbsoluteLayout {
             performHover((MouseEvent)event);
             if(event.getTarget() == -1){
                 dispatchEvent(event);
-            } else {
+            } else if (renders.containsKey(event.getTarget())){
                 View target = renders.get(event.getTarget()).view;
                 Rect visibleBounds = target.getVisibleBounds();
                 ((MouseEvent) event).transform(-visibleBounds.left, -visibleBounds.top);
@@ -242,6 +242,7 @@ public class WindowContainer extends AbsoluteLayout {
         for (Menu.Group group: currentMenu.getGroups()) {
             for (Menu.Item item: group.getItems()) {
                 ViewGroup v = inflater.inflate("default_widget_menu_item");
+                v.setAlpha(item.isEnable() ? 1.0f : 0.5f );
                 ImageView icon = v.findViewByTag("icon");
                 if (item.getIcon() == null) {
                     icon.getParent().removeChild(icon);

@@ -1,6 +1,7 @@
 package br.nullexcept.mux.core.texel;
 
 import br.nullexcept.mux.graphics.Rect;
+import br.nullexcept.mux.utils.Log;
 import br.nullexcept.mux.view.View;
 import br.nullexcept.mux.view.ViewGroup;
 
@@ -26,7 +27,6 @@ class ViewRenderer {
             canvas.getFramebuffer().resize(bounds.width(), bounds.height());
         }
         canvas.begin();
-        canvas.alpha(view.getAlpha());
         canvas.reset();
         view.onDraw(canvas);
         if (view instanceof ViewGroup){

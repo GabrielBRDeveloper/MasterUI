@@ -61,11 +61,12 @@ class GLTexel {
          *
          * dstColor = src.rgb * X + dest.rgb * Y;
          */
+        glBlendEquation(GL_FUNC_ADD);
         glBlendFuncSeparate(
                 GL_ONE,
                 GL_ONE_MINUS_SRC_ALPHA,
                 GL_ONE,
-                GL_ONE_MINUS_SRC_ALPHA
+                GL_ONE
         );
 
 
@@ -78,31 +79,28 @@ class GLTexel {
         for (int i = 0; i < vertices.length; i++) {
             bufferRect.put(vertices[i]);
             bufferRect.position(0);
-
             glBindTexture(GL_TEXTURE_2D, textures[i]);
 
             glVertexAttribPointer(program.position, 2, GL_FLOAT, false, 0, bufferRect);
             glVertexAttribPointer(program.uv, 2, GL_FLOAT, false, 0, bufferUV);
-
-            glUniform1iv(program.params, new int[]{});
-
             glUniform1i(program.texture, GL_TEXTURE_2D);
-            glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-            glFinish();
+
+            /**
+             * @TODO: Need better implement for fix dark border + alpha, with low gpu cost
+             * MODE 0 = FILL
+             * MODE 1 = "ANTILIAZING""
+             */
+            for (int x = 0; x < 2; x++) {
+                glUniform1iv(program.params, new int[]{
+                        x, Math.round(alphas[i] * 255)
+                });
+                glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+            }
         }
 
         program.unbind();
         glBindTexture(GL_TEXTURE_2D, 0);
-    }
-
-
-    private static FloatBuffer allocateVertices(float[][] vectors) {
-        FloatBuffer vertx = BufferUtils.createFloatBuffer(vectors.length*vectors[0].length);
-        vertx.position(0);
-        for (int i = 0; i< vectors.length; i++)
-            vertx.put(vectors[i]);
-        vertx.position(0);
-        return vertx;
+        glDisable(GL_BLEND);
     }
 
     public static void drawTexture(float x, float y, float width, float height, GLProgram program, int texture){

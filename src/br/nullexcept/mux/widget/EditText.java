@@ -172,8 +172,8 @@ public class EditText extends View {
 
     @Override
     public boolean onCreateContextMenu(Menu menu) {
+        ClipboardApplet clipboard = getContext().getApplet(Context.CLIPBOARD_APPLET);
         menu.setOnClickListener(item -> {
-            ClipboardApplet clipboard = getContext().getApplet(Context.CLIPBOARD_APPLET);
             switch (item.getId()) {
                 case "paste": {
                     pasteFromClipboard();
@@ -189,6 +189,7 @@ public class EditText extends View {
             }
         });
 
+        this.menu.findItemById("paste").setEnable(clipboard.hasContent());
         menu.add(this.menu);
         return true;
     }
@@ -213,6 +214,8 @@ public class EditText extends View {
 
     private void pasteFromClipboard() {
         String content = ((ClipboardApplet)getContext().getApplet(Context.CLIPBOARD_APPLET)).getContent();
+        if (content == null)return;
+
         if(selection.length() > 0){
             text.delete();
         }

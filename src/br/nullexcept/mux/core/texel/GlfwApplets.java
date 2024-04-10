@@ -18,6 +18,12 @@ class GlfwApplets {
             }
 
             @Override
+            public boolean hasContent() {
+                String content = getContent();
+                return content != null && content.length() > 0;
+            }
+
+            @Override
             public void setContent(String content) { 
                 GLFW.glfwSetClipboardString(C.GLFW_CONTEXT, content);
             }
