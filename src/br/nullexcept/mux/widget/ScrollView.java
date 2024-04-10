@@ -152,16 +152,6 @@ public class ScrollView extends ViewGroup {
         measureContent();
     }
 
-    @Override
-    protected int calculateHeight() {
-        return getPaddingTop() + getPaddingBottom();
-    }
-
-    @Override
-    protected int calculateWidth() {
-        return getPaddingLeft() + getPaddingRight();
-    }
-
     private class ScrollContainer extends ViewGroup {
         public ScrollContainer(Context context) {
             super(context);

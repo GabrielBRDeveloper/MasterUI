@@ -1,10 +1,7 @@
 package br.nullexcept.mux.widget;
 
 import br.nullexcept.mux.app.Context;
-import br.nullexcept.mux.graphics.Canvas;
-import br.nullexcept.mux.graphics.Drawable;
-import br.nullexcept.mux.graphics.Paint;
-import br.nullexcept.mux.graphics.Rect;
+import br.nullexcept.mux.graphics.*;
 import br.nullexcept.mux.res.AttributeList;
 import br.nullexcept.mux.view.AttrList;
 import br.nullexcept.mux.view.Gravity;
@@ -54,12 +51,11 @@ public class ImageView extends View {
     }
 
     @Override
-    protected int calculateHeight() {
-        return getPaddingBottom() + getPaddingTop() + image.getHeight();
-    }
-
-    @Override
-    protected int calculateWidth() {
-        return getPaddingLeft() + getPaddingRight() + image.getWidth();
+    protected Size onMeasureContent() {
+        if (image != null) {
+            return new Size(image.getWidth(), image.getHeight());
+        } else {
+            return super.onMeasureContent();
+        }
     }
 }

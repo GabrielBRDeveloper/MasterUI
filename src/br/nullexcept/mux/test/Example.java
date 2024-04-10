@@ -10,19 +10,6 @@ public class Example extends Activity {
         Application.initialize(Example::new);
     }
 
-    private void printXml(String space, XmlElement element){
-        System.out.println(space+"   ["+element.name()+"]");
-        for (String key: element.attrNames()){
-            System.out.println(space+" - "+key+" = "+element.attr(key));
-        }
-        if (element.childCount() > 0) {
-            System.out.println(space + " - Children: ");
-            for (int i = 0; i < element.childCount(); i++) {
-                printXml(space + "   ", element.childAt(i));
-            }
-        }
-    }
-
     @Override
     public void onCreate() {
         super.onCreate();

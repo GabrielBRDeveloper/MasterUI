@@ -258,47 +258,16 @@ public class View {
         if (parent == null)
             return;
 
-        int parentWidth = parent.getMeasuredWidth() - parent.getPaddingLeft() -
-                parent.getPaddingRight();
-        int parentHeight = parent.getMeasuredHeight() - parent.getPaddingTop() -
-                parent.getPaddingBottom();
-
-        Point location = parent.getChildLocation(this);
-        int ow = getMeasuredWidth();
-        int oh = getMeasuredHeight();
-        { // Measure sizes
-            int w = 1;
-            int h = 1;
-            if (params.width >= 0) {
-                w = params.width;
-            } else if (params.width == ViewGroup.LayoutParams.MATCH_PARENT) {
-                w = Math.max(0, parentWidth - location.x + parent.getPaddingLeft());
-            } else {
-                w = calculateWidth();
-            }
-
-            if (params.height >= 0) {
-                h = params.height;
-            } else if (params.height == ViewGroup.LayoutParams.MATCH_PARENT) {
-                h = Math.max(0, parentHeight - location.y + parent.getPaddingTop());
-            } else {
-                h = calculateHeight();
-            }
-            if (ow != w || oh != h) {
-                onMeasure(w, h);
-                parent.requestLayout();
-                measure();
-                invalidate();
+        if (parent.measureChild(this)) {
+            ViewGroup.LayoutParams pp = parent.getLayoutParams();
+            if (pp.width < 0 || pp.height < 0) {
+                parent.measure();
             }
         }
     }
 
-    protected int calculateWidth() {
-        return padding.left + padding.right;
-    }
-
-    protected int calculateHeight() {
-        return padding.top + padding.bottom;
+    protected Size onMeasureContent() {
+        return new Size(0,0);
     }
 
     public <T extends View> T findViewByTag(Object tag) {
@@ -398,6 +367,9 @@ public class View {
 
     protected void onMeasure(int width, int height) {
         measured.set(width, height);
+        getParent().requestLayout();
+        measure();
+        invalidate();
     }
 
     final void setParent(ViewGroup group) {
