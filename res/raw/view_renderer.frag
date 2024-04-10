@@ -10,17 +10,14 @@ uniform sampler2D texture;
 varying vec2 uv;
 
 void main() {
-    vec4 color = texture2D(texture, uv);
-    color.a *= ALPHA;
-    if(color.a <= 0.0) discard;
+    vec4 diffuse = vec4(1.0);
 
     if(MODE == 0) {
-        color.rgb *= color.a;
-    } else if(ALPHA == 1.0){
-        if(color.a >= 1.0)discard;
-    } else {
-        discard;
+        diffuse = texture2D(texture, uv);
     }
 
-    gl_FragColor = color;
+    if(diffuse.a <= 0.0)
+        discard;
+
+    gl_FragColor = diffuse;
 }

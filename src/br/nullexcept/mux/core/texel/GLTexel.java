@@ -66,7 +66,7 @@ class GLTexel {
                 GL_ONE,
                 GL_ONE_MINUS_SRC_ALPHA,
                 GL_ONE,
-                GL_ONE
+                GL_ONE_MINUS_SRC_ALPHA
         );
 
 
@@ -85,17 +85,11 @@ class GLTexel {
             glVertexAttribPointer(program.uv, 2, GL_FLOAT, false, 0, bufferUV);
             glUniform1i(program.texture, GL_TEXTURE_2D);
 
-            /**
-             * @TODO: Need better implement for fix dark border + alpha, with low gpu cost
-             * MODE 0 = FILL
-             * MODE 1 = "ANTILIAZING""
-             */
-            for (int x = 0; x < 2; x++) {
-                glUniform1iv(program.params, new int[]{
-                        x, Math.round(alphas[i] * 255)
-                });
-                glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-            }
+            glUniform1iv(program.params, new int[]{
+                    0,
+                    Math.round(alphas[i] * 255)
+            });
+            glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         }
 
         program.unbind();
