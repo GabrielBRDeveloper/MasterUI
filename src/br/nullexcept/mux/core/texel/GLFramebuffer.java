@@ -56,10 +56,8 @@ class GLFramebuffer implements Disposable, Bindable {
     }
 
     public void clear(int color){
-        bind();
         glClearColor(Color.red(color)/255.0f, Color.green(color)/255.0f, Color.blue(color)/255.0f, Color.alpha(color)/255.0f);
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);
-        unbind();
     }
 
     public GLTexture getTexture() {

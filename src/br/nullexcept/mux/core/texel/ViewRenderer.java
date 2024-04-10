@@ -1,9 +1,14 @@
 package br.nullexcept.mux.core.texel;
 
+import br.nullexcept.mux.C;
+import br.nullexcept.mux.graphics.Color;
+import br.nullexcept.mux.graphics.Paint;
 import br.nullexcept.mux.graphics.Rect;
-import br.nullexcept.mux.utils.Log;
+import br.nullexcept.mux.hardware.GLES;
 import br.nullexcept.mux.view.View;
 import br.nullexcept.mux.view.ViewGroup;
+import org.lwjgl.nanovg.NanoVG;
+import org.lwjgl.nanovg.NanoVGGLES2;
 
 import java.util.HashMap;
 import java.util.List;
@@ -11,9 +16,15 @@ import java.util.List;
 class ViewRenderer {
     private static final int FLAG_REQUIRES_DRAW = WindowContainer.FLAG_REQUIRES_DRAW;
     private final HashMap<Integer, RenderCache> registry;
+    private final GLFramebuffer tmpFramebuffer;
+    private final CacheBitmap cacheAlpha = new CacheBitmap();
+    private final Paint tmpPaint = new Paint();
+    private final int img;
 
     ViewRenderer(HashMap<Integer, RenderCache> registry){
         this.registry = registry;
+        tmpFramebuffer = new GLFramebuffer(1,1);
+        img = NanoVGGLES2.nvglCreateImageFromHandle(C.VG_CONTEXT, tmpFramebuffer.getTexture().getTexture(),0,0, NanoVG.NVG_IMAGE_PREMULTIPLIED|NanoVG.NVG_IMAGE_FLIPY);
     }
 
     public void drawInternal(CanvasTexel canvas, View view){
@@ -54,8 +65,19 @@ class ViewRenderer {
                 }
             }
 
-            canvas.begin();
-            GLTexel.drawViewLayers(borders,textures, alphas);
+            if (view.getAlpha() == 1.0f) { //FAST DRAW
+                canvas.begin();
+                GLTexel.drawViewLayers(borders,textures, alphas);
+            } else {
+                // For draw container with alpha draw in a tmp fbo after draw in view fbo
+                tmpFramebuffer.resize(canvas.getWidth(),canvas.getHeight());
+                tmpFramebuffer.bind();
+                tmpFramebuffer.clear(0);
+                GLTexel.drawViewLayers(borders,textures, alphas);
+                tmpFramebuffer.unbind();
+                canvas.begin();
+                canvas.drawBitmap(0,0, cacheAlpha, tmpPaint);
+            }
         }
         view.onDrawForeground(canvas);
         view.subFlag(FLAG_REQUIRES_DRAW);
@@ -145,4 +167,25 @@ class ViewRenderer {
         return mesh;
     }
 
+    public void dispose() {
+        tmpFramebuffer.dispose();
+        NanoVG.nvgDeleteImage(C.VG_CONTEXT, img);
+    }
+
+    private class CacheBitmap extends TexelBitmap {
+        @Override
+        public int getWidth() {
+            return tmpFramebuffer.getWidth();
+        }
+
+        @Override
+        public int getHeight() {
+            return tmpFramebuffer.getHeight();
+        }
+
+        @Override
+        public int id() {
+            return img;
+        }
+    }
 }

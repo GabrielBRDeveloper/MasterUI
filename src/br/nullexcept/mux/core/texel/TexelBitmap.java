@@ -16,6 +16,13 @@ class TexelBitmap implements Bitmap {
     private final int id;
     private boolean disposed = false;
 
+    public TexelBitmap() {
+        this.id = 0;
+        this.disposed = true;
+        width = 0;
+        height = 0;
+    }
+
     public TexelBitmap(ByteBuffer encodedData){
         id = NanoVG.nvgCreateImageMem(C.VG_CONTEXT,0,encodedData);
         int[][] sizes = new int[2][1];
