@@ -48,6 +48,9 @@ public class ViewGroup extends View {
 
     protected boolean measureChild(View child) {
         LayoutParams params = child.getLayoutParams();
+        if (child instanceof ViewGroup) {
+            ((ViewGroup) child).measureChildren();
+        }
         Size size = child.onMeasureContent();
         Point pos = getChildLocation(child);
 
@@ -88,6 +91,7 @@ public class ViewGroup extends View {
         while (measureChildren()) {
             measure();
         }
+        parent.measureChild(this);
         measureBounds();
     }
 
