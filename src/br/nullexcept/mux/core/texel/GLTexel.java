@@ -2,6 +2,7 @@ package br.nullexcept.mux.core.texel;
 
 import br.nullexcept.mux.graphics.Color;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengles.OESDrawBuffersIndexed;
 
 import java.nio.FloatBuffer;
 
@@ -54,42 +55,57 @@ class GLTexel {
 
     public static void drawViewLayers(float[][] vertices, int[] textures, float[] alphas){
         glEnable(GL_BLEND);
-        glBlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-        GLProgram program = GLShaderList.VIEW;
+        /**
+         * X = FUNC SRC
+         * Y = FUNC DST
+         *
+         * dstColor = src.rgb * X + dest.rgb * Y;
+         */
+        glBlendFuncSeparate(
+                GL_ONE,
+                GL_ONE_MINUS_SRC_ALPHA,
+                GL_ONE,
+                GL_ONE_MINUS_SRC_ALPHA
+        );
+
+
+        GLProgramView program = GLShaderList.VIEW;
 
         program.bind();
-
-        int vPosition = program.attribute(GLProgram.ATTRIBUTE_POSITION);
-        int vTextureCoords = program.attribute(GLProgram.ATTRIBUTE_UV);
-        int uTexture = program.uniform(GLProgram.UNIFORM_TEXTURE);
-        int uAlpha = program.uniform("alpha");
-        int uTime = program.uniform("time");
-
-        glEnableVertexAttribArray(vPosition);
-        glEnableVertexAttribArray(vTextureCoords);
+        glEnableVertexAttribArray(program.position);
+        glEnableVertexAttribArray(program.uv);
 
         for (int i = 0; i < vertices.length; i++) {
             bufferRect.put(vertices[i]);
             bufferRect.position(0);
 
             glBindTexture(GL_TEXTURE_2D, textures[i]);
-            glVertexAttribPointer(vPosition, 2, GL_FLOAT, false, 0, bufferRect);
-            glVertexAttribPointer(vTextureCoords, 2, GL_FLOAT, false, 0, bufferUV);
 
-            glUniform1i(uTexture, GL_TEXTURE_2D);
-            glUniform1f(uAlpha, alphas[i]);
-            glUniform1f(uTime, (System.currentTimeMillis() & 1000)/1000.0f);
+            glVertexAttribPointer(program.position, 2, GL_FLOAT, false, 0, bufferRect);
+            glVertexAttribPointer(program.uv, 2, GL_FLOAT, false, 0, bufferUV);
+
+            glUniform1iv(program.params, new int[]{});
+
+            glUniform1i(program.texture, GL_TEXTURE_2D);
             glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-            glDisable(GL_DEPTH_TEST);
+            glFinish();
         }
 
         program.unbind();
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
+
+    private static FloatBuffer allocateVertices(float[][] vectors) {
+        FloatBuffer vertx = BufferUtils.createFloatBuffer(vectors.length*vectors[0].length);
+        vertx.position(0);
+        for (int i = 0; i< vectors.length; i++)
+            vertx.put(vectors[i]);
+        vertx.position(0);
+        return vertx;
+    }
+
     public static void drawTexture(float x, float y, float width, float height, GLProgram program, int texture){
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         prepareRect(x, y, width, height);
         //bufferColor.put(new float[]{ Color.red(color)/255.0f, Color.green(color)/255.0f, Color.blue(color)/255.0f, Color.alpha(color)/255.0f  });
         program.bind();
@@ -113,6 +129,5 @@ class GLTexel {
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         program.unbind();
         glBindTexture(GL_TEXTURE_2D,0);
-        glDisable(GL_DEPTH_TEST);
     }
 }

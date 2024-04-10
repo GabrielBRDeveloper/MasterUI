@@ -6,7 +6,7 @@ class GLShaderList {
     private static ArrayList<GLProgram> list = new ArrayList<>();
 
     public static final GLProgram TEXTURE = register(new GLProgramTexture());
-    public static final GLProgram VIEW = register(new GLProgramView());
+    public static final GLProgramView VIEW = register(new GLProgramView());
 
     public static <T extends GLProgram> T register(T value){
         list.add(value);

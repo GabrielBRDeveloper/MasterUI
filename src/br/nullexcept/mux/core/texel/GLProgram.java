@@ -29,6 +29,10 @@ abstract class GLProgram implements Bindable, Disposable {
         glUseProgram(0);
     }
 
+    protected int id() {
+        return program;
+    }
+
     protected abstract void preload(int program);
 
     public void dispose(){

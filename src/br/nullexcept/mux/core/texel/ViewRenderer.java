@@ -26,8 +26,8 @@ class ViewRenderer {
             canvas.getFramebuffer().resize(bounds.width(), bounds.height());
         }
         canvas.begin();
-        canvas.reset();
         canvas.alpha(view.getAlpha());
+        canvas.reset();
         view.onDraw(canvas);
         if (view instanceof ViewGroup){
             canvas.end();
@@ -52,10 +52,9 @@ class ViewRenderer {
                     index++;
                 }
             }
-            canvas.getFramebuffer().bind();
-            GLTexel.drawViewLayers(borders,textures, alphas);
-            canvas.getFramebuffer().unbind();
+
             canvas.begin();
+            GLTexel.drawViewLayers(borders,textures, alphas);
         }
         view.onDrawForeground(canvas);
         view.subFlag(FLAG_REQUIRES_DRAW);

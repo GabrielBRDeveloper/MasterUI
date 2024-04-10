@@ -32,6 +32,8 @@
         width="200dp"
         height="200dp"
         background="?colorPrimary"
+        rotation="45"
+        alpha="0.2"
         src="@drawable/panda"/>
     <View width="10dp" height="10dp"/>
     <Switch/>
