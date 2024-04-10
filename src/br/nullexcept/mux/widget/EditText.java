@@ -136,13 +136,10 @@ public class EditText extends View {
     }
 
     @Override
-    protected int calculateHeight() {
-        int lineCount = Math.max(1, text.getLineCount());
-        return (int) ((lineCount * font().getLineHeight()) + getPaddingTop() + getPaddingBottom());
-    }
+    protected Size onMeasureContent() {
+        Size size = new Size();
+        size.height = Math.round(font().getLineHeight()* Math.max(1, text.getLineCount()));
 
-    @Override
-    protected int calculateWidth() {
         int width = 0;
         int line = 0;
         for (int i = 0; i < text.getLineCount(); i++) {
@@ -157,7 +154,9 @@ public class EditText extends View {
             width += font().measureChar(text.charAt(i));
         }
 
-        return width + getPaddingLeft() + getPaddingRight();
+        size.width = width;
+
+        return size;
     }
 
     public CharSequence getText() {

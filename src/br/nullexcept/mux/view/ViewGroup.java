@@ -3,6 +3,7 @@ package br.nullexcept.mux.view;
 import br.nullexcept.mux.app.Context;
 import br.nullexcept.mux.graphics.Point;
 import br.nullexcept.mux.graphics.Rect;
+import br.nullexcept.mux.graphics.Size;
 import br.nullexcept.mux.input.MotionEvent;
 import br.nullexcept.mux.input.MouseEvent;
 import br.nullexcept.mux.res.AttributeList;
@@ -36,53 +37,59 @@ public class ViewGroup extends View {
         }
     }
 
-    private void measureChildren(){
-        for (View child : children) {
-            child.measure();
+    protected int measureSpec(int parent, int spec, int wrap, int padding) {
+        if (spec == LayoutParams.WRAP_CONTENT) {
+            return wrap + padding;
+        } else if (spec == LayoutParams.MATCH_PARENT) {
+            return Math.max(parent, 0);
+        } else {
+            return spec;
         }
+    }
+
+    protected boolean measureChild(View child) {
+        LayoutParams params = child.getLayoutParams();
+        Size size = child.onMeasureContent();
+        Point pos = getChildLocation(child);
+
+        int left = pos.x - getPaddingLeft();
+        int top  = pos.y - getPaddingTop();
+
+        int w = measureSpec(getMeasuredWidth()-getPaddingLeft()-getPaddingRight()-left, params.width, size.width, child.getPaddingLeft() + child.getPaddingRight());
+        int h = measureSpec(getMeasuredHeight()-getPaddingTop()-getPaddingBottom()-top, params.height, size.height, child.getPaddingTop() + child.getPaddingBottom());
+        if (w != child.getMeasuredWidth() || h != child.getMeasuredHeight()) {
+            child.onMeasure(w,h);
+            return true;
+        }
+        return false;
+    }
+
+    protected boolean measureChildren(){
+        if (children == null)
+            return false;
+
+        boolean changed = false;
         for (View child : children) {
+            changed |= measureChild(child);
+        }
+
+        for (View child: children) {
             child.measureBounds();
         }
+        return changed;
     }
 
     @Override
     public void measure() {
-        LayoutParams params = getLayoutParams();
         ViewGroup parent = getParent();
         if (parent == null)
             return;
 
-        parent.getInternalSize(rect);
-
-        int ow = getMeasuredWidth();
-        int oh = getMeasuredHeight();
-        Point location = parent.getChildLocation(this);
-        int width, height;
-        if (params.hasWrap()) {
-            measureChildren();
-            if (params.width == LayoutParams.WRAP_CONTENT) {
-                width = calculateWidth();
-            } else {
-                width = params.width == LayoutParams.MATCH_PARENT ? rect.width() - location.x : params.width;
-            }
-            if (params.height == LayoutParams.WRAP_CONTENT) {
-                height = calculateHeight();
-            } else {
-                height = params.height == LayoutParams.MATCH_PARENT ? rect.height() - location.y : params.height;
-            }
-        } else {
-            width = params.width == LayoutParams.MATCH_PARENT ? rect.width() - location.x : params.width;
-            height = params.height == LayoutParams.MATCH_PARENT ? rect.height() - location.y : params.height;
-            width = Math.max(0, width);
-            height = Math.max(0, height);
-        }
-
-        measureChildren();
-        if (width != ow || height != oh) {
-            onMeasure(width, height);
+        parent.measureChild(this);
+        while (measureChildren()) {
             measure();
-            invalidate();
         }
+        measureBounds();
     }
 
     @Override
@@ -124,23 +131,15 @@ public class ViewGroup extends View {
     }
 
     @Override
-    protected int calculateWidth() {
-        int width = 0;
+    protected Size onMeasureContent() {
+        Size size = new Size();
         for (View child: children){
             int x = Math.max(0, getChildLocation(child).x - getPaddingLeft());
-            width = Math.max(x+child.getMeasuredWidth(), width);
-        }
-        return width + getPaddingLeft() + getPaddingRight();
-    }
-
-    @Override
-    protected int calculateHeight() {
-        int height = 0;
-        for (View child: children){
+            size.width = Math.max(x + child.getMeasuredWidth(), size.width);
             int y = Math.max(0, getChildLocation(child).y - getPaddingTop());
-            height = Math.max(y+child.getMeasuredHeight(), height);
+            size.height = Math.max(y+child.getMeasuredHeight(), size.height);
         }
-        return height + getPaddingTop() + getPaddingBottom();
+        return size;
     }
 
     public int getChildrenCount(){

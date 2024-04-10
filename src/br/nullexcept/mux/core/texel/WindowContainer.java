@@ -52,6 +52,9 @@ public class WindowContainer extends AbsoluteLayout {
         if (rootCanvas != null) {
             getBounds().set(0, 0, rootCanvas.getWidth(), rootCanvas.getHeight());
         }
+        while (measureChildren()) {
+            measure();
+        }
     }
 
     @Override
@@ -163,10 +166,7 @@ public class WindowContainer extends AbsoluteLayout {
 
     @Override
     public void requestLayout() {
-        for (View view: getChildren())
-            view.measure();
-        for (View view: getChildren())
-            view.measureBounds();
+        measure();
     }
 
     public void dispose(){
