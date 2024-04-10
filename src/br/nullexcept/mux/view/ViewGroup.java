@@ -33,7 +33,6 @@ public class ViewGroup extends View {
             invalidate();
         } else {
             measure();
-            measureBounds();
         }
     }
 

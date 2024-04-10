@@ -258,7 +258,12 @@ public class View {
         if (parent == null)
             return;
 
-        parent.measureChild(this);
+        if (parent.measureChild(this)) {
+            ViewGroup.LayoutParams pp = parent.getLayoutParams();
+            if (pp.width < 0 || pp.height < 0) {
+                parent.measure();
+            }
+        }
     }
 
     protected Size onMeasureContent() {
