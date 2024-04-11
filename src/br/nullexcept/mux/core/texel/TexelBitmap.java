@@ -3,9 +3,12 @@ package br.nullexcept.mux.core.texel;
 import br.nullexcept.mux.C;
 import br.nullexcept.mux.app.Looper;
 import br.nullexcept.mux.graphics.Bitmap;
+import br.nullexcept.mux.hardware.GLES;
 import br.nullexcept.mux.utils.Log;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.nanovg.NanoVGGLES2;
+import org.lwjgl.opengles.GLES20;
 
 import java.nio.ByteBuffer;
 
@@ -14,6 +17,7 @@ class TexelBitmap implements Bitmap {
     private final int height;
     private final int id;
     private boolean disposed = false;
+    int texture;
 
     public TexelBitmap() {
         this.id = 0;
@@ -32,6 +36,7 @@ class TexelBitmap implements Bitmap {
     }
 
     private void setupImage(int texture){
+        this.texture = texture;
     }
 
     @Override
@@ -51,9 +56,7 @@ class TexelBitmap implements Bitmap {
     }
 
     @Override
-    public void setPixel(int x, int y) {
-        Log.log("TexelBitmap","Requires implement set pixels");
-    }
+    public void setPixel(int x, int y) {}
 
     @Override
     public Format getFormat() {

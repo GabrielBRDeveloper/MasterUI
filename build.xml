@@ -25,6 +25,8 @@
     <exclude name="**/.git/**"/>
     <exclude name="**/.hg/**"/>
     <exclude name="**/.svn/**"/>
+    <exclude name="**/docs/**"/>
+    <exclude name="**/out/**"/>
     <exclude name="**/CVS/**"/>
     <exclude name="**/__pycache__/**"/>
     <exclude name="**/_svn/**"/>

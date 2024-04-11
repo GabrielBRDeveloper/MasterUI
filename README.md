@@ -5,6 +5,8 @@
 Java library for make a beautiful UI, code design is based in android ui.
 That project uses OpenGLES 2.0 for render, so that is compatible with many actual devices.
 
+>**[Use Guide](docs/HELLO_WORLD.md)**
+
 # Usage example
 
 ```java
@@ -21,12 +23,6 @@ public class Example extends Activity {
         setTitle("Hello world!");
         view.setBackground(new ColorDrawable(Color.RED));
         setContentView(view);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Application.stop();
     }
 }
 ```
@@ -59,7 +55,7 @@ public class Example extends Activity {
 
 ### Interface
 
-- 🟨 XML UI
+- 🟩 XML UI
 - 🟨 Themes
 - 🟨 Multi window
 - 🟨 Menus

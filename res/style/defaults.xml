@@ -30,6 +30,11 @@
     <item name="background">@drawable/textarea_background</item>
   </style>
 
+  <style name="Widget.Window">
+    <item name="icon">@drawable/default_window_icon</item>
+    <item name="title">MasterUi - Project</item>
+  </style>
+
   <style name="Widget.Button">
     <item name="background">@drawable/button_background</item>
     <item name="gravity">center</item>

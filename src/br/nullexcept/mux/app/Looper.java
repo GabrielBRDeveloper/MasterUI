@@ -47,8 +47,7 @@ public class Looper {
                     try {
                         runnable.run();
                     } catch (Throwable e) {
-                        Log.error(LOG_TAG, "[ERROR ON LOOPER]");
-                        Log.error(LOG_TAG, e);
+                        Log.error(LOG_TAG, "[ERROR ON LOOPER]",e);
                         stop = true;
                     }
                 }

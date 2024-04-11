@@ -1,6 +1,8 @@
 package br.nullexcept.mux.app;
 
 import br.nullexcept.mux.lang.Valuable;
+import br.nullexcept.mux.res.AttributeList;
+import br.nullexcept.mux.view.AttrList;
 import br.nullexcept.mux.view.View;
 import br.nullexcept.mux.view.Window;
 
@@ -8,7 +10,12 @@ public class Activity extends Context {
     Window mWindow;
     private boolean running;
 
-    public void onCreate(){ running = true; }
+    public void onCreate(){
+        running = true;
+        AttributeList attrs = getResources().obtainStyled("Widget.Window");
+        attrs.searchText("title", (text)-> mWindow.setTitle(""+text));
+        attrs.searchDrawable("icon", (icon) -> mWindow.setIcon(icon));
+    }
     public void onDestroy(){ running = false; }
     public void onPause(){ running = false; }
     public void onResume(){ running = true; }

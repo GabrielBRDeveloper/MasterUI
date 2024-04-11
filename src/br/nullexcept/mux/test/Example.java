@@ -2,6 +2,10 @@ package br.nullexcept.mux.test;
 
 import br.nullexcept.mux.app.Activity;
 import br.nullexcept.mux.app.Application;
+import br.nullexcept.mux.graphics.Bitmap;
+import br.nullexcept.mux.graphics.BitmapFactory;
+import br.nullexcept.mux.graphics.Drawable;
+import br.nullexcept.mux.graphics.drawable.BitmapDrawable;
 import br.nullexcept.mux.utils.Log;
 import br.nullexcept.mux.view.View;
 import br.nullexcept.mux.view.anim.AlphaAnimation;
@@ -17,8 +21,7 @@ public class Example extends Activity {
         super.onCreate();
         Log.log("OK", "Hello world");
         setContentView("main");
-        setTitle("Example");
-
+        if (true)return;
         View panda = findViewById("panda");
         {
             RotationAnimation rot = new RotationAnimation(panda, 5000);

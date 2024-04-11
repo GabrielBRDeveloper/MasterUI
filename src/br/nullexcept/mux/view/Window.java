@@ -1,5 +1,8 @@
 package br.nullexcept.mux.view;
 
+import br.nullexcept.mux.graphics.Bitmap;
+import br.nullexcept.mux.graphics.Drawable;
+
 public abstract class Window {
     public abstract int getWidth();
     public abstract int getHeight();
@@ -13,6 +16,7 @@ public abstract class Window {
     public abstract WindowObserver getWindowObserver();
     public abstract void create();
     public abstract void destroy();
+    public abstract void setIcon(Drawable icon);
 
     public interface WindowObserver {
         void onCreated();

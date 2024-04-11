@@ -2,7 +2,7 @@ package br.nullexcept.mux.core.texel;
 
 import br.nullexcept.mux.C;
 import br.nullexcept.mux.app.Looper;
-import br.nullexcept.mux.graphics.Point;
+import br.nullexcept.mux.graphics.*;
 import br.nullexcept.mux.graphics.fonts.Typeface;
 import br.nullexcept.mux.hardware.GLES;
 import br.nullexcept.mux.input.CharEvent;
@@ -12,10 +12,15 @@ import br.nullexcept.mux.input.MouseEvent;
 import br.nullexcept.mux.view.View;
 import br.nullexcept.mux.view.ViewGroup;
 import br.nullexcept.mux.view.Window;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.nanovg.NVGColor;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.opengles.GLES20;
+import org.lwjgl.system.MemoryUtil;
+
+import java.nio.ByteBuffer;
 
 import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
 
@@ -34,6 +39,8 @@ class GlfwWindow extends Window {
     public GlfwWindow() {
         window = GLFW.glfwCreateWindow(512, 512, "[title]", 0, C.GLFW_CONTEXT);
         eventManager = new GlfwEventManager(this);
+
+        GLFW.glfwIconifyWindow(window);
         GLFW.glfwSetWindowSizeLimits(window, 128,128, Integer.MAX_VALUE, Integer.MAX_VALUE);
     }
 
@@ -268,6 +275,54 @@ class GlfwWindow extends Window {
 
         container = null;
         observer = null;
+    }
+
+    @Override
+    public void setIcon(Drawable icon) {
+        int iconSize = 128;
+
+        icon.setBounds(new Rect(0,0,iconSize,iconSize));
+
+        CanvasTexel canvas = new CanvasTexel(iconSize, iconSize);
+        canvas.begin();
+        icon.draw(canvas);
+        canvas.end();
+        ByteBuffer buffer = BufferUtils.createByteBuffer((iconSize*iconSize)*4);
+
+        canvas.getFramebuffer().bind();
+        GLES.glReadPixels(0,0, iconSize,iconSize, GLES20.GL_RGBA,GLES20.GL_UNSIGNED_BYTE,buffer);
+        canvas.getFramebuffer().unbind();
+        canvas.dispose();
+
+        new Thread(()->{
+            buffer.rewind();
+            ByteBuffer flipY = BufferUtils.createByteBuffer(buffer.capacity());
+            flipY.position(0);
+            byte[] row = new byte[iconSize*4];
+            for (int i = 0; i < iconSize; i++) {
+                buffer.position(
+                        (buffer.capacity()) - (row.length * (i+1))
+                );
+                buffer.get(row);
+                flipY.position(row.length*i);
+                flipY.put(row);
+            }
+
+            MemoryUtil.memFree(buffer);
+            flipY.flip();
+
+            if (!destroyed) {
+                GLFWImage img = GLFWImage.create();
+                img.width(canvas.getWidth());
+                img.height(canvas.getHeight());
+                img.pixels(flipY);
+
+                GLFWImage.Buffer bff = GLFWImage.malloc(1);
+                bff.put(0, img);
+
+                GLFW.glfwSetWindowIcon(window, bff);
+            }
+        }).start();
     }
 
     public void onMouseMoved(MotionEvent event) {

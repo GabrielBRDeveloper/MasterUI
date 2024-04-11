@@ -7,6 +7,7 @@
       <sourceFolder url="file://$MODULE_DIR$/assets" type="java-resource" relativeOutputPath="assets" />
       <sourceFolder url="file://$MODULE_DIR$/res" type="java-resource" relativeOutputPath="res" />
       <excludeFolder url="file://$MODULE_DIR$/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/docs" />
       <excludeFolder url="file://$MODULE_DIR$/lib" />
       <excludeFolder url="file://$MODULE_DIR$/out" />
     </content>
