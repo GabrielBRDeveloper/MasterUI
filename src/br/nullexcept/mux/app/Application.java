@@ -38,7 +38,12 @@ public class Application {
         TexelAPI.destroy();
         glfwTerminate();
         System.gc();
-        System.exit(0);
+        new Thread(()->{
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {}
+            System.exit(0);
+        }).start();
     }
 
     private static final void loop(){
@@ -91,6 +96,8 @@ public class Application {
     }
 
     public static void stop(){
+        for (Service service: services.values())
+            service.myLooper.stop();
         Looper.getMainLooper().stop();
     }
 
@@ -105,8 +112,8 @@ public class Application {
 
         services.put(name, sv);
         new Thread(()->{
-            looper.post(sv::onCreate);
             looper.initialize();
+            looper.post(sv::onCreate);
             looper.loop();
             services.remove(name);
             sv.onDestroy();

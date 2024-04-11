@@ -75,7 +75,7 @@ public class Example extends Activity {
 - 🟩 Looper
 - 🟨 Activity
 - 🟨 Read bitmap.
-- 🟥 Services.
+- 🟨 Services.
 - 🟥 Write bitmap.
 
 ### Events

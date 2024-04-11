@@ -47,8 +47,16 @@ public class Activity extends Context {
         mWindow.setContentView(view);
     }
 
-    protected void post(Runnable runnable){
-        Looper.getMainLooper().post(runnable);
+    protected void post(Runnable runnable) {
+        postDelayed(runnable, 1);
+    }
+
+    protected void postDelayed(Runnable runnable, int time){
+        Looper.getMainLooper().postDelayed(()->{
+            if(isRunning()) {
+                runnable.run();
+            }
+        }, time);
     }
 
     protected void setTitle(String title){

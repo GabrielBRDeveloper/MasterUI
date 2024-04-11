@@ -7,6 +7,14 @@ public class Service {
 
     }
 
+    protected void post(Runnable runnable) {
+        postDelayed(runnable, 1);
+    }
+
+    protected void postDelayed(Runnable run, int time) {
+        myLooper.postDelayed(run, time);
+    }
+
     protected void finish() {
         myLooper.stop();
     }

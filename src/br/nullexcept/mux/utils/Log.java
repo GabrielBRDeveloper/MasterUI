@@ -2,13 +2,14 @@ package br.nullexcept.mux.utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.Date;
 
 public class Log {
-    private static final long start = System.currentTimeMillis();
+    private static final Date date = new Date();
 
     private static final String time(){
-        long time = (System.currentTimeMillis() - start)/1000;
-        return String.format("%02d:%02d", (time/60), time % 60);
+        date.setTime(System.currentTimeMillis());
+        return String.format("%02d:%02d", date.getHours(), date.getMinutes());
     }
 
     private static String toString(Object obj){
