@@ -100,7 +100,7 @@ class FallbackAttributes implements AttributeList {
     @Override
     public CharSequence getText(String name) {
         if (contains(name)){
-            return resolve(map.get(name));
+            return Parser.parseText(resources, resolve(map.get(name)));
         } else if (fallback != null){
             return fallback.getText(name);
         }

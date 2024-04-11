@@ -17,7 +17,6 @@ public class ScrollView extends ViewGroup {
     private final Point pixelScroll = new Point();
     private final ScrollContainer container;
     private Drawable scrollDrawable = new ColorDrawable(Color.GREEN);
-    private final Rect rect = new Rect();
     private int scrollbarWeight = 10;
     private final Point mouseScroll = new Point();
     private boolean capturedMouseScroll = true;
@@ -77,7 +76,6 @@ public class ScrollView extends ViewGroup {
 
     @Override
     protected boolean dispatchMouseEvent(MouseEvent mouseEvent) {
-
         if (mouseEvent.getAction() == MotionEvent.ACTION_DOWN && mouseEvent.getTarget() == -1) {
             if (scrollbar.inner(mouseEvent.getX(), mouseEvent.getY())) {
                 mouseEvent.setTarget(hashCode());

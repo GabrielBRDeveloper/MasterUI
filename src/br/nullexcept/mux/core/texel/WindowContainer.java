@@ -1,5 +1,6 @@
 package br.nullexcept.mux.core.texel;
 
+import br.nullexcept.mux.C;
 import br.nullexcept.mux.app.Context;
 import br.nullexcept.mux.graphics.Color;
 import br.nullexcept.mux.graphics.Rect;
@@ -149,10 +150,12 @@ public class WindowContainer extends AbsoluteLayout {
 
     private long lastRefresh = 0;
     public void drawFrame() {
-        if (System.currentTimeMillis() - lastRefresh >= 7000){
+        if (!C.Flags.DISABLE_AUTO_REDRAW && System.currentTimeMillis() - lastRefresh >= 7000){
             invalidateAll();
             lastRefresh = System.currentTimeMillis();
         }
+        if (C.Flags.FULL_DRAW) invalidateAll();
+
         drawer.drawInternal(rootCanvas, this);
     }
 
@@ -250,15 +253,17 @@ public class WindowContainer extends AbsoluteLayout {
                     icon.setImageDrawable(item.getIcon());
                 }
                 ((TextView)v.findViewByTag("title")).setText(item.getTitle());
-                v.setOnClickListener((x)-> {
-                    currentMenu.callOnClick(item);
-                    closeMenu();
-                });
+                if (item.isEnable()) {
+                    v.setOnClickListener((x) -> {
+                        currentMenu.callOnClick(item);
+                        closeMenu();
+                    });
+                }
                 menuLayout.addChild(v);
-                new AlphaAnimation(v, 250).play();
             }
         }
 
+        new AlphaAnimation(menuLayout, 100).play();
         menuLayout.measure();
         requestLayout();
     }

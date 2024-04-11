@@ -217,4 +217,11 @@ class Parser {
         }
         return null;
     }
+
+    public static CharSequence parseText(Resources resources, String id) {
+        if (id.startsWith("@string/")) {
+            return resources.getString(id.substring("@string/".length()));
+        }
+        return id;
+    }
 }

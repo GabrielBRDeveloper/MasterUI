@@ -18,6 +18,10 @@ public class Context {
         applets.putAll(TexelAPI.obtainApplets());
     }
 
+    public String getString(String id) {
+        return mResource.getString(id);
+    }
+
     public <T extends Applet> T getApplet(String name) {
         return (T) applets.get(name);
     }

@@ -94,6 +94,7 @@ public class View {
             setGravity(gravity);
         });
 
+        state.set(StateList.CLICKABLE, false);
 
         attributes = attrs;
         Looper.getMainLooper().post(()-> attributes = null);
@@ -221,6 +222,8 @@ public class View {
     public void setOnClickListener(OnClickListener clickListener) {
         this.clickListener = clickListener;
         clickable = true;
+        state.set(StateList.CLICKABLE, true);
+        changeDrawableState();
     }
 
     public void post(Runnable runnable, long time) {

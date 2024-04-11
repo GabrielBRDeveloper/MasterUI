@@ -9,6 +9,7 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWVidMode;
 
 import java.util.HashMap;
+import java.util.Locale;
 
 
 /**
@@ -28,6 +29,7 @@ public final class Resources {
     private final Context context;
     private final AssetsManager assetsManager;
     private FallbackAttributes theme;
+    private final FallbackLanguage language = new FallbackLanguage();
 
     static final AssetsManager Manager;
 
@@ -42,7 +44,37 @@ public final class Resources {
         inflater = new LayoutInflater(ctx);
         assetsManager = new AssetsManager("/assets/", ctx.getClass());
         importStylesheet(requestXml("style/defaults"));
+
+        if (Manager.exists("values/style.xml"))
+            importStylesheet(requestXml("values/style"));
+        if (Manager.exists("values/themes.xml"))
+            importStylesheet(requestXml("values/themes"));
+
+        importLanguage();
         setTheme("Base.Theme");
+    }
+
+    /**
+     * LANGUAGE BASED IN OVERLAY EX:
+     * DEFAULT <= EN <= EN-US
+     */
+    private void importLanguage() {
+        Locale local = Locale.getDefault();
+        if (Resources.Manager.exists("values/strings.xml")) {
+            language.merge(requestXml("values/strings"));
+        }
+        if (local != null) {
+            String tag = local.toLanguageTag();
+            String low = tag.split("-")[0];
+            if (Manager.exists("values-"+low+"/strings.xml"))
+                language.merge(requestXml("values-"+low+"/strings"));
+            if (Manager.exists("values-"+tag+"/strings.xml"))
+                language.merge(requestXml("values-"+tag+"/strings"));
+        }
+    }
+
+    public String getString(String id) {
+        return language.getString(id);
     }
 
     public AssetsManager getAssetsManager() {

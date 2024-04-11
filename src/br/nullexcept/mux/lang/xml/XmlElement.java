@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class XmlElement {
@@ -87,5 +88,9 @@ public class XmlElement {
 
     public Map<String, String> attrs() {
         return new HashMap<>(attributes);
+    }
+
+    public List<XmlElement> children() {
+        return new ArrayList<>(children);
     }
 }

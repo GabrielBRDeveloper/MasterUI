@@ -189,6 +189,8 @@ public class EditText extends View {
         });
 
         this.menu.findItemById("paste").setEnable(clipboard.hasContent());
+        this.menu.findItemById("copy").setEnable(selection.length() > 0);
+        this.menu.findItemById("cut").setEnable(selection.length() > 0);
         menu.add(this.menu);
         return true;
     }

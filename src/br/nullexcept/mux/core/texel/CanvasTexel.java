@@ -39,7 +39,7 @@ class CanvasTexel implements Canvas {
 
     public void alpha(float alpha){
         this.alpha *= alpha;
-        VgTexel.setAlpha(alpha);
+        VgTexel.setAlpha(this.alpha);
     }
 
     @Override
