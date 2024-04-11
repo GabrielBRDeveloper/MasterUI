@@ -29,6 +29,7 @@ class GlfwWindow extends Window {
     public GlfwWindow() {
         window = GLFW.glfwCreateWindow(512, 512, "[title]", 0, C.GLFW_CONTEXT);
         eventManager = new GlfwEventManager(this);
+        GLFW.glfwSetWindowSizeLimits(window, 128,128, Integer.MAX_VALUE, Integer.MAX_VALUE);
     }
 
     long getAddress(){
@@ -69,7 +70,7 @@ class GlfwWindow extends Window {
         eventManager.runFrame();
 
         long time = System.currentTimeMillis();
-        if (isVisible()) {
+        if (isVisible() && container != null) {
             int ow = windowSize.x;
             int oh = windowSize.y;
             refresh();
@@ -100,8 +101,10 @@ class GlfwWindow extends Window {
     }
 
     private void onResize(int width, int height) {
-        container.resize(width, height);
-        container.invalidateAll();
+        if (container != null) {
+            container.resize(width, height);
+            container.invalidateAll();
+        }
     }
 
     @Override
@@ -130,16 +133,25 @@ class GlfwWindow extends Window {
             container.dispose();
             container= null;
         }
+        eventManager.clear();
+        if (view == null)
+            return;
+
+        windowSize.set(0,0);
         container = new WindowContainer(view.getContext(), this);
         container.addChild(view);
     }
 
     public void onMouseEvent(MouseEvent event) {
-        container.performInputEvent(event);
+        if (container != null) {
+            container.performInputEvent(event);
+        }
     }
 
     public void onKeyEvent(KeyEvent event) {
-        container.performInputEvent(event);
+        if (container != null) {
+            container.performInputEvent(event);
+        }
     }
 
     public void onCharEvent(CharEvent charEvent) {
@@ -168,6 +180,11 @@ class GlfwWindow extends Window {
     @Override
     public void setWindowObserver(WindowObserver observer) {
         this.observer = observer;
+    }
+
+    @Override
+    public WindowObserver getWindowObserver() {
+        return observer;
     }
 
     @Override

@@ -4,6 +4,7 @@ import br.nullexcept.mux.app.Context;
 import br.nullexcept.mux.graphics.*;
 import br.nullexcept.mux.graphics.drawable.ColorDrawable;
 import br.nullexcept.mux.input.KeyEvent;
+import br.nullexcept.mux.input.MotionEvent;
 import br.nullexcept.mux.input.MouseEvent;
 import br.nullexcept.mux.res.AttributeList;
 import br.nullexcept.mux.view.AttrList;
@@ -20,6 +21,7 @@ public class ScrollView extends ViewGroup {
     private int scrollbarWeight = 10;
     private final Point mouseScroll = new Point();
     private boolean capturedMouseScroll = true;
+    private final Rect scrollbar = new Rect();
 
     public ScrollView(Context context) {
         super(context);
@@ -33,6 +35,7 @@ public class ScrollView extends ViewGroup {
 
     {
         container = new ScrollContainer(getContext());
+        container.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
         super.addChild(container);
     }
 
@@ -45,18 +48,23 @@ public class ScrollView extends ViewGroup {
     @Override
     public void onDrawForeground(Canvas canvas) {
         super.onDrawForeground(canvas);
-        if (space.y > 1){
-            float vh = getHeight() - getPaddingTop() - getPaddingBottom();
+        measureScroll();
 
-            float sh = vh / space.y;
-            if (sh > 7.0)
-                sh = 0.7f;
+        int ch = container.getMeasuredHeight();
+        int vh = getMeasuredHeight();
 
-            int h = Math.round(vh * sh);
-            int y = (int) Math.round((vh - h) * scroll[1]);
-            rect.set(getWidth()-scrollbarWeight, y+getPaddingTop(), getWidth(), getPaddingTop()+y+h);
-            scrollDrawable.setBounds(rect);
+        if (ch > vh){
+            double rest = (double) vh / ch;
+            float localHeight = getHeight() - getPaddingTop() - getPaddingBottom();
+
+            int h = (int) Math.round(localHeight * rest);
+            h = Math.max(10, h);
+            int y = (int) Math.round((localHeight - h) * scroll[1]);
+            scrollbar.set(getWidth()-scrollbarWeight, y+getPaddingTop(), getWidth(), getPaddingTop()+y+h);
+            scrollDrawable.setBounds(scrollbar);
             scrollDrawable.draw(canvas);
+        } else {
+            scrollbar.set(0,0,0,0);
         }
     }
 
@@ -69,6 +77,20 @@ public class ScrollView extends ViewGroup {
 
     @Override
     protected boolean dispatchMouseEvent(MouseEvent mouseEvent) {
+
+        if (mouseEvent.getAction() == MotionEvent.ACTION_DOWN && mouseEvent.getTarget() == -1) {
+            if (scrollbar.inner(mouseEvent.getX(), mouseEvent.getY())) {
+                mouseEvent.setTarget(hashCode());
+                return true;
+            }
+        } else if (mouseEvent.getTarget() == hashCode()) {
+            double percent = mouseEvent.getY() / getMeasuredHeight();
+            percent = Math.max(0, Math.min(1.0, percent));
+            scroll[1] = percent;
+            measureContent();
+            return true;
+        }
+
         if (capturedMouseScroll){
             capturedMouseScroll = false;
             mouseScroll.set(mouseEvent.getScroll().x, mouseEvent.getScroll().y);
@@ -106,13 +128,7 @@ public class ScrollView extends ViewGroup {
         measureContent();
     }
 
-    private void measureContent() {
-        if (container.getChildrenCount() == 0) {
-            return;
-        }
-
-        measure();
-
+    private void measureScroll() {
         scroll[0] = Math.max(0.0, Math.min(1.0, scroll[0]));
         scroll[1] = Math.max(0.0, Math.min(1.0, scroll[1]));
 
@@ -136,9 +152,17 @@ public class ScrollView extends ViewGroup {
         space.set(Math.abs(mw), Math.abs(mh));
 
         pixelScroll.set(sx, sy);
+    }
+
+    private void measureContent() {
+        if (container.getChildrenCount() == 0) {
+            return;
+        }
+
+        measure();
+        measureScroll();
         container.invalidate();
         invalidate();
-        post(this::measureContent, 10);
     }
 
     @Override
@@ -168,6 +192,12 @@ public class ScrollView extends ViewGroup {
         @Override
         public void measure() {
             super.measure();
+        }
+
+        @Override
+        protected void onMeasure(int width, int height) {
+            super.onMeasure(width, height);
+            measureContent();
         }
 
         @Override

@@ -10,6 +10,7 @@ public abstract class Window {
     public abstract void setContentView(View view);
     public abstract void setVisible(boolean visible);
     public abstract void setWindowObserver(WindowObserver observer);
+    public abstract WindowObserver getWindowObserver();
     public abstract void create();
     public abstract void destroy();
 

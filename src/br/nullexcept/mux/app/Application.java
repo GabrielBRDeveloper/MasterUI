@@ -53,9 +53,8 @@ public class Application {
         Looper.getMainLooper().post(Application::loop);
     }
 
-    static void boot(Window window, Activity activity) {
-        window.destroy();
-        window.setWindowObserver(new Window.WindowObserver() {
+    static Window.WindowObserver buildObserver(Activity activity) {
+        return new Window.WindowObserver() {
             @Override
             public void onCreated() {
                 activity.onCreate();
@@ -80,7 +79,12 @@ public class Application {
                 RUNNING_ACTIVITIES--;
                 activity.onDestroy();
             }
-        });
+        };
+    }
+
+    static void boot(Window window, Activity activity) {
+        window.destroy();
+        window.setWindowObserver(buildObserver(activity));
         activity.mWindow = window;
         window.create();
         window.setVisible(true);

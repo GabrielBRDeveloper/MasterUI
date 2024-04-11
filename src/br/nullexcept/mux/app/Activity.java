@@ -24,8 +24,15 @@ public class Activity extends Context {
 
     public void switchActivity(Valuable<Activity> provider) {
         Window window = mWindow;
-        finish();
-        Application.boot(window, provider.get());
+        window.getWindowObserver().onDestroy();
+        mWindow.setContentView(null);
+        System.gc();
+        Activity nw = provider.get();
+        nw.mWindow = mWindow;
+        mWindow = null;
+
+        window.setWindowObserver(Application.buildObserver(nw));
+        window.getWindowObserver().onCreated();
     }
 
     public <T extends View> T findViewById(String id) {

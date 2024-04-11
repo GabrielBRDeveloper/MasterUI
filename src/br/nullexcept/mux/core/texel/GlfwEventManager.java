@@ -113,6 +113,11 @@ class GlfwEventManager {
         window.onMouseMoved(mouseMove);
     }
 
+    public void clear() {
+        downKeyEvents.clear();
+        downMouseEvents.clear();
+    }
+
     private class GlfwKeyEvent extends KeyEvent {
         private final int keyCode;
         public int modifiers = 0;

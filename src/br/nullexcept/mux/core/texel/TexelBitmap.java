@@ -1,8 +1,8 @@
 package br.nullexcept.mux.core.texel;
 
 import br.nullexcept.mux.C;
+import br.nullexcept.mux.app.Looper;
 import br.nullexcept.mux.graphics.Bitmap;
-import br.nullexcept.mux.hardware.GLES;
 import br.nullexcept.mux.utils.Log;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.nanovg.NanoVGGLES2;
@@ -10,7 +10,6 @@ import org.lwjgl.nanovg.NanoVGGLES2;
 import java.nio.ByteBuffer;
 
 class TexelBitmap implements Bitmap {
-    private static final int TEXTURE_2D = GLES.GL_TEXTURE27;
     private final int width;
     private final int height;
     private final int id;
@@ -74,11 +73,11 @@ class TexelBitmap implements Bitmap {
 
     @Override
     protected void finalize() throws Throwable {
-        try {
-            if (!disposed){
-                dispose();
-            }
-        } catch (Exception e){}
+        Looper.getMainLooper().post(()->{
+            try {
+                NanoVG.nvgDeleteImage(C.VG_CONTEXT, id);
+            } catch (Exception e){}
+        });
         super.finalize();
     }
 
