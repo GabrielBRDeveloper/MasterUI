@@ -34,7 +34,7 @@ public class Example extends Activity {
 
 # Create a UI with XML.
 
-For create complex UIs you can use XMLs, first you need create your layout file a like `res/layout/example.xml`, that is a example of a simple Hello world layout:
+For create complex UIs you can use XMLs, first you need create your layout file `res/layout/example.xml`, that is a example of a simple Hello world layout:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
@@ -64,4 +64,12 @@ public void onCreate() {
 
 ### Change widgets from a xml layout.
 
-For access and edit nodes created from xml layout, you can use method: ``findViewById('NODE_ID')``, and set tag id in your node.
+For access and edit nodes created from xml layout, you can use method: ``findViewById('NODE_ID')``, and set tag id in your xml code, example:
+
+```xml
+  <TextView
+    id="NODE_ID"
+    width="match_parent"
+    height="match_parent"
+    text="Hello world"/>
+```
