@@ -84,7 +84,7 @@ public class Example extends Activity {
 - 🟩 Mouse
 - 🟥 Joystick
 
-Full project status: [WIP]
+Full project status: ALPHA
 
 ### Licenses | About
 
