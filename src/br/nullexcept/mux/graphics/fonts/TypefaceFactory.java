@@ -1,6 +1,5 @@
 package br.nullexcept.mux.graphics.fonts;
 
-import br.nullexcept.mux.res.AssetsManager;
 import br.nullexcept.mux.utils.BufferUtils;
 
 import java.io.InputStream;

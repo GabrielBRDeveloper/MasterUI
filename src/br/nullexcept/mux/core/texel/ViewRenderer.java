@@ -1,10 +1,8 @@
 package br.nullexcept.mux.core.texel;
 
 import br.nullexcept.mux.C;
-import br.nullexcept.mux.graphics.Color;
 import br.nullexcept.mux.graphics.Paint;
 import br.nullexcept.mux.graphics.Rect;
-import br.nullexcept.mux.hardware.GLES;
 import br.nullexcept.mux.view.View;
 import br.nullexcept.mux.view.ViewGroup;
 import org.lwjgl.nanovg.NanoVG;

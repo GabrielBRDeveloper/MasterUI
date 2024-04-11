@@ -4,6 +4,7 @@ import br.nullexcept.mux.app.Looper;
 
 public abstract class LinearAnimation {
     private int duration;
+    private boolean loop  = false;
     public LinearAnimation(int duration) {
         this.duration = duration;
     }
@@ -17,6 +18,9 @@ public abstract class LinearAnimation {
         Runnable update = () -> {
             if (data[1] > data[0]) {
                 onEnd();
+                if (loop) {
+                    play();
+                }
                 return;
             }
             onFrame((double)data[1]/data[0]);
@@ -27,6 +31,10 @@ public abstract class LinearAnimation {
         loops[0] = update;
         onBegin();
         Looper.getMainLooper().post(update);
+    }
+
+    public void setLoop(boolean loop) {
+        this.loop = loop;
     }
 
     public abstract void onBegin();

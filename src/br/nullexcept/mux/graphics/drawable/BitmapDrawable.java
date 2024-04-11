@@ -3,7 +3,6 @@ package br.nullexcept.mux.graphics.drawable;
 import br.nullexcept.mux.graphics.Bitmap;
 import br.nullexcept.mux.graphics.Canvas;
 import br.nullexcept.mux.graphics.Drawable;
-import br.nullexcept.mux.graphics.Paint;
 
 public class BitmapDrawable extends Drawable {
     private final Bitmap bitmap;

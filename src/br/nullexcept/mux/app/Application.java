@@ -2,17 +2,17 @@ package br.nullexcept.mux.app;
 
 import br.nullexcept.mux.C;
 import br.nullexcept.mux.core.texel.TexelAPI;
-import br.nullexcept.mux.lang.Function;
 import br.nullexcept.mux.lang.Valuable;
-import br.nullexcept.mux.res.AssetsManager;
-import br.nullexcept.mux.res.Resources;
 import br.nullexcept.mux.view.Window;
 import org.lwjgl.opengles.GLES;
+
+import java.util.HashMap;
 
 import static org.lwjgl.glfw.GLFW.*;
 
 public class Application {
     private static long lastGc = System.currentTimeMillis();
+    private static HashMap<String, Service> services = new HashMap<>();
     private static int RUNNING_ACTIVITIES = 0;
 
     public static void initialize(Valuable<Activity> creator){
@@ -92,5 +92,25 @@ public class Application {
 
     public static void stop(){
         Looper.getMainLooper().stop();
+    }
+
+    public static <T extends Service> T beginService(Class<T> clazz, Valuable<T> service) {
+        String name = clazz.getName();
+        if (services.containsKey(name)) {
+            return (T) services.get(name);
+        }
+        Looper looper = new Looper();
+        T sv = service.get();
+        sv.myLooper = looper;
+
+        services.put(name, sv);
+        new Thread(()->{
+            looper.post(sv::onCreate);
+            looper.initialize();
+            looper.loop();
+            services.remove(name);
+            sv.onDestroy();
+        }).start();
+        return sv;
     }
 }

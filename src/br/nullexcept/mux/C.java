@@ -7,12 +7,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class C {
+    public static int VIEW_COUNT = 0;
     public static long VG_CONTEXT = -1;
     public static long GLFW_CONTEXT = 0;
     public static BitmapFactory BITMAP_FACTORY;
 
     public static class Flags {
         public static final boolean FULL_DRAW;
+        public static final boolean DEBUG_OVERLAY;
         public static final boolean DISABLE_AUTO_REDRAW;
 
         static {
@@ -23,6 +25,7 @@ public class C {
             }
 
             FULL_DRAW = flags.contains("FULL_DRAW");
+            DEBUG_OVERLAY = flags.contains("DEBUG_OVERLAY");
             DISABLE_AUTO_REDRAW = flags.contains("DISABLE_AUTO_REDRAW");
         }
     }

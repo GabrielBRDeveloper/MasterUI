@@ -2,7 +2,7 @@ package br.nullexcept.mux.core.texel;
 
 import br.nullexcept.mux.graphics.Point;
 import br.nullexcept.mux.input.*;
-import org.lwjgl.glfw.*;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.HashMap;
 

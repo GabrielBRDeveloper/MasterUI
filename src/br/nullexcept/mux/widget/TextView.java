@@ -7,9 +7,9 @@ import br.nullexcept.mux.graphics.Rect;
 import br.nullexcept.mux.graphics.Size;
 import br.nullexcept.mux.graphics.fonts.FontMetrics;
 import br.nullexcept.mux.res.AttributeList;
+import br.nullexcept.mux.view.AttrList;
 import br.nullexcept.mux.view.Gravity;
 import br.nullexcept.mux.view.View;
-import br.nullexcept.mux.view.AttrList;
 
 public class TextView extends View {
     private final Paint paint = new Paint();

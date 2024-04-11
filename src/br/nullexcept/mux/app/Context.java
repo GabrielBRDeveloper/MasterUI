@@ -1,6 +1,7 @@
 package br.nullexcept.mux.app;
 
 import br.nullexcept.mux.core.texel.TexelAPI;
+import br.nullexcept.mux.lang.Valuable;
 import br.nullexcept.mux.res.AssetsManager;
 import br.nullexcept.mux.res.LayoutInflater;
 import br.nullexcept.mux.res.Resources;
@@ -16,6 +17,20 @@ public class Context {
     public Context(){
         mResource = new Resources(this);
         applets.putAll(TexelAPI.obtainApplets());
+    }
+
+    public <T extends Service> T startService(Class<T> clazz) {
+        return startService(clazz, ()-> {
+            try {
+                return clazz.newInstance();
+            } catch (Exception e) {
+                throw new IllegalArgumentException(e);
+            }
+        });
+    }
+
+    public <T extends Service> T startService(Class<T> clazz, Valuable<T> service) {
+        return Application.beginService(clazz, service);
     }
 
     public String getString(String id) {

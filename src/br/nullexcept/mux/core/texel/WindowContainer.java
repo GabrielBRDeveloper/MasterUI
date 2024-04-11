@@ -177,6 +177,7 @@ public class WindowContainer extends AbsoluteLayout {
             render.canvas.dispose();
         }
         renders.clear();
+        drawer.dispose();
     }
 
     public void performInputEvent(Event event) {

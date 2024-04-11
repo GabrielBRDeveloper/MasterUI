@@ -1,7 +1,6 @@
 package br.nullexcept.mux.res;
 
 import br.nullexcept.mux.app.Context;
-import br.nullexcept.mux.lang.Function;
 import br.nullexcept.mux.lang.ValuedFunction;
 import br.nullexcept.mux.lang.xml.XmlElement;
 import br.nullexcept.mux.view.View;

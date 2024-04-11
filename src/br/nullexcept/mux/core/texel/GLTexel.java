@@ -2,7 +2,6 @@ package br.nullexcept.mux.core.texel;
 
 import br.nullexcept.mux.graphics.Color;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengles.OESDrawBuffersIndexed;
 
 import java.nio.FloatBuffer;
 

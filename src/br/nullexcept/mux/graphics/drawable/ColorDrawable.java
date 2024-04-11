@@ -2,7 +2,6 @@ package br.nullexcept.mux.graphics.drawable;
 
 import br.nullexcept.mux.graphics.Canvas;
 import br.nullexcept.mux.graphics.Drawable;
-import br.nullexcept.mux.graphics.Paint;
 
 public class ColorDrawable extends Drawable {
 

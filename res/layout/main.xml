@@ -29,6 +29,7 @@
         padding="20dp"/>
     <View width="10dp" height="10dp"/>
     <ImageView
+        id="panda"
         width="200dp"
         height="200dp"
         background="?colorPrimary"

@@ -1,5 +1,6 @@
 package br.nullexcept.mux.view;
 
+import br.nullexcept.mux.C;
 import br.nullexcept.mux.app.Context;
 import br.nullexcept.mux.app.Looper;
 import br.nullexcept.mux.graphics.*;
@@ -457,6 +458,7 @@ public class View {
 
     private static synchronized int hash() {
         currentHash++;
+        C.VIEW_COUNT = currentHash;
         return currentHash;
     }
 

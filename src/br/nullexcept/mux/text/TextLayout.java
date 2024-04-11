@@ -1,7 +1,5 @@
 package br.nullexcept.mux.text;
 
-import java.util.Arrays;
-
 public class TextLayout implements CharSequence {
     private final StringBuilder builder = new StringBuilder();
     private int lineCount = 0;

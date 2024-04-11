@@ -2,8 +2,8 @@ package br.nullexcept.mux.graphics.drawable;
 
 import br.nullexcept.mux.graphics.Canvas;
 import br.nullexcept.mux.graphics.Drawable;
-import br.nullexcept.mux.graphics.StateList;
 import br.nullexcept.mux.graphics.Rect;
+import br.nullexcept.mux.graphics.StateList;
 
 import java.util.ArrayList;
 

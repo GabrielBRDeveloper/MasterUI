@@ -1,18 +1,23 @@
 package br.nullexcept.mux.core.texel;
 
 import br.nullexcept.mux.C;
-import br.nullexcept.mux.app.Activity;
 import br.nullexcept.mux.app.Looper;
 import br.nullexcept.mux.graphics.Point;
-import br.nullexcept.mux.input.CharEvent;
+import br.nullexcept.mux.graphics.fonts.Typeface;
 import br.nullexcept.mux.hardware.GLES;
+import br.nullexcept.mux.input.CharEvent;
 import br.nullexcept.mux.input.KeyEvent;
 import br.nullexcept.mux.input.MotionEvent;
 import br.nullexcept.mux.input.MouseEvent;
 import br.nullexcept.mux.view.View;
+import br.nullexcept.mux.view.ViewGroup;
 import br.nullexcept.mux.view.Window;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.nanovg.NVGColor;
+import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.opengles.GLES20;
+
+import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
 
 class GlfwWindow extends Window {
     private final long window;
@@ -54,7 +59,7 @@ class GlfwWindow extends Window {
         position.set(buffer[0][0], buffer[1][0]);
     }
 
-    private int frames = 0;
+    private long[] times = new long[8];
     private long last = System.currentTimeMillis();
 
     private void update() {
@@ -64,13 +69,18 @@ class GlfwWindow extends Window {
 
         if (System.currentTimeMillis() - last >= 1000) {
             last = System.currentTimeMillis();
-            frames = 0;
+            times[5] = times[0];
+            times[6] = times[1] / times[0];
+
+            times[0] = 0;
+            times[1] = 0;
         }
-        frames++;
+        times[0]++;
         eventManager.runFrame();
 
         long time = System.currentTimeMillis();
         if (isVisible() && container != null) {
+            long begin = System.currentTimeMillis();
             int ow = windowSize.x;
             int oh = windowSize.y;
             refresh();
@@ -80,10 +90,17 @@ class GlfwWindow extends Window {
             container.drawFrame();
             GLFW.glfwSwapBuffers(C.GLFW_CONTEXT);
             GLFW.glfwMakeContextCurrent(window);
+            glfwSwapInterval(0); //NEED THAT FOR NOT SLOW MAIN LOOP
             GLES.glViewport(0, 0, ow, oh);
             GLES.glClearColor(0,0,0,1);
             GLES.glClear(GLES20.GL_COLOR_BUFFER_BIT| GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_STENCIL_BUFFER_BIT);
             GLTexel.drawTexture(0, 0, ow, oh, container.getCanvas().getFramebuffer().getTexture());
+
+            times[1] += System.currentTimeMillis() - begin;
+            if (C.Flags.DEBUG_OVERLAY) {
+                drawDebug();
+            }
+
             GLFW.glfwSwapBuffers(window);
             GLFW.glfwMakeContextCurrent(C.GLFW_CONTEXT);
         }
@@ -93,11 +110,46 @@ class GlfwWindow extends Window {
         time = System.currentTimeMillis() - time;
         // Window with focus = 60fps | without focus = 24fps
         time = Math.max(0, (isFocused() ? 16 : 41) - time);
+        if(C.Flags.FULL_DRAW) {
+            time = 1;
+        }
         if (!destroyed) {
             Looper.getMainLooper().postDelayed(this::update, time);
         } else {
             running = false;
         }
+    }
+
+    private final NVGColor color1 = NVGColor.create();
+    private final NVGColor color2 = NVGColor.create();
+    private void drawDebug() {
+        NanoVG.nvgBeginFrame(C.VG_CONTEXT,windowSize.x, windowSize.y,1);
+        NanoVG.nvgFontFaceId(C.VG_CONTEXT, Typeface.DEFAULT.hashCode());
+        NanoVG.nvgFontSize(C.VG_CONTEXT, 16);
+
+        NanoVG.nvgBeginPath(C.VG_CONTEXT);
+        NanoVG.nvgRGBAf(0,0,0,.5f, color2);
+        NanoVG.nvgFillColor(C.VG_CONTEXT, color2);
+        NanoVG.nvgRect(C.VG_CONTEXT, 10, 10, 160,72);
+        NanoVG.nvgFill(C.VG_CONTEXT);
+        NanoVG.nvgClosePath(C.VG_CONTEXT);
+
+        NanoVG.nvgRGBAf(1,1,1,1, color1);
+        NanoVG.nvgFillColor(C.VG_CONTEXT, color1);
+        NanoVG.nvgText(C.VG_CONTEXT,15,32,"FPS: "+times[5]);
+        NanoVG.nvgText(C.VG_CONTEXT,15,48,"DRAW TIME: "+times[6]+"ms");
+        NanoVG.nvgText(C.VG_CONTEXT,15,64,"VIEWS: "+viewCount(container));
+        NanoVG.nvgEndFrame(C.VG_CONTEXT);
+    }
+
+    private int viewCount(ViewGroup container) {
+        int count = 0;
+        for (View view: container.getChildren()) {
+            if (view instanceof ViewGroup)
+                count += viewCount((ViewGroup) view);
+            count++;
+        }
+        return count;
     }
 
     private void onResize(int width, int height) {

@@ -1,6 +1,5 @@
 package br.nullexcept.mux.res;
 
-import br.nullexcept.mux.app.Context;
 import br.nullexcept.mux.graphics.Drawable;
 import br.nullexcept.mux.lang.Function;
 import br.nullexcept.mux.lang.xml.XmlElement;
