@@ -85,12 +85,12 @@ class Parser {
 
                 Path path = parseVectorPath(attrs.getRawValue("src"), width,height);
                 PathDrawable drawable = new PathDrawable(path, width,height);
-                attrs.searchColor(AttrList.color, drawable::setColor);
+                attrs.searchColor(AttrList.layoutGravity, drawable::setColor);
                 return drawable;
             }
             case "shape":{
                 ShapeDrawable drawable = new ShapeDrawable();;
-                attrs.searchColor(AttrList.color, drawable::setColor);
+                attrs.searchColor(AttrList.layoutGravity, drawable::setColor);
                 attrs.searchDimension(AttrList.stroke, drawable::setStrokeSize);
                 String shapeType = xml.has("type") ? xml.attr("type") : "rect";
 
@@ -140,7 +140,7 @@ class Parser {
             }
             case "color":{
                 ColorDrawable drawable = new ColorDrawable(0);
-                attrs.searchColor(AttrList.color, drawable::setColor);
+                attrs.searchColor(AttrList.layoutGravity, drawable::setColor);
                 return drawable;
             }
             default:

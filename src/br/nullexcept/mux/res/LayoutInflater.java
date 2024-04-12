@@ -3,6 +3,8 @@ package br.nullexcept.mux.res;
 import br.nullexcept.mux.app.Context;
 import br.nullexcept.mux.lang.ValuedFunction;
 import br.nullexcept.mux.lang.xml.XmlElement;
+import br.nullexcept.mux.view.AttrList;
+import br.nullexcept.mux.view.Gravity;
 import br.nullexcept.mux.view.View;
 import br.nullexcept.mux.view.ViewGroup;
 import br.nullexcept.mux.widget.*;
@@ -49,15 +51,15 @@ public class LayoutInflater {
     }
 
     private ViewGroup.LayoutParams parseLayoutParams(AttributeList attr){
-        ViewGroup.LayoutParams params;
-        if (attr.contains(x)){
-            AbsoluteLayout.LayoutParams lp = new AbsoluteLayout.LayoutParams(0,0);
-            attr.searchDimension(x, v -> lp.x = v.intValue());
-            attr.searchDimension(y, v -> lp.y = v.intValue());
-            params = lp;
-        } else {
-            params = new ViewGroup.LayoutParams(0,0);
-        }
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(0,0);
+
+        attr.searchDimension(x, x -> params.getMargins().left = x.intValue());
+        attr.searchDimension(y, y -> params.getMargins().top = y.intValue());
+        attr.searchDimension(margin, margin -> params.setMargins(margin.intValue(),margin.intValue(),margin.intValue(),margin.intValue()));
+        attr.searchDimension(marginLeft, margin -> params.getMargins().left = margin.intValue());
+        attr.searchDimension(marginRight, margin -> params.getMargins().right = margin.intValue());
+        attr.searchDimension(marginTop, margin -> params.getMargins().top = margin.intValue());
+        attr.searchDimension(marginBottom, margin -> params.getMargins().bottom = margin.intValue());
 
         ValuedFunction<String, Integer> parseParams = (key)->{
             int[] result = new int[]{Integer.MIN_VALUE};

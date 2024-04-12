@@ -19,11 +19,17 @@ public class AttrList {
     public static final String singleLine = "singleLine";
     public static final String x = "x";
     public static final String y = "y";
+    public static final String margin = "margin";
+    public static final String marginLeft = "marginLeft";
+    public static final String marginRight = "marginRight";
+    public static final String marginTop = "marginTop";
+    public static final String marginBottom = "marginBottom";
     public static final String gravity = "gravity";
     public static final String rotation = "rotation";
     public static final String scale = "scale";
     public static final String pointerIcon = "pointerIcon";
     public static final String color = "color";
+    public static final String layoutGravity = "layoutGravity";
     public static final String stroke = "stroke";
     public static final String radius = "radius";
     public static final String mode = "mode";

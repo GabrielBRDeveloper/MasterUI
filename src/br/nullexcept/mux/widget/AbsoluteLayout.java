@@ -3,6 +3,7 @@ package br.nullexcept.mux.widget;
 import br.nullexcept.mux.app.Context;
 import br.nullexcept.mux.graphics.Point;
 import br.nullexcept.mux.res.AttributeList;
+import br.nullexcept.mux.view.MarginLayoutParams;
 import br.nullexcept.mux.view.View;
 import br.nullexcept.mux.view.ViewGroup;
 
@@ -38,6 +39,15 @@ public class AbsoluteLayout extends ViewGroup {
             super(width, height);
             this.x = x;
             this.y = y;
+        }
+
+        @Override
+        public void from(ViewGroup.LayoutParams params) {
+            if (params instanceof MarginLayoutParams) {
+                x = ((MarginLayoutParams) params).getMarginLeft();
+                y = ((MarginLayoutParams) params).getMarginTop();
+            }
+            super.from(params);
         }
 
         public LayoutParams(int width, int height) {

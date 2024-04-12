@@ -4,10 +4,7 @@ import br.nullexcept.mux.app.Context;
 import br.nullexcept.mux.graphics.Point;
 import br.nullexcept.mux.graphics.Rect;
 import br.nullexcept.mux.res.AttributeList;
-import br.nullexcept.mux.view.AttrList;
-import br.nullexcept.mux.view.Gravity;
-import br.nullexcept.mux.view.View;
-import br.nullexcept.mux.view.ViewGroup;
+import br.nullexcept.mux.view.*;
 
 public class LinearLayout extends ViewGroup {
     public static int ORIENTATION_HORIZONTAL = 1;
@@ -35,7 +32,9 @@ public class LinearLayout extends ViewGroup {
 
     @Override
     public void addChild(View view) {
-        view.setLayoutParams(new LayoutParams(view.getLayoutParams().width, view.getLayoutParams().height));
+        LayoutParams params = new LayoutParams(0,0);
+        params.from(view.getLayoutParams());
+        view.setLayoutParams(params);
         super.addChild(view);
     }
 
@@ -56,6 +55,11 @@ public class LinearLayout extends ViewGroup {
             }
         }
 
+        LayoutParams params = (LayoutParams) view.getLayoutParams();
+
+        point.x += params.getMarginLeft() - params.getMarginRight();
+        point.y += params.getMarginTop() - params.getMarginBottom();
+
         if (orientation == ORIENTATION_HORIZONTAL) {
             point.y += rect.top;
         } else {
@@ -71,7 +75,7 @@ public class LinearLayout extends ViewGroup {
         requestLayout();
     }
 
-    private static class LayoutParams extends ViewGroup.LayoutParams {
+    private static class LayoutParams extends MarginLayoutParams {
         public LayoutParams(int width, int height) {
             super(width, height);
         }

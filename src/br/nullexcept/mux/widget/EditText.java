@@ -9,15 +9,15 @@ import br.nullexcept.mux.input.CharEvent;
 import br.nullexcept.mux.input.KeyEvent;
 import br.nullexcept.mux.input.MouseEvent;
 import br.nullexcept.mux.res.AttributeList;
-import br.nullexcept.mux.text.TextLayout;
-import br.nullexcept.mux.text.TextSelection;
+import br.nullexcept.mux.text.Editable;
+import br.nullexcept.mux.text.Selection;
 import br.nullexcept.mux.view.AttrList;
 import br.nullexcept.mux.view.Menu;
 import br.nullexcept.mux.view.View;
 
 public class EditText extends View {
-    private final TextLayout text = new TextLayout();
-    private final TextSelection selection = text.getSelection();
+    private final Editable text = new Editable();
+    private final Selection selection = text.getSelection();
     private final Paint paint = new Paint();
     private int selectionColor = Color.RED;
     private int textColor = Color.GREEN;

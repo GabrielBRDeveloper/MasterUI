@@ -6,10 +6,7 @@ import br.nullexcept.mux.graphics.Paint;
 import br.nullexcept.mux.graphics.Path;
 import br.nullexcept.mux.graphics.Point;
 import br.nullexcept.mux.utils.Log;
-import org.lwjgl.nanovg.NVGColor;
-import org.lwjgl.nanovg.NVGPaint;
-import org.lwjgl.nanovg.NanoVG;
-import org.lwjgl.nanovg.NanoVGGLES2;
+import org.lwjgl.nanovg.*;
 
 import static org.lwjgl.nanovg.NanoVG.*;
 

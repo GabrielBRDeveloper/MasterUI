@@ -2,7 +2,9 @@ package br.nullexcept.mux.core.texel;
 
 import br.nullexcept.mux.C;
 import br.nullexcept.mux.app.Looper;
-import br.nullexcept.mux.graphics.*;
+import br.nullexcept.mux.graphics.Drawable;
+import br.nullexcept.mux.graphics.Point;
+import br.nullexcept.mux.graphics.Rect;
 import br.nullexcept.mux.graphics.fonts.Typeface;
 import br.nullexcept.mux.hardware.GLES;
 import br.nullexcept.mux.input.CharEvent;
@@ -18,7 +20,6 @@ import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.nanovg.NVGColor;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.opengles.GLES20;
-import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
 

@@ -53,6 +53,9 @@ public class Typeface {
             ch = 'Z';
         }
         switch (ch){
+            case '\t':
+            case '\f':
+                return bounds[' '];
             case '\n':
             case '\r':
                 return 0;

@@ -12,4 +12,13 @@ public class Size {
         this.width = width;
         this.height = height;
     }
+
+    public Size(Size size) {
+        this(size.width, size.height);
+    }
+
+    public void set(int width, int height) {
+        this.width = width;
+        this.height = height;
+    }
 }

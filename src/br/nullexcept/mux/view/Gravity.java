@@ -29,33 +29,23 @@ public class Gravity {
         return (gravity >> SHIFT_X) & 255;
     }
 
+
+    public static int apply(int primaryGravity, int size, int child) {
+        switch (primaryGravity) {
+            case AFTER:
+                return size - child;
+            case MIDDLE:
+                return (size-child)/2;
+        }
+        return 0;
+    }
+
     public static void applyGravity(int gravity, int width, int height, int viewportWidth, int viewportHeight, Rect dest) {
         int vertical = vertical(gravity);
         int horizontal = horizontal(gravity);
 
-        switch (vertical) {
-            case AFTER:
-                dest.top = viewportHeight - height;
-                break;
-            case MIDDLE:
-                dest.top = (viewportHeight - height) / 2;
-                break;
-            default:
-                dest.top = 0;
-                break;
-        }
-
-        switch (horizontal) {
-            case AFTER:
-                dest.left = viewportWidth - width;
-                break;
-            case MIDDLE:
-                dest.left = (viewportWidth - width) / 2;
-                break;
-            default:
-                dest.left = 0;
-                break;
-        }
+        dest.top = apply(vertical, viewportHeight, height);
+        dest.left = apply(horizontal, viewportWidth, width);
 
         dest.bottom = dest.top + height;
         dest.right = dest.left + width;

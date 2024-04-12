@@ -1,11 +1,11 @@
 package br.nullexcept.mux.text;
 
-public class TextSelection {
+public class Selection {
     private int start = 0;
     private int end = 0;
     private final CharSequence text;
 
-    public TextSelection(CharSequence text) {
+    public Selection(CharSequence text) {
         this.text = text;
     }
 

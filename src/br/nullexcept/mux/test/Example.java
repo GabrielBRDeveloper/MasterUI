@@ -19,8 +19,9 @@ public class Example extends Activity {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.log("OK", "Hello world");
+        Log.log("Debug", "Hello world | Log");
         setContentView("main");
+        setTitle("Hello world");
         if (true)return;
         View panda = findViewById("panda");
         {

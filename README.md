@@ -2,10 +2,11 @@
 
 # Master UI
 
-Java library for make a beautiful UI, code design is based in android ui.
+Java library for make a beautiful UI, based in android code design. \
 That project uses OpenGLES 2.0 for render, so that is compatible with many actual devices.
 
->**[Use Guide](docs/HELLO_WORLD.md)**
+>**[Use Guide](docs/SETUP.md)** \
+>**[API Status](docs/STATUS.md)**
 
 # Usage example
 
@@ -36,53 +37,8 @@ public class Example extends Activity {
 - OpenGLES 2.0
 - Java 11 (Need some native fixes in nanovg, to work in java 8)
 
-# Status
 
-🟥 **Need implement**\
-🟨 **Initial support**\
-🟩 **Full implemented**
-
-### Components
-
-- 🟩 AbsoluteLayout
-- 🟩 LinearLayout
-- 🟩 Button
-- 🟩 Switch
-- 🟩 TextView
-- 🟨 ScrollView
-- 🟨 EditText
-- 🟨 ImageView
-
-### Interface
-
-- 🟩 XML UI
-- 🟨 Themes
-- 🟨 Multi window
-- 🟨 Menus
-- 🟩 Text/Localization
-- 🟩 Attributes
-- 🟩 Read drawables.
-- 🟩 Scalable UI.
-- 🟩 Path (A like SVG) Drawables
-- 🟥 Clip based in path.
-
-### General
-
-- 🟩 Looper
-- 🟨 Activity
-- 🟨 Read bitmap.
-- 🟨 Services.
-- 🟥 Write bitmap.
-
-### Events
-
-- 🟩 Keyboard
-- 🟩 Mouse
-- 🟥 Joystick
-
-Full project status: ALPHA
-
-### Licenses | About
+### Licenses
 
 LWJGL: https://github.com/LWJGL/lwjgl3/blob/master/LICENSE.md \
 NanoVG: https://github.com/memononen/nanovg/blob/master/LICENSE.txt \

@@ -50,7 +50,7 @@ public class ViewGroup extends View {
         if (child instanceof ViewGroup) {
             ((ViewGroup) child).measureChildren();
         }
-        Size size = child.onMeasureContent(getMeasuredWidth(), getMeasuredHeight());
+        Size size = child.onMeasureContent(getMeasuredWidth()-getPaddingLeft()-getPaddingRight(), getMeasuredHeight()-getPaddingTop()-getPaddingBottom());
         Point pos = getChildLocation(child);
 
         int left = pos.x - getPaddingLeft();
@@ -243,6 +243,11 @@ public class ViewGroup extends View {
         public LayoutParams(int width, int height){
             this.width = width;
             this.height = height;
+        }
+
+        public void from(LayoutParams params) {
+            this.width = params.width;
+            this.height = params.height;
         }
 
         public boolean hasWrap(){
