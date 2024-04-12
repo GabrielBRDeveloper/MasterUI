@@ -30,7 +30,7 @@ public class TextView extends View {
     }
 
     @Override
-    protected Size onMeasureContent() {
+    protected Size onMeasureContent(int parentWidth, int parentHeight) {
         Size size = new Size();
         FontMetrics metrics = paint.getFontMetrics();
         for (String line : lines){

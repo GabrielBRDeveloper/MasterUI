@@ -270,7 +270,7 @@ public class View {
         }
     }
 
-    protected Size onMeasureContent() {
+    protected Size onMeasureContent(int parentWidth, int parentHeight) {
         return new Size(0,0);
     }
 

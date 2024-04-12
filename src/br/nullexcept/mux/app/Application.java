@@ -3,6 +3,7 @@ package br.nullexcept.mux.app;
 import br.nullexcept.mux.C;
 import br.nullexcept.mux.core.texel.TexelAPI;
 import br.nullexcept.mux.lang.Valuable;
+import br.nullexcept.mux.utils.Log;
 import br.nullexcept.mux.view.Window;
 import org.lwjgl.opengles.GLES;
 
@@ -38,12 +39,8 @@ public class Application {
         TexelAPI.destroy();
         glfwTerminate();
         System.gc();
-        new Thread(()->{
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {}
-            System.exit(0);
-        }).start();
+        Looper.sleep(2000,0); // Wait for all services stop
+        System.exit(0);
     }
 
     private static final void loop(){

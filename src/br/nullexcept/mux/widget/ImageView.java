@@ -54,11 +54,11 @@ public class ImageView extends View {
     }
 
     @Override
-    protected Size onMeasureContent() {
+    protected Size onMeasureContent(int parentWidth, int parentHeight) {
         if (image != null) {
             return new Size(image.getWidth(), image.getHeight());
         } else {
-            return super.onMeasureContent();
+            return super.onMeasureContent(parentWidth, parentHeight);
         }
     }
 }

@@ -50,7 +50,7 @@ public class ViewGroup extends View {
         if (child instanceof ViewGroup) {
             ((ViewGroup) child).measureChildren();
         }
-        Size size = child.onMeasureContent();
+        Size size = child.onMeasureContent(getMeasuredWidth(), getMeasuredHeight());
         Point pos = getChildLocation(child);
 
         int left = pos.x - getPaddingLeft();
@@ -133,7 +133,7 @@ public class ViewGroup extends View {
     }
 
     @Override
-    protected Size onMeasureContent() {
+    protected Size onMeasureContent(int parentWidth, int parentHeight) {
         Size size = new Size();
         for (View child: children){
             int x = Math.max(0, getChildLocation(child).x - getPaddingLeft());

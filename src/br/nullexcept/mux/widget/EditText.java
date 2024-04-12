@@ -136,7 +136,7 @@ public class EditText extends View {
     }
 
     @Override
-    protected Size onMeasureContent() {
+    protected Size onMeasureContent(int parentWidth, int parentHeight) {
         Size size = new Size();
         size.height = Math.round(font().getLineHeight()* Math.max(1, text.getLineCount()));
 

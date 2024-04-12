@@ -52,7 +52,15 @@ public class Looper {
                     }
                 }
             }
+
+            sleep(0, (int) (Math.random()*400));
         }
+    }
+
+    public static void sleep(int ms, int nano) {
+        try {
+            Thread.sleep(ms, nano);
+        } catch (Exception e){}
     }
 
     public void stop(){

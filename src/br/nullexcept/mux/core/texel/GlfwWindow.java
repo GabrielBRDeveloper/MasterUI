@@ -308,20 +308,17 @@ class GlfwWindow extends Window {
                 flipY.put(row);
             }
 
-            MemoryUtil.memFree(buffer);
             flipY.flip();
 
-            if (!destroyed) {
-                GLFWImage img = GLFWImage.create();
-                img.width(canvas.getWidth());
-                img.height(canvas.getHeight());
-                img.pixels(flipY);
-
-                GLFWImage.Buffer bff = GLFWImage.malloc(1);
-                bff.put(0, img);
-
-                GLFW.glfwSetWindowIcon(window, bff);
-            }
+            Looper.getMainLooper().post(()->{
+                if (!destroyed) {
+                    GLFWImage ic = GLFWImage.malloc();
+                    ic.set(iconSize, iconSize, flipY);
+                    GLFWImage.Buffer stack = GLFWImage.malloc(1);
+                    stack.put(0, ic);
+                    GLFW.glfwSetWindowIcon(window, stack);
+                }
+            });
         }).start();
     }
 
