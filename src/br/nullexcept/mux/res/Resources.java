@@ -18,8 +18,6 @@ import java.util.Locale;
  * Stylesheet basics:
  * Stylesheet -> parent -> parent -> theme
  */
-
-
 public final class Resources {
     private DisplayMetrics metrics;
     private static final HashMap<String, XmlElement> cache = new HashMap<>();
@@ -34,7 +32,7 @@ public final class Resources {
     static final AssetsManager Manager;
 
     static {
-        Manager = new AssetsManager("/res/", Resources.class);
+        Manager = new ResourcesManager();
         Typeface.DEFAULT = TypefaceFactory.create(Manager.openDocument("fonts/Roboto/Roboto-Regular.ttf"));
     }
 
@@ -149,7 +147,7 @@ public final class Resources {
                 int[][] sizes = new int[2][1];
                 GLFW.glfwGetMonitorPhysicalSize(monitor, sizes[0], sizes[1]);
                 pm = (double) dw / sizes[0][0];
-                pt = (pm * 0.35277777777778);
+                pt = (pm * 0.35277777777778); //72pt = 1inch
                 cm = pm * 10;
             }
             {
@@ -157,6 +155,12 @@ public final class Resources {
                 GLFW.glfwGetMonitorContentScale(monitor,scale,scale);
                 sp = scale[0];
             }
+        }
+    }
+
+    private static class ResourcesManager extends AssetsManager {
+        ResourcesManager() {
+            super("/res/", ResourcesManager.class);
         }
     }
 }

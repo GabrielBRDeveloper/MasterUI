@@ -58,7 +58,6 @@ public class TextLayout {
 
         wrapSize.height = (int) (Math.max(1,li) * font.getLineHeight());
         breakLines = li;
-
     }
 
     public int getWrapLineCount() {
