@@ -17,7 +17,6 @@ public class ScrollView extends ViewGroup {
     private final Point pixelScroll = new Point();
     private final ScrollContainer container;
     private Drawable scrollDrawable = new ColorDrawable(Color.GREEN);
-    private int scrollbarWeight = 10;
     private final Point mouseScroll = new Point();
     private boolean capturedMouseScroll = true;
     private final Rect scrollbar = new Rect();
@@ -59,7 +58,8 @@ public class ScrollView extends ViewGroup {
             int h = (int) Math.round(localHeight * rest);
             h = Math.max(10, h);
             int y = (int) Math.round((localHeight - h) * scroll[1]);
-            scrollbar.set(getWidth()-scrollbarWeight, y+getPaddingTop(), getWidth(), getPaddingTop()+y+h);
+            int scrollbarWeight = 10;
+            scrollbar.set(getWidth()- scrollbarWeight, y+getPaddingTop(), getWidth(), getPaddingTop()+y+h);
             scrollDrawable.setBounds(scrollbar);
             scrollDrawable.draw(canvas);
         } else {

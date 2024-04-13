@@ -29,7 +29,7 @@ public class WindowContainer extends AbsoluteLayout {
     private final ViewRenderer drawer;
     private Menu currentMenu;
 
-    private final LinearLayout menuLayout;
+    private final MenuLayout menuLayout;
     private final AbsoluteLayout content;
 
     private int focusedView = hashCode();
@@ -43,7 +43,7 @@ public class WindowContainer extends AbsoluteLayout {
         content = new AbsoluteLayout(context);
         content.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
         super.addChild(content);
-        menuLayout = new LinearLayout(context, context.getResources().obtainStyled("Widget.MenuLayout"));
+        menuLayout = new MenuLayout(context);
         super.addChild(menuLayout);
 
     }
@@ -205,9 +205,11 @@ public class WindowContainer extends AbsoluteLayout {
         }
     }
 
-    private void closeMenu() {
-        menuLayout.removeAllViews();
-        menuLayout.measure();
+    @Override
+    protected void showMenu(Menu menu, int x, int y) {
+        menuLayout.hide();
+        menuLayout.setPosition(x,y);
+        menuLayout.show(menu);
     }
 
     private boolean performMenuEvent(MouseEvent event) {
@@ -222,10 +224,8 @@ public class WindowContainer extends AbsoluteLayout {
                     child = child.getParent();
                 }
                 if (child != null) {
-                    AbsoluteLayout.LayoutParams params = (LayoutParams) menuLayout.getLayoutParams();
-                    params.x = Math.round(event.getX());
-                    params.y = Math.round(event.getY());
-                    showMenu();
+                    menuLayout.setPosition(Math.round(event.getX()), Math.round(event.getY()));
+                    menuLayout.show(currentMenu);
                     return true;
                 }
 
@@ -236,37 +236,9 @@ public class WindowContainer extends AbsoluteLayout {
         if (bounds.inner(event.getX(), event.getY())) {
             return false;
         } else {
-            closeMenu();
+            menuLayout.hide();
         }
         return true;
-    }
-
-    private void showMenu() {
-        LayoutInflater inflater  = getContext().getLayoutInflater();
-        for (Menu.Group group: currentMenu.getGroups()) {
-            for (Menu.Item item: group.getItems()) {
-                ViewGroup v = inflater.inflate("default_widget_menu_item");
-                v.setAlpha(item.isEnable() ? 1.0f : 0.5f );
-                ImageView icon = v.findViewByTag("icon");
-                if (item.getIcon() == null) {
-                    icon.getParent().removeChild(icon);
-                } else {
-                    icon.setImageDrawable(item.getIcon());
-                }
-                ((TextView)v.findViewByTag("title")).setText(item.getTitle());
-                if (item.isEnable()) {
-                    v.setOnClickListener((x) -> {
-                        currentMenu.callOnClick(item);
-                        closeMenu();
-                    });
-                }
-                menuLayout.addChild(v);
-            }
-        }
-
-        new AlphaAnimation(menuLayout, 100).play();
-        menuLayout.measure();
-        requestLayout();
     }
 
     private void populateHover(View view, boolean hovered) {

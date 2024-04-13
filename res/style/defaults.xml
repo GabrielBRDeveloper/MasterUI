@@ -26,6 +26,7 @@
   <style name="Widget.EditText">
     <item name="pointerIcon">textSelection</item>
     <item name="textColor">?colorOnSurface</item>
+    <item name="padding">8dp</item>
     <item name="selectionColor">?colorPrimary</item>
     <item name="background">@drawable/textarea_background</item>
   </style>

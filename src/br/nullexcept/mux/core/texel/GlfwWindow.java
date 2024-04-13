@@ -5,6 +5,7 @@ import br.nullexcept.mux.app.Looper;
 import br.nullexcept.mux.graphics.Drawable;
 import br.nullexcept.mux.graphics.Point;
 import br.nullexcept.mux.graphics.Rect;
+import br.nullexcept.mux.graphics.Size;
 import br.nullexcept.mux.graphics.fonts.Typeface;
 import br.nullexcept.mux.hardware.GLES;
 import br.nullexcept.mux.input.CharEvent;
@@ -28,7 +29,7 @@ import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
 class GlfwWindow extends Window {
     private final long window;
     private final GlfwEventManager eventManager;
-    private final Point windowSize = new Point();
+    private final Size windowSize = new Size();
 
     private WindowContainer container;
     private boolean destroyed = true;
@@ -38,8 +39,18 @@ class GlfwWindow extends Window {
     private WindowObserver observer;
 
     public GlfwWindow() {
-        window = GLFW.glfwCreateWindow(512, 512, "[title]", 0, C.GLFW_CONTEXT);
+        window = GLFW.glfwCreateWindow(512, 512, "[MasterUI:Window]", 0, C.GLFW_CONTEXT);
         eventManager = new GlfwEventManager(this);
+
+        {
+            int[][] sizes = new int[4][1];
+            long monitor = GLFW.glfwGetPrimaryMonitor();
+            GLFW.glfwGetMonitorWorkarea(monitor, sizes[0], sizes[1], sizes[2],sizes[3]);
+            int x = sizes[0][0] + (sizes[2][0]/2) - 256;
+            int y = sizes[1][0] + (sizes[3][0]/2) - 256;
+
+            position.set(x,y);
+        }
 
         GLFW.glfwIconifyWindow(window);
         GLFW.glfwSetWindowSizeLimits(window, 128,128, Integer.MAX_VALUE, Integer.MAX_VALUE);
@@ -51,12 +62,12 @@ class GlfwWindow extends Window {
 
     @Override
     public int getWidth() {
-        return windowSize.x;
+        return windowSize.width;
     }
 
     @Override
     public int getHeight() {
-        return windowSize.y;
+        return windowSize.height;
     }
 
     private void refresh() {
@@ -89,17 +100,18 @@ class GlfwWindow extends Window {
         long time = System.currentTimeMillis();
         if (isVisible() && container != null) {
             long begin = System.currentTimeMillis();
-            int ow = windowSize.x;
-            int oh = windowSize.y;
+            int ow = windowSize.width;
+            int oh = windowSize.height;
             refresh();
-            if (ow != windowSize.x || oh != windowSize.y) {
-                onResize(windowSize.x, windowSize.y);
+            if (ow != windowSize.width || oh != windowSize.height) {
+                onResize(windowSize.width, windowSize.height);
             }
+
             container.drawFrame();
             GLFW.glfwSwapBuffers(C.GLFW_CONTEXT);
             GLFW.glfwMakeContextCurrent(window);
             glfwSwapInterval(0); //NEED THAT FOR NOT SLOW MAIN LOOP
-            GLES.glViewport(0, 0, ow, oh);
+            GLES.glViewport(0, 0, windowSize.width, windowSize.height);
             GLES.glClearColor(0,0,0,1);
             GLES.glClear(GLES20.GL_COLOR_BUFFER_BIT| GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_STENCIL_BUFFER_BIT);
             GLTexel.drawTexture(0, 0, ow, oh, container.getCanvas().getFramebuffer().getTexture());
@@ -131,7 +143,7 @@ class GlfwWindow extends Window {
     private final NVGColor color1 = NVGColor.create();
     private final NVGColor color2 = NVGColor.create();
     private void drawDebug() {
-        NanoVG.nvgBeginFrame(C.VG_CONTEXT,windowSize.x, windowSize.y,1);
+        NanoVG.nvgBeginFrame(C.VG_CONTEXT,windowSize.width, windowSize.height,1);
         NanoVG.nvgFontFaceId(C.VG_CONTEXT, Typeface.DEFAULT.hashCode());
         NanoVG.nvgFontSize(C.VG_CONTEXT, 16);
 
@@ -229,12 +241,13 @@ class GlfwWindow extends Window {
         }
         this.visible = visible;
         if (visible) {
+            GLFW.glfwSetWindowPos(window, position.x, position.y);
             GLFW.glfwShowWindow(window);
         } else {
             GLFW.glfwHideWindow(window);
+            GLFW.glfwSetWindowPos(window, position.x, position.y);
         }
 
-        GLFW.glfwSetWindowPos(window, position.x, position.y);
     }
 
     @Override
@@ -324,6 +337,9 @@ class GlfwWindow extends Window {
     }
 
     public void onMouseMoved(MotionEvent event) {
+        if (container == null)
+            return;
+
         container.performInputEvent(event);
         View child = container.getChildAt((int)event.getX(), (int)event.getY());
         if (child != null){

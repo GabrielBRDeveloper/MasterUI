@@ -63,42 +63,26 @@ public class View {
             attrs.searchDimension(AttrList.paddingBottom, value -> padding.bottom = value.intValue());
             setPadding(padding.left, padding.top, padding.right, padding.bottom);
         }
-        attrs.searchFloat(AttrList.scale, value -> setScale(value));
-        attrs.searchFloat(AttrList.rotation, value -> setRotation(value));
+        attrs.searchFloat(AttrList.scale, this::setScale);
+        attrs.searchFloat(AttrList.rotation, this::setRotation);
         attrs.searchRaw(AttrList.tag, (value) -> setTag(String.valueOf(value)));
         attrs.searchFloat(AttrList.alpha, this::setAlpha);
         attrs.searchDrawable(AttrList.background, this::setBackground);
         attrs.searchRaw(AttrList.pointerIcon, value -> setPointerIcon(new PointerIcon(PointerIcon.Model.fromName(value))));
         attrs.searchRaw(AttrList.id, value -> id = value);
-        attrs.searchRaw(AttrList.gravity, value -> {
-            String[] types = value.split("\\|");
-            int gravity = 0;
-            for (String type : types) {
-                switch (type) {
-                    case "left":
-                        gravity |= Gravity.LEFT;
-                        break;
-                    case "center":
-                        gravity |= Gravity.CENTER;
-                        break;
-                    case "right":
-                        gravity |= Gravity.RIGHT;
-                        break;
-                    case "top":
-                        gravity |= Gravity.TOP;
-                        break;
-                    case "bottom":
-                        gravity |= Gravity.BOTTOM;
-                        break;
-                }
-            }
-            setGravity(gravity);
-        });
+        attrs.searchRaw(AttrList.gravity, value -> setGravity(Gravity.parseGravity(value)));
 
         state.set(StateList.CLICKABLE, false);
 
         attributes = attrs;
         Looper.getMainLooper().post(()-> attributes = null);
+    }
+
+    protected void showMenu(Menu menu, int x, int y) {
+        Rect bounds = getBounds();
+        x = Math.max(0, Math.min(x, bounds.width()));
+        y = Math.max(0, Math.min(y, bounds.height()));
+        getParent().showMenu(menu, bounds.left+x, bounds.top+y);
     }
 
     protected AttributeList initialAttributes() {

@@ -23,7 +23,7 @@ public class BufferUtils {
         }
     }
 
-    public static final ByteBuffer allocateStream(InputStream input){
+    public static ByteBuffer allocateStream(InputStream input){
         try {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             byte[] chunk = new byte[1024 * 64];

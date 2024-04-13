@@ -59,6 +59,7 @@ public class LayoutInflater {
         attr.searchDimension(marginLeft, margin -> params.getMargins().left = margin.intValue());
         attr.searchDimension(marginRight, margin -> params.getMargins().right = margin.intValue());
         attr.searchDimension(marginTop, margin -> params.getMargins().top = margin.intValue());
+        attr.searchRaw(layoutGravity, value -> params.setGravity(Gravity.parseGravity(value)));
         attr.searchDimension(marginBottom, margin -> params.getMargins().bottom = margin.intValue());
 
         ValuedFunction<String, Integer> parseParams = (key)->{
@@ -72,9 +73,7 @@ public class LayoutInflater {
                         result[0] = ViewGroup.LayoutParams.WRAP_CONTENT;
                         break;
                     default:
-                        attr.searchDimension(key, x -> {
-                            result[0] = Math.round(x);
-                        });
+                        attr.searchDimension(key, x -> result[0] = Math.round(x));
                 }
             });
             if (result[0] == Integer.MIN_VALUE) {
@@ -92,6 +91,7 @@ public class LayoutInflater {
     static {
         registerView("AbsoluteLayout", AbsoluteLayout::new);
         registerView("LinearLayout", LinearLayout::new);
+        registerView("FrameLayout", FrameLayout::new);
         registerView("ScrollView", ScrollView::new);
 
         registerView("ImageView", ImageView::new);

@@ -43,7 +43,7 @@ public class Application {
         System.exit(0);
     }
 
-    private static final void loop(){
+    private static void loop(){
         glfwPollEvents();
         if (System.currentTimeMillis() - lastGc > 5000){
             System.gc();
@@ -98,13 +98,14 @@ public class Application {
         Looper.getMainLooper().stop();
     }
 
-    public static <T extends Service> T beginService(Class<T> clazz, Valuable<T> service) {
-        String name = clazz.getName();
+    static <T extends Service> T beginService(Valuable<T> service) {
+        T sv = service.get();
+        String name = sv.getClass().getName();
+
         if (services.containsKey(name)) {
             return (T) services.get(name);
         }
         Looper looper = new Looper();
-        T sv = service.get();
         sv.myLooper = looper;
 
         services.put(name, sv);

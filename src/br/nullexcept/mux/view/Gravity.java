@@ -40,6 +40,31 @@ public class Gravity {
         return 0;
     }
 
+    public static int parseGravity(String gravity) {
+        String[] types = gravity.toLowerCase().split("\\|");
+        int value = 0;
+        for (String type : types) {
+            switch (type) {
+                case "left":
+                    value |= Gravity.LEFT;
+                    break;
+                case "center":
+                    value |= Gravity.CENTER;
+                    break;
+                case "right":
+                    value |= Gravity.RIGHT;
+                    break;
+                case "top":
+                    value |= Gravity.TOP;
+                    break;
+                case "bottom":
+                    value |= Gravity.BOTTOM;
+                    break;
+            }
+        }
+        return value;
+    }
+
     public static void applyGravity(int gravity, int width, int height, int viewportWidth, int viewportHeight, Rect dest) {
         int vertical = vertical(gravity);
         int horizontal = horizontal(gravity);

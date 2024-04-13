@@ -19,18 +19,8 @@ public class Context {
         applets.putAll(TexelAPI.obtainApplets());
     }
 
-    public <T extends Service> T startService(Class<T> clazz) {
-        return startService(clazz, ()-> {
-            try {
-                return clazz.newInstance();
-            } catch (Exception e) {
-                throw new IllegalArgumentException(e);
-            }
-        });
-    }
-
-    public <T extends Service> T startService(Class<T> clazz, Valuable<T> service) {
-        return Application.beginService(clazz, service);
+    public <T extends Service> T startService(Valuable<T> service) {
+        return Application.beginService(service);
     }
 
     public String getString(String id) {

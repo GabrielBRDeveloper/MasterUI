@@ -27,6 +27,24 @@ public class LayerListDrawable extends Drawable {
     }
 
     @Override
+    public int getWidth() {
+        int width = 1;
+        for (Layer layer: layers) {
+            width = Math.max(width, layer.drawable.getWidth()+layer.padding.left+layer.padding.right);
+        }
+        return width;
+    }
+
+    @Override
+    public int getHeight() {
+        int height = 1;
+        for (Layer layer: layers) {
+            height = Math.max(height, layer.drawable.getWidth()+layer.padding.bottom+layer.padding.top);
+        }
+        return height;
+    }
+
+    @Override
     public void setBounds(Rect rect) {
         super.setBounds(rect);
         for (Layer layer: layers){
