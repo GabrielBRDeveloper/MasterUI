@@ -3,6 +3,7 @@ package br.nullexcept.mux.widget;
 import br.nullexcept.mux.app.Context;
 import br.nullexcept.mux.graphics.Point;
 import br.nullexcept.mux.graphics.Rect;
+import br.nullexcept.mux.graphics.Size;
 import br.nullexcept.mux.res.AttributeList;
 import br.nullexcept.mux.view.*;
 

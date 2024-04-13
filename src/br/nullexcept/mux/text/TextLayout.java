@@ -49,7 +49,6 @@ public class TextLayout {
                 li += measureLine(li, text.getLineStart(line), text.getLineEnd(line), line);
             }
         }
-
         wrapSize.height = (int) (Math.max(1,li) * font.getLineHeight());
         breakLines = li;
     }
@@ -113,7 +112,6 @@ public class TextLayout {
         lines[index][3] = width;
 
         wrapSize.width = Math.max(lines[index][3], wrapSize.width);
-
         return lineCount;
     }
 

@@ -42,7 +42,7 @@ public class TextView extends View {
             h = parentHeight;
         }
 
-        layout.measure(getGravity(), w,h);
+        layout.measure(w,h, getGravity());
 
         return new Size(layout.getWrapSize());
     }
@@ -59,9 +59,14 @@ public class TextView extends View {
         int height = getMeasuredHeight() - getPaddingTop() - getPaddingBottom();
 
         canvas.translate(getPaddingLeft(), getPaddingTop());
-        layout.measure(width, height, getGravity());
         layout.draw(canvas, width, height, false);
         canvas.translate(-getPaddingLeft(), -getPaddingTop());
+    }
+
+    @Override
+    protected void onMeasure(int width, int height) {
+        super.onMeasure(width, height);
+        layout.measure(width, height, getGravity());
     }
 
     public void setText(CharSequence text) {
@@ -77,6 +82,7 @@ public class TextView extends View {
 
     public void setTextSize(float textSize){
         this.paint.setTextSize(textSize);
+        layout.update();
         measure();
         invalidate();
     }

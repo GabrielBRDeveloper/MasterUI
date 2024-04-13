@@ -5,7 +5,10 @@
     background="?colorSurface"
     padding="40dp"
     orientation="horizontal">
-  <EditText
+  <TextView
     width="match_parent"
-    height="match_parent"/>
+    height="match_parent"
+    gravity="center"
+    textSize="14dp"
+    text="The quick brown fox jumps over the lazy dog"/>
 </LinearLayout>
