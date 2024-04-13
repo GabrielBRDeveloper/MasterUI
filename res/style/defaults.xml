@@ -39,7 +39,9 @@
   <style name="Widget.Button">
     <item name="background">@drawable/button_background</item>
     <item name="gravity">center</item>
-    <item name="padding">8dp</item>
+    <item name="padding">10dp</item>
+    <item name="paddingLeft">15dp</item>
+    <item name="paddingRight">15dp</item>
     <item name="textColor">?colorOnSurfaceVariant</item>
     <item name="pointerIcon">hand</item>
   </style>
