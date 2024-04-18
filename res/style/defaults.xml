@@ -34,12 +34,16 @@
   <style name="Widget.Window">
     <item name="icon">@drawable/default_window_icon</item>
     <item name="title">MasterUi - Project</item>
+    <item name="width">800dp</item>
+    <item name="height">500dp</item>
   </style>
 
   <style name="Widget.Button">
     <item name="background">@drawable/button_background</item>
     <item name="gravity">center</item>
-    <item name="padding">8dp</item>
+    <item name="padding">10dp</item>
+    <item name="paddingLeft">15dp</item>
+    <item name="paddingRight">15dp</item>
     <item name="textColor">?colorOnSurfaceVariant</item>
     <item name="pointerIcon">hand</item>
   </style>

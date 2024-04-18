@@ -20,7 +20,7 @@ public class Typeface {
 
     private final int font;
     private final String id = UUID.randomUUID().toString();
-    private final short[] bounds = new short[1024*8]; //32KB of buffer for store characters bounds
+    private final short[] bounds = new short[1024*16]; //64KB of buffer for store characters bounds
 
     Typeface(ByteBuffer buffer){
         this.buffer = buffer;

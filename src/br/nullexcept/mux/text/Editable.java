@@ -4,9 +4,15 @@ public class Editable implements CharSequence {
     private final StringBuilder builder = new StringBuilder();
     private int lineCount = 0;
     private final int[][] lines = new int[4096][2];
+    private final OnTextChangedListener listener;
     private final Selection selection = new Selection(this);
 
-    public Editable() {
+    public Editable(){
+        this(text->{});
+    }
+
+    public Editable(OnTextChangedListener listener) {
+        this.listener = listener;
         measure();
     }
 
@@ -99,11 +105,13 @@ public class Editable implements CharSequence {
         index = Math.max(0, Math.min(builder.length(), index));
         builder.insert(index, text);
         measure();
+        listener.onContentChanged(this);
     }
 
     public void delete(int index, int length) {
         builder.delete(index, index + length);
         measure();
+        listener.onContentChanged(this);
     }
 
     @Override
@@ -125,10 +133,13 @@ public class Editable implements CharSequence {
 
     public void removeBreaks() {
         int index;
+        boolean changed = false;
         while ((index = builder.indexOf("\n")) != -1) {
             builder.delete(index, index + 1);
+            changed = true;
         }
         measure();
+        if (changed) listener.onContentChanged(this);
     }
 
     @Override

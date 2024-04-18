@@ -37,4 +37,5 @@ public class AttrList {
     public static final String selectionColor = "selectionColor";
     public static final String checked = "checked";
     public static final String scrollbar = "scrollbar";
+    public static final String hint = "hint";
 }

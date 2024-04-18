@@ -9,10 +9,11 @@
 
 - 🟩 AbsoluteLayout
 - 🟩 LinearLayout
+- 🟨 FrameLayout
+- 🟨 ScrollView
 - 🟩 Button
 - 🟩 Switch
 - 🟩 TextView
-- 🟨 ScrollView
 - 🟨 EditText
 - 🟨 ImageView
 

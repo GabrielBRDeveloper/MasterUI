@@ -1,6 +1,5 @@
 package br.nullexcept.mux.view;
 
-import br.nullexcept.mux.graphics.Bitmap;
 import br.nullexcept.mux.graphics.Drawable;
 
 public abstract class Window {
@@ -11,6 +10,8 @@ public abstract class Window {
     public abstract void setResizable(boolean enable);
     public abstract View getContentView();
     public abstract void setContentView(View view);
+    public abstract void setSize(int width, int height);
+    public abstract void setMinimumSize(int width, int height);
     public abstract void setVisible(boolean visible);
     public abstract void setWindowObserver(WindowObserver observer);
     public abstract WindowObserver getWindowObserver();

@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<LinearLayout
+<FrameLayout
     width="match_parent"
     height="match_parent"
     background="?colorSurface"
-    padding="40dp"
+    padding="20dp"
     orientation="horizontal">
-  <TextView
+  <LinearLayout
     width="match_parent"
-    height="match_parent"
-    gravity="center"
-    textSize="14dp"
-    text="The quick brown fox jumps over the lazy dog"/>
-</LinearLayout>
+    height="match_parent">
+    <LinearLayout
+        width="match_parent"
+        height="match_parent">
+      <EditText width="match_parent" height="match_parent" hint="Text hint"/>
+    </LinearLayout>
+  </LinearLayout>
+</FrameLayout>

@@ -8,6 +8,8 @@ Create folder structure on your project:
 **assets**: Folder for save all assets from your project.\
 **res:** Folder for save all resources a like texts, layouts, icons, themes, etc.
 
+![ProjectStructure](https://imgur.com/Dkhckpg.png)
+
 **IMPORTANT:** Ouput folders need follow that structure too.
 
 # Create a Hello World
@@ -24,13 +26,17 @@ public class Example extends Activity {
     @Override
     public void onCreate() {
         super.onCreate();
-        View view = new View(this);
-        setTitle("Hello world!");
+        TextView view = new TextView(this);
+        view.setText("Hello world");
+        view.setGravity(Gravity.CENTER);
+        view.setTextSize(32);
         view.setBackground(new ColorDrawable(Color.RED));
         setContentView(view);
     }
 }
+
 ```
+![Preview](https://imgur.com/AhU9Cge.png)
 
 # Create a UI with XML.
 
@@ -38,16 +44,18 @@ For create complex UIs you can use XMLs, first you need create your layout file 
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
-<LinearLayout
+<FrameLayout
     width="match_parent"
     height="match_parent"
     background="?colorSurface"
     orientation="horizontal">
-  <TextView
-    width="match_parent"
-    height="match_parent"
-    text="Hello world"/>
-</LinearLayout>
+  <Button
+    width="wrap_content"
+    height="wrap_content"
+    layoutGravity="center"
+    textSize="16dp"
+    text="Hello World"/>
+</FrameLayout>
 ```
 
 For import that layout, you can use ``setContentView(layoutId)`` in your activity.
@@ -61,6 +69,8 @@ public void onCreate() {
 }
 
 ```
+
+![Preview](https://imgur.com/1Vd9SCU.png)
 
 ### Change widgets from a xml layout.
 
