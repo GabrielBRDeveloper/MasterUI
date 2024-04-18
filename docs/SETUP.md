@@ -1,10 +1,11 @@
 > [Bootstrap](#bootstrap) \
-> [Hello World](#create-a-hello-world)
+> [Hello World](#create-a-hello-world) \
+> [Access xml nodes from java](#access-xml-views-from-java)
 
 
 # Bootstrap
 
-Import .jar with library and natives from [releases](/releases) or build from [sources](/). \
+Import .jar with library and natives from [releases](https://github.com/GabrielBRDeveloper/MasterUI/releases/) or build from [sources](/).
 
 Create folder structure on your project:
 >    assets/\
@@ -77,7 +78,7 @@ public void onCreate() {
 
 ![Preview](https://imgur.com/1Vd9SCU.png)
 
-### Change widgets from a xml layout.
+# Access XML Views from Java
 
 For access and edit nodes created from xml layout, you can use method: ``findViewById('NODE_ID')``, and set tag id in your xml code, example:
 
@@ -88,3 +89,14 @@ For access and edit nodes created from xml layout, you can use method: ``findVie
     height="match_parent"
     text="Hello world"/>
 ```
+
+```java
+@Override
+public void onCreate() {
+    super.onCreate();
+    setContentView("example");
+    ((TextView)findViewById("NODE_ID")).setText("New text");
+}
+```
+
+All views has a method ``findViewById('id')`` for find a child with specific id.
