@@ -273,10 +273,12 @@ public class WindowContainer extends AbsoluteLayout {
     }
 
     public void resize(int w, int h) {
-        rootCanvas.getFramebuffer().resize(w, h);
-        measure();
-        requestLayout();
-        invalidateAll();
+        if (this.rootCanvas.getHeight() != h || rootCanvas.getWidth() != w) {
+            rootCanvas.getFramebuffer().resize(w, h);
+            measure();
+            requestLayout();
+            invalidateAll();
+        }
     }
 
     @Override

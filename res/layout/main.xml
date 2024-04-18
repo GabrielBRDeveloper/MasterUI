@@ -3,11 +3,15 @@
     width="match_parent"
     height="match_parent"
     background="?colorSurface"
+    padding="20dp"
     orientation="horizontal">
-  <Button
-    width="wrap_content"
-    height="wrap_content"
-    layoutGravity="center"
-    textSize="16dp"
-    text="Hello World"/>
+  <LinearLayout
+    width="match_parent"
+    height="match_parent">
+    <LinearLayout
+        width="match_parent"
+        height="match_parent">
+      <EditText width="match_parent" height="match_parent" hint="Text hint"/>
+    </LinearLayout>
+  </LinearLayout>
 </FrameLayout>

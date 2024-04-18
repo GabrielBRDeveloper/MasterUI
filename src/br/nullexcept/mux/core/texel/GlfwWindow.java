@@ -29,7 +29,7 @@ import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
 class GlfwWindow extends Window {
     private final long window;
     private final GlfwEventManager eventManager;
-    private final Size windowSize = new Size();
+    private final Size windowSize = new Size(512,512);
 
     private WindowContainer container;
     private boolean destroyed = true;
@@ -41,7 +41,12 @@ class GlfwWindow extends Window {
     public GlfwWindow() {
         window = GLFW.glfwCreateWindow(512, 512, "[MasterUI:Window]", 0, C.GLFW_CONTEXT);
         eventManager = new GlfwEventManager(this);
+        GLFW.glfwIconifyWindow(window);
+        setMinimumSize(256,256);
+        center();
+    }
 
+    private void center() {
         {
             int[][] sizes = new int[4][1];
             long monitor = GLFW.glfwGetPrimaryMonitor();
@@ -52,8 +57,7 @@ class GlfwWindow extends Window {
             position.set(x,y);
         }
 
-        GLFW.glfwIconifyWindow(window);
-        GLFW.glfwSetWindowSizeLimits(window, 128,128, Integer.MAX_VALUE, Integer.MAX_VALUE);
+        align();
     }
 
     long getAddress(){
@@ -100,12 +104,8 @@ class GlfwWindow extends Window {
         long time = System.currentTimeMillis();
         if (isVisible() && container != null) {
             long begin = System.currentTimeMillis();
-            int ow = windowSize.width;
-            int oh = windowSize.height;
             refresh();
-            if (ow != windowSize.width || oh != windowSize.height) {
-                onResize(windowSize.width, windowSize.height);
-            }
+            container.resize(windowSize.width, windowSize.height);
 
             container.drawFrame();
             GLFW.glfwSwapBuffers(C.GLFW_CONTEXT);
@@ -114,7 +114,7 @@ class GlfwWindow extends Window {
             GLES.glViewport(0, 0, windowSize.width, windowSize.height);
             GLES.glClearColor(0,0,0,1);
             GLES.glClear(GLES20.GL_COLOR_BUFFER_BIT| GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_STENCIL_BUFFER_BIT);
-            GLTexel.drawTexture(0, 0, ow, oh, container.getCanvas().getFramebuffer().getTexture());
+            GLTexel.drawTexture(0, 0, windowSize.width, windowSize.height, container.getCanvas().getFramebuffer().getTexture());
 
             times[1] += System.currentTimeMillis() - begin;
             if (C.Flags.DEBUG_OVERLAY) {
@@ -172,13 +172,6 @@ class GlfwWindow extends Window {
         return count;
     }
 
-    private void onResize(int width, int height) {
-        if (container != null) {
-            container.resize(width, height);
-            container.invalidateAll();
-        }
-    }
-
     @Override
     public boolean isVisible() {
         return visible;
@@ -209,9 +202,24 @@ class GlfwWindow extends Window {
         if (view == null)
             return;
 
-        windowSize.set(0,0);
         container = new WindowContainer(view.getContext(), this);
         container.addChild(view);
+    }
+
+    @Override
+    public void setSize(int width, int height) {
+
+        // Keep position aspect
+        position.x += (windowSize.width-width)/2;
+        position.y += (windowSize.height-height)/2;
+
+        windowSize.set(width, height);
+        align();
+    }
+
+    @Override
+    public void setMinimumSize(int width, int height) {
+        GLFW.glfwSetWindowSizeLimits(window, width,height,Integer.MAX_VALUE, Integer.MAX_VALUE);
     }
 
     public void onMouseEvent(MouseEvent event) {
@@ -241,13 +249,20 @@ class GlfwWindow extends Window {
         }
         this.visible = visible;
         if (visible) {
-            GLFW.glfwSetWindowPos(window, position.x, position.y);
+            align();
             GLFW.glfwShowWindow(window);
         } else {
+            refresh();
+            align();
             GLFW.glfwHideWindow(window);
-            GLFW.glfwSetWindowPos(window, position.x, position.y);
         }
+    }
 
+    private void align() {
+        windowSize.set(Math.max(1, windowSize.width), Math.max(1, windowSize.height));
+        position.set(Math.max(0, position.x), Math.max(0, position.y));
+        GLFW.glfwSetWindowSize(window, windowSize.width, windowSize.height);
+        GLFW.glfwSetWindowPos(window, position.x, position.y);
     }
 
     @Override
@@ -266,7 +281,6 @@ class GlfwWindow extends Window {
             throw new RuntimeException("Window already created");
         }
         destroyed = false;
-        windowSize.set(-1,-1);
         observer.onCreated();
         setVisible(true);
         if (!running){

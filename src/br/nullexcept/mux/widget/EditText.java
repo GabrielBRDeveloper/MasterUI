@@ -10,15 +10,24 @@ import br.nullexcept.mux.input.KeyEvent;
 import br.nullexcept.mux.input.MouseEvent;
 import br.nullexcept.mux.res.AttributeList;
 import br.nullexcept.mux.text.Editable;
+import br.nullexcept.mux.text.OnTextChangedListener;
 import br.nullexcept.mux.text.Selection;
+import br.nullexcept.mux.text.TextLayout;
 import br.nullexcept.mux.view.AttrList;
 import br.nullexcept.mux.view.Menu;
 import br.nullexcept.mux.view.View;
 
 public class EditText extends View {
-    private final Editable text = new Editable();
+    private OnTextChangedListener textChangedListener;
+    private final Editable text = new Editable(text->{
+        if(textChangedListener != null){
+            textChangedListener.onContentChanged(text);
+        }
+    });
+
     private final Selection selection = text.getSelection();
     private final Paint paint = new Paint();
+    private final Hint hint = new Hint(paint);
     private int selectionColor = Color.RED;
     private int textColor = Color.GREEN;
     private boolean caretVisible = false;
@@ -37,6 +46,7 @@ public class EditText extends View {
         attrs = initialAttributes();
 
         attrs.searchText(AttrList.text, this::setText);
+        attrs.searchText(AttrList.hint, this::setHint);
         attrs.searchColor(AttrList.textColor, this::setTextColor);
         attrs.searchColor(AttrList.selectionColor, this::setSelectionColor);
         attrs.searchBoolean(AttrList.singleLine, this::setSingleLine);
@@ -51,6 +61,15 @@ public class EditText extends View {
     {
         setFocusable(true);
         setOnClickListener(v-> requestFocus());
+    }
+
+    public void setHint(CharSequence text) {
+        hint.setText(text);
+        invalidate();
+    }
+
+    public void setOnTextChangedListener(OnTextChangedListener textChangedListener) {
+        this.textChangedListener = textChangedListener;
     }
 
     @Override
@@ -298,21 +317,31 @@ public class EditText extends View {
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.translate(getPaddingLeft(), getPaddingTop());
+
         if (!loopState){
             caretLoop();
         }
-        FontMetrics metrics = paint.getFontMetrics();
-        int lineHeight = (int) metrics.getLineHeight();
-        int y = 0;
-        if (selection.length() == 0) {
-            drawCaret(canvas);
+        if (text.length() > 0) {
+            FontMetrics metrics = paint.getFontMetrics();
+            int lineHeight = (int) metrics.getLineHeight();
+            int y = 0;
+            if (selection.length() == 0) {
+                drawCaret(canvas);
+            } else {
+                drawSelection(canvas);
+            }
+            paint.setColor(textColor);
+            for (int i = 0; i < text.getLineCount(); i++) {
+                drawLine(canvas, 0, y, i);
+                y += lineHeight;
+            }
         } else {
-            drawSelection(canvas);
-        }
-        paint.setColor(textColor);
-        for (int i = 0; i < text.getLineCount(); i++) {
-            drawLine(canvas, 0, y, i);
-            y += lineHeight;
+            int width = getMeasuredWidth() - getPaddingLeft() - getPaddingRight();
+            int height = getMeasuredHeight() - getPaddingTop() - getPaddingBottom();
+            int color = Color.argb(Color.alpha(textColor)/2, Color.red(textColor), Color.green(textColor), Color.blue(textColor));
+            paint.setColor(color);
+            hint.draw(canvas,getGravity(), width, height);
+            drawCaret(canvas);
         }
         canvas.translate(-getPaddingLeft(), -getPaddingTop());
     }
@@ -395,6 +424,26 @@ public class EditText extends View {
             canvas.drawText(String.valueOf(text.charAt(start)), x, y + ascent, paint);
             x += font().measureChar(text.charAt(start));
             start++;
+        }
+    }
+
+
+    private static class Hint {
+        private final Editable text = new Editable();
+        private final TextLayout layout;
+        public Hint(Paint paint) {
+            this.layout = new TextLayout(text, paint, new SimpleTextRenderer(paint));
+        }
+
+        public void draw(Canvas canvas, int gravity, int width, int height) {
+            layout.measure(width, height, gravity);
+            layout.draw(canvas, width, height,false);
+        }
+
+        public void setText(CharSequence content) {
+            text.delete(0,text.length());
+            text.insert(content);
+            layout.update();
         }
     }
 }

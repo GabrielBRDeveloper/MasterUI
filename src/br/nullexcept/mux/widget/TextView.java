@@ -1,10 +1,7 @@
 package br.nullexcept.mux.widget;
 
 import br.nullexcept.mux.app.Context;
-import br.nullexcept.mux.graphics.Canvas;
-import br.nullexcept.mux.graphics.Paint;
-import br.nullexcept.mux.graphics.Rect;
-import br.nullexcept.mux.graphics.Size;
+import br.nullexcept.mux.graphics.*;
 import br.nullexcept.mux.res.AttributeList;
 import br.nullexcept.mux.text.Editable;
 import br.nullexcept.mux.text.TextLayout;
@@ -14,8 +11,9 @@ import br.nullexcept.mux.view.ViewGroup;
 
 public class TextView extends View {
     private final Paint paint = new Paint();
+    private ColorStateList textColor = new ColorStateList(Color.RED);
     private final Editable text = new Editable();
-    private final TextLayout layout = new TextLayout(text, paint, new Renderer());
+    private final TextLayout layout = new TextLayout(text, paint, new SimpleTextRenderer(paint));
 
     public TextView(Context context) {
         this(context, null);
@@ -48,8 +46,16 @@ public class TextView extends View {
     }
 
     public void setTextColor(int color){
-        paint.setColor(color);
+        textColor = new ColorStateList(color);
         invalidate();
+    }
+
+    @Override
+    protected void changeDrawableState() {
+        super.changeDrawableState();
+        if (textColor.setState(getStateList())) {
+            invalidate();
+        }
     }
 
     @Override
@@ -59,6 +65,7 @@ public class TextView extends View {
         int height = getMeasuredHeight() - getPaddingTop() - getPaddingBottom();
 
         canvas.translate(getPaddingLeft(), getPaddingTop());
+        paint.setColor(textColor.getColor());
         layout.draw(canvas, width, height, false);
         canvas.translate(-getPaddingLeft(), -getPaddingTop());
     }
@@ -90,32 +97,33 @@ public class TextView extends View {
     public CharSequence getText() {
         return text;
     }
+}
 
-    private class Renderer implements TextLayout.TextRenderer {
+class SimpleTextRenderer implements TextLayout.TextRenderer {
+    private final Paint paint;
 
-        @Override
-        public void drawSelection(Canvas canvas, int x, int y, int width, int height) {
+    SimpleTextRenderer(Paint paint) {
+        this.paint = paint;
+    }
 
-        }
+    @Override
+    public void drawSelection(Canvas canvas, int x, int y, int width, int height) {}
 
-        @Override
-        public void drawCharacter(Canvas canvas, char ch, int x, int y) {
-            switch (ch) {
-                case '\n':
-                case '\r':
-                case ' ':
-                case '\t':
-                case '\f':
-                    break;
-                default:
-                    canvas.drawText(String.valueOf(ch), x, y, paint);
-                    break;
-            }
-        }
-
-        @Override
-        public void drawCaret(Canvas canvas, int x, int y) {
-
+    @Override
+    public void drawCharacter(Canvas canvas, char ch, int x, int y) {
+        switch (ch) {
+            case '\n':
+            case '\r':
+            case ' ':
+            case '\t':
+            case '\f':
+                break;
+            default:
+                canvas.drawText(String.valueOf(ch), x, y, paint);
+                break;
         }
     }
+
+    @Override
+    public void drawCaret(Canvas canvas, int x, int y) {}
 }

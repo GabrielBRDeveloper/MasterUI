@@ -15,6 +15,8 @@ public class Activity extends Context {
         AttributeList attrs = getResources().obtainStyled("Widget.Window");
         attrs.searchText("title", (text)-> mWindow.setTitle(""+text));
         attrs.searchDrawable("icon", (icon) -> mWindow.setIcon(icon));
+        attrs.searchDimension("width", (size) -> mWindow.setSize(size.intValue(), mWindow.getHeight()));
+        attrs.searchDimension("height", (size) -> mWindow.setSize(mWindow.getWidth(), size.intValue()));
     }
     public void onDestroy(){ running = false; }
     public void onPause(){ running = false; }

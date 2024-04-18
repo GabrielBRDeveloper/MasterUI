@@ -34,6 +34,8 @@
   <style name="Widget.Window">
     <item name="icon">@drawable/default_window_icon</item>
     <item name="title">MasterUi - Project</item>
+    <item name="width">800dp</item>
+    <item name="height">500dp</item>
   </style>
 
   <style name="Widget.Button">
