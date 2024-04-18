@@ -98,7 +98,7 @@ public class EditText extends View {
         x -= getPaddingLeft();
         int line = (int)(y/font().getLineHeight());
 
-        line = Math.max(0, Math.min(text.getLineCount(), line));
+        line = Math.max(0, Math.min(text.getLineCount()-1, line));
 
         int start = text.getLineStart(line);
         if (start == text.length()) {
