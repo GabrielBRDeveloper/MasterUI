@@ -23,9 +23,12 @@
     <style name="paddingBottom">10dp</style>
   </style>
 
-  <style name="Widget.EditText">
-    <item name="pointerIcon">textSelection</item>
+  <style name="Widget.TextView">
     <item name="textColor">?colorOnSurface</item>
+  </style>
+
+  <style name="Widget.EditText" parent="Widget.TextView">
+    <item name="pointerIcon">textSelection</item>
     <item name="padding">8dp</item>
     <item name="selectionColor">?colorPrimary</item>
     <item name="background">@drawable/textarea_background</item>

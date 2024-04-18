@@ -223,4 +223,24 @@ class Parser {
         }
         return id;
     }
+
+    public static ColorStateList parseColorState(Resources resources, String value) {
+        if (value.startsWith("#")) {
+            return new ColorStateList(parseColor(value));
+        } else if (value.startsWith("@color/")) {
+            XmlElement xml = resources.requestXml(value.substring(1));
+            ColorStateList color = new ColorStateList(xml.has("default") ? parseColor(xml.attr("default")) : Color.TRANSPARENT);
+            for (int i = 0; i < xml.childCount(); i++) {
+                XmlElement child = xml.childAt(i);
+                HashMap<String, String> attrs = new HashMap<>(child.attrs());
+                StateList states = new StateList();
+                for (String key: attrs.keySet()){
+                    states.set(StateList.fromName(key), Boolean.parseBoolean(attrs.get(key)));
+                }
+                color.add(parseColor(child.value()),states);
+            }
+        }
+        Log.error(LOG_TAG, "Invalid color value: "+value);
+        return new ColorStateList(Color.RED);
+    }
 }

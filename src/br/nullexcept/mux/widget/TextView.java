@@ -23,7 +23,7 @@ public class TextView extends View {
         super(context, attrs);
         attrs = initialAttributes();
         attrs.searchText(AttrList.text, this::setText);
-        attrs.searchColor(AttrList.textColor, this::setTextColor);
+        attrs.searchColorList(AttrList.textColor, value -> textColor = value);
         attrs.searchDimension(AttrList.textSize, this::setTextSize);
     }
 

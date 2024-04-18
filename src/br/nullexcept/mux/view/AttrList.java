@@ -16,6 +16,7 @@ public class AttrList {
     public static final String tag = "tag";
     public static final String alpha = "alpha";
     public static final String orientation = "orientation";
+    public static final String dividerSize = "dividerSize";
     public static final String singleLine = "singleLine";
     public static final String x = "x";
     public static final String y = "y";

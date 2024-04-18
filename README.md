@@ -2,8 +2,7 @@
 
 # Master UI
 
-Java library for make a beautiful UI, based in android code design. \
-That project uses OpenGLES 2.0 for render, so that is compatible with many actual devices.
+Java library for make a beautiful apps, based in android code design. 
 
 >**[Use Guide](docs/SETUP.md)** \
 >**[API Status](docs/STATUS.md)**

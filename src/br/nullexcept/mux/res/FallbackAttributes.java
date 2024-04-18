@@ -1,5 +1,6 @@
 package br.nullexcept.mux.res;
 
+import br.nullexcept.mux.graphics.ColorStateList;
 import br.nullexcept.mux.graphics.Drawable;
 import br.nullexcept.mux.lang.Function;
 import br.nullexcept.mux.lang.xml.XmlElement;
@@ -47,6 +48,14 @@ class FallbackAttributes implements AttributeList {
     public void searchColor(String name, Function<Integer> apply) {
         int color = getColor(name, Integer.MIN_VALUE);
         if (color != Integer.MIN_VALUE){
+            apply.call(color);
+        }
+    }
+
+    @Override
+    public void searchColorList(String name, Function<ColorStateList> apply) {
+        ColorStateList color = getColorList(name);
+        if (color != null) {
             apply.call(color);
         }
     }
@@ -132,6 +141,16 @@ class FallbackAttributes implements AttributeList {
             return Parser.parseDrawable(resources, resolve(map.get(name)));
         } else if (fallback != null){
             return fallback.getDrawable(name);
+        }
+        return null;
+    }
+
+    @Override
+    public ColorStateList getColorList(String name) {
+        if (contains(name)) {
+            return Parser.parseColorState(resources, resolve(map.get(name)));
+        } else if (fallback != null) {
+            return fallback.getColorList(name);
         }
         return null;
     }
