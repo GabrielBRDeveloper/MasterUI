@@ -8,6 +8,7 @@ import br.nullexcept.mux.graphics.shape.RoundedShape;
 import br.nullexcept.mux.lang.xml.XmlElement;
 import br.nullexcept.mux.utils.Log;
 import br.nullexcept.mux.view.AttrList;
+import br.nullexcept.mux.view.Gravity;
 import org.lwjgl.nanovg.NSVGImage;
 import org.lwjgl.nanovg.NSVGPath;
 import org.lwjgl.nanovg.NSVGShape;
@@ -66,16 +67,27 @@ class Parser {
                     } else {
                         childDrawable = inflateXmlDrawable(res, child.childAt(0));
                     }
+
                     attrs = res.obtainStyled(child);
                     attrs.searchDimension(AttrList.padding, v -> {
                         int x = Math.round(v);
                         padding.set(x,x,x,x);
                     });
+
+                    Size size = new Size(-1,-1);
+                    int[] gravity = new int[]{ Gravity.LEFT };
+
+                    attrs.searchDimension(AttrList.padding, v -> padding.set(v.intValue(),v.intValue(),v.intValue(),v.intValue()));
+                    attrs.searchDimension(AttrList.width, v -> size.width = v.intValue());
+                    attrs.searchDimension(AttrList.height, v -> size.height = v.intValue());
+                    attrs.searchRaw(AttrList.gravity, v -> gravity[0] = Gravity.parseGravity(v));
+
                     attrs.searchDimension("left", v -> padding.left = Math.round(v));
                     attrs.searchDimension("right", v -> padding.right = Math.round(v));
                     attrs.searchDimension("bottom", v -> padding.bottom = Math.round(v));
                     attrs.searchDimension("top", v -> padding.top = Math.round(v));
-                    drawable.addLayer(childDrawable, padding);
+
+                    drawable.addLayer(childDrawable, padding, size, gravity[0]);
                 }
                 return drawable;
             }

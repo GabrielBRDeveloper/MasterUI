@@ -1,9 +1,7 @@
 package br.nullexcept.mux.graphics.drawable;
 
-import br.nullexcept.mux.graphics.Canvas;
-import br.nullexcept.mux.graphics.Drawable;
-import br.nullexcept.mux.graphics.Rect;
-import br.nullexcept.mux.graphics.StateList;
+import br.nullexcept.mux.graphics.*;
+import br.nullexcept.mux.view.Gravity;
 
 import java.util.ArrayList;
 
@@ -16,7 +14,15 @@ public class LayerListDrawable extends Drawable {
     }
 
     public void addLayer(Drawable drawable, Rect padding){
-        layers.add(new Layer(padding, drawable));
+        addLayer(drawable, padding, new Size(-1,-1));
+    }
+
+    public void addLayer(Drawable drawable, Rect padding, Size size){
+        addLayer(drawable, padding, size, Gravity.LEFT);
+    }
+
+    public void addLayer(Drawable drawable, Rect padding, Size size, int gravity){
+        layers.add(new Layer(padding, size, drawable, gravity));
     }
 
     @Override
@@ -63,11 +69,15 @@ public class LayerListDrawable extends Drawable {
 
     private final class Layer {
         private final Rect padding;
+        private final Size size;
         private final Drawable drawable;
+        private final int gravity;
 
-        private Layer(Rect padding, Drawable drawable) {
+        private Layer(Rect padding, Size size, Drawable drawable, int gravity) {
             this.padding = padding;
+            this.size = size;
             this.drawable = drawable;
+            this.gravity = gravity;
         }
 
         public void setBounds(Rect rect) {
@@ -75,6 +85,24 @@ public class LayerListDrawable extends Drawable {
             tmp.top = rect.top + padding.top;
             tmp.bottom = rect.bottom - padding.bottom;
             tmp.right = rect.right - padding.right;
+
+            int x = tmp.left;
+            int y = tmp.top;
+
+            int vw = tmp.width();
+            int vh = tmp.height();
+
+            int cw = vw;
+            int ch = vh;
+
+            if (size.width != -1)
+                cw = Math.min(cw, size.width);
+            if (size.height != -1)
+                ch = Math.min(ch, size.height);
+
+            Gravity.applyGravity(gravity,cw,ch,vw,vh, tmp);
+            tmp.move(x,y);
+
             drawable.setBounds(tmp);
         }
     }
