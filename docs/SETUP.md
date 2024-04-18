@@ -1,6 +1,11 @@
+> [Bootstrap](#bootstrap) \
+> [Hello World](#create-a-hello-world)
+
+
 # Bootstrap
 
-Import .jar with library and natives. \
+Import .jar with library and natives from [releases](/releases) or build from [sources](/). \
+
 Create folder structure on your project:
 >    assets/\
 >    res/
@@ -14,7 +19,7 @@ Create folder structure on your project:
 
 # Create a Hello World
 
-You can create a hello world:
+For make a simple hello world:
 
 ```java
 

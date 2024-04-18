@@ -12,6 +12,8 @@ public class LinearLayout extends ViewGroup {
     public static int ORIENTATION_VERTICAL = 0;
 
     private int orientation;
+    private int dividerSize;
+
     private final Rect rect = new Rect();
 
     public LinearLayout(Context context) {
@@ -21,6 +23,7 @@ public class LinearLayout extends ViewGroup {
     public LinearLayout(Context context, AttributeList attrs) {
         super(context, attrs);
         attrs = initialAttributes();
+        attrs.searchDimension(AttrList.dividerSize, value -> dividerSize = value.intValue());
         attrs.searchRaw(AttrList.orientation, value -> {
             if ("horizontal".equals(value)){
                 setOrientation(ORIENTATION_HORIZONTAL);
@@ -49,10 +52,11 @@ public class LinearLayout extends ViewGroup {
 
         for (int i = 0; i < index; i++){
             View child = getChildAt(i);
+            LayoutParams params = (LayoutParams) child.getLayoutParams();
             if (orientation == ORIENTATION_HORIZONTAL){
-                point.x += child.getMeasuredWidth();
+                point.x += child.getMeasuredWidth() + params.getMarginLeft() + params.getMarginRight() + dividerSize;
             } else {
-                point.y += child.getMeasuredHeight();
+                point.y += child.getMeasuredHeight() + params.getMarginTop() + params.getMarginBottom() + dividerSize;
             }
         }
 
