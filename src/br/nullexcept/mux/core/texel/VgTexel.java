@@ -158,7 +158,7 @@ class VgTexel {
         float ah = image.getHeight() / srcH;
 
         float imgH = destH * ah;
-        float imgW = destW *= aw;
+        float imgW = destW * aw;
 
         float imgX = destX - ((srcX / image.getWidth()) * imgW);
         float imgY = destY - ((srcY / image.getHeight()) * imgH);

@@ -150,6 +150,13 @@ class Parser {
 
                 return drawable;
             }
+            case "nine-path": {
+                NinePathDrawable drawable = new NinePathDrawable();
+                drawable.setBitmap(openBitmap(attrs.getRawValue("src").substring(1)));
+                drawable.setBorder(Integer.parseInt(attrs.getRawValue("border")));
+
+                return drawable;
+            }
             case "color":{
                 ColorDrawable drawable = new ColorDrawable(0);
                 attrs.searchColor(AttrList.color, drawable::setColor);
@@ -207,6 +214,18 @@ class Parser {
         return p;
     }
 
+    private static Bitmap openBitmap(String path) {
+        String[] supportedImages = new String[]{
+                "png", "jpg", "jpeg"
+        };
+        for (String format: supportedImages){
+            if (Resources.Manager.exists(path+"."+format)){
+                return BitmapFactory.openBitmap(Resources.Manager.openDocument(path+"."+format));
+            }
+        }
+        return null;
+    }
+
     public static Drawable parseDrawable(Resources resources, String value) {
         if (value.startsWith("#")){
             return new ColorDrawable(Color.parseColor(value));
@@ -215,13 +234,9 @@ class Parser {
             if (Resources.Manager.exists(value+".xml")){
                 return inflateXmlDrawable(resources, resources.requestXml(value));
             } else {
-                String[] supportedImages = new String[]{
-                        "png", "jpg", "jpeg"
-                };
-                for (String format: supportedImages){
-                    if (Resources.Manager.exists(value+"."+format)){
-                        return new BitmapDrawable(BitmapFactory.openBitmap(Resources.Manager.openDocument(value+"."+format)));
-                    }
+                Bitmap res = openBitmap(value);
+                if (res != null) {
+                    return new BitmapDrawable(res);
                 }
             }
         }
