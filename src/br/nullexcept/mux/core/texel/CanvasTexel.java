@@ -120,13 +120,23 @@ class CanvasTexel implements Canvas {
 
     @Override
     public void drawBitmap(int x, int y, int width, int height, Bitmap bitmap, Paint paint) {
+        drawBitmap(x,y,width,height, 0,0, bitmap.getWidth(), getHeight(), bitmap,paint);
+    }
+
+    @Override
+    public void drawBitmap(int x, int y, int width, int height, int srcX, int srcY, int srcWidth, int srcHeight, Bitmap bitmap, Paint paint) {
         if (!(bitmap instanceof TexelBitmap)){
             throw new IllegalArgumentException("Invalid bitmap, bitmap core and canvas core is different!");
         }
         TexelBitmap texelBitmap = (TexelBitmap)bitmap;
         VgTexel.beginElement();
-        VgTexel.drawImage(texelBitmap,x,y,width,height, 0,0, texelBitmap.getWidth(), texelBitmap.getHeight());
+        VgTexel.drawImage(texelBitmap,x,y,width,height, srcX, srcY,srcWidth, srcHeight);
         VgTexel.endElement();
+    }
+
+    @Override
+    public void drawBitmap(Rect rect, Rect source, Bitmap bitmap, Paint paint) {
+        drawBitmap(rect.left, rect.top, rect.width(), rect.height(), source.left, source.top, source.width(), source.height(),bitmap, paint);
     }
 
     @Override

@@ -13,6 +13,8 @@ public interface Canvas {
 
     void drawBitmap(Rect rect, Bitmap bitmap, Paint paint);
     void drawBitmap(int x, int y, int width, int height, Bitmap bitmap, Paint paint);
+    void drawBitmap(int x, int y, int width, int height, int srcX, int srcY, int srcWidth, int srcHeight, Bitmap bitmap, Paint paint);
+    void drawBitmap(Rect rect, Rect source, Bitmap bitmap, Paint paint);
     void drawBitmap(int x, int y, Bitmap bitmap, Paint paint);
 
     void drawEllipse(int left, int top, int right, int bottom, Paint paint);
