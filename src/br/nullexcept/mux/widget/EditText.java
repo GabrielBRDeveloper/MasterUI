@@ -14,8 +14,9 @@ import br.nullexcept.mux.text.OnTextChangedListener;
 import br.nullexcept.mux.text.Selection;
 import br.nullexcept.mux.text.TextLayout;
 import br.nullexcept.mux.view.AttrList;
-import br.nullexcept.mux.view.Menu;
 import br.nullexcept.mux.view.View;
+import br.nullexcept.mux.view.menu.MenuGroup;
+import br.nullexcept.mux.view.menu.MenuItem;
 
 public class EditText extends View {
     private OnTextChangedListener textChangedListener;
@@ -34,7 +35,7 @@ public class EditText extends View {
     private boolean singleLine = false;
     private boolean loopState = false;
     private long mouseDownTime = 0L;
-    private final Menu.Group menu;
+    private final MenuGroup menu;
     private final Point mouseDownPoint = new Point();
 
     public EditText(Context context) {
@@ -52,10 +53,10 @@ public class EditText extends View {
         attrs.searchBoolean(AttrList.singleLine, this::setSingleLine);
         attrs.searchDimension(AttrList.textSize, this::setTextSize);
 
-        menu = new Menu.Group("");
-        menu.add(new Menu.Item("copy", "Copy", new MaterialIconDrawable("content_copy", textColor)));
-        menu.add(new Menu.Item("cut", "Cut", new MaterialIconDrawable("content_cut", textColor)));
-        menu.add(new Menu.Item("paste", "Paste", new MaterialIconDrawable("content_paste", textColor)));
+        menu = new MenuGroup();
+        menu.add(new MenuItem("copy", "Copy", new MaterialIconDrawable("content_copy", textColor)));
+        menu.add(new MenuItem("cut", "Cut", new MaterialIconDrawable("content_cut", textColor)));
+        menu.add(new MenuItem("paste", "Paste", new MaterialIconDrawable("content_paste", textColor)));
     }
 
     {
@@ -189,7 +190,7 @@ public class EditText extends View {
     }
 
     @Override
-    public boolean onCreateContextMenu(Menu menu) {
+    public boolean onCreateContextMenu(MenuGroup menu) {
         ClipboardApplet clipboard = getContext().getApplet(Context.CLIPBOARD_APPLET);
         menu.setOnClickListener(item -> {
             switch (item.getId()) {
@@ -207,9 +208,9 @@ public class EditText extends View {
             }
         });
 
-        this.menu.findItemById("paste").setEnable(clipboard.hasContent());
-        this.menu.findItemById("copy").setEnable(selection.length() > 0);
-        this.menu.findItemById("cut").setEnable(selection.length() > 0);
+        this.menu.findMenuById("paste").setEnable(clipboard.hasContent());
+        this.menu.findMenuById("copy").setEnable(selection.length() > 0);
+        this.menu.findMenuById("cut").setEnable(selection.length() > 0);
         menu.add(this.menu);
         return true;
     }

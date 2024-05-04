@@ -39,4 +39,7 @@ public class AttrList {
     public static final String checked = "checked";
     public static final String scrollbar = "scrollbar";
     public static final String hint = "hint";
+    public static final String title = "title";
+    public static final String summary = "summary";
+    public static final String icon = "icon";
 }

@@ -57,6 +57,10 @@ public class Looper {
         }
     }
 
+    public static void sleep(int ms) {
+        sleep(ms,0);
+    }
+
     public static void sleep(int ms, int nano) {
         try {
             Thread.sleep(ms, nano);

@@ -1,7 +1,7 @@
 package br.nullexcept.mux.app;
 
 import br.nullexcept.mux.core.texel.TexelAPI;
-import br.nullexcept.mux.lang.Valuable;
+import br.nullexcept.mux.lang.Parcel;
 import br.nullexcept.mux.res.AssetsManager;
 import br.nullexcept.mux.res.LayoutInflater;
 import br.nullexcept.mux.res.Resources;
@@ -13,13 +13,20 @@ public class Context {
 
     private final Resources mResource;
     private final HashMap<String, Applet> applets = new HashMap<>();
+    Launch _args;
 
     public Context(){
         mResource = new Resources(this);
         applets.putAll(TexelAPI.obtainApplets());
     }
 
-    public <T extends Service> T startService(Valuable<T> service) {
+    protected void onParcelChanged(Parcel parcel) {}
+
+    protected Parcel getParcel() {
+        return _args;
+    }
+
+    public <T extends Service> T startService(Launch<T> service) {
         return Application.beginService(service);
     }
 

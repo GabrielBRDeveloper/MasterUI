@@ -23,7 +23,10 @@ public class LayoutInflater {
 
     public <T extends View> T inflate(String resource){
         Resources res = context.getResources();
-        XmlElement element = res.requestXml("layout/" +resource);
+        if (!resource.startsWith("@")) {
+            resource = "@layout/"+resource;
+        }
+        XmlElement element = res.requestXml(Resources.fixPath(resource, "layout"));
         return inflate(element);
     }
 

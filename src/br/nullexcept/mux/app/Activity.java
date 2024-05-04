@@ -1,12 +1,13 @@
 package br.nullexcept.mux.app;
 
-import br.nullexcept.mux.lang.Valuable;
+import br.nullexcept.mux.core.texel.TexelAPI;
 import br.nullexcept.mux.res.AttributeList;
-import br.nullexcept.mux.view.AttrList;
 import br.nullexcept.mux.view.View;
 import br.nullexcept.mux.view.Window;
 
 public class Activity extends Context {
+    public static final int FLAG_ACTIVITY_NEW_WINDOW = 0x0000001;
+
     Window mWindow;
     private boolean running;
 
@@ -31,17 +32,24 @@ public class Activity extends Context {
         mWindow = null;
     }
 
-    public void switchActivity(Valuable<Activity> provider) {
-        Window window = mWindow;
-        window.getWindowObserver().onDestroy();
-        mWindow.setContentView(null);
-        System.gc();
-        Activity nw = provider.get();
-        nw.mWindow = mWindow;
-        mWindow = null;
+    public  <T extends Activity> void startActivity(Launch<T> launch) {
+        if (!launch.hasFlag(FLAG_ACTIVITY_NEW_WINDOW)) {
+            Window window = mWindow;
+            window.getWindowObserver().onDestroy();
+            mWindow.setContentView(null);
+            System.gc();
+            Activity nw = launch.make();
+            nw._args = launch;
+            nw.mWindow = mWindow;
+            mWindow = null;
 
-        window.setWindowObserver(Application.buildObserver(nw));
-        window.getWindowObserver().onCreated();
+            window.setWindowObserver(Application.buildObserver(nw));
+            window.getWindowObserver().onCreated();
+        } else {
+            Activity nw = launch.make();
+            nw._args = launch;
+            Application.boot(TexelAPI.createWindow(), nw);
+        }
     }
 
     public <T extends View> T findViewById(String id) {

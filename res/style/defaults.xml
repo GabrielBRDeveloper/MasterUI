@@ -13,6 +13,10 @@
     <item name="textSize">15dp</item>
   </style>
 
+  <style name="Base.Menu">
+
+  </style>
+
   <style name="Widget.ScrollView">
     <item name="scrollbar">@drawable/scrollbar_thumb</item>
   </style>
