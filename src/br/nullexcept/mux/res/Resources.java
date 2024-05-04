@@ -24,6 +24,7 @@ public final class Resources {
     private final HashMap<String, StylePreset> styles = new HashMap<>();
 
     private final LayoutInflater inflater;
+    private final MenuInflater menuInflater;
     private final Context context;
     private final AssetsManager assetsManager;
     private FallbackAttributes theme;
@@ -40,6 +41,7 @@ public final class Resources {
         this.context = ctx;
         metrics = new DisplayMetrics();
         inflater = new LayoutInflater(ctx);
+        menuInflater = new MenuInflater(this);
         assetsManager = new AssetsManager("/assets/", ctx.getClass());
         importStylesheet(requestXml("style/defaults"));
 
@@ -50,6 +52,10 @@ public final class Resources {
 
         importLanguage();
         setTheme("Base.Theme");
+    }
+
+    public MenuInflater getMenuInflater() {
+        return menuInflater;
     }
 
     /**
@@ -129,7 +135,7 @@ public final class Resources {
     }
 
     public Drawable getDrawable(String id) {
-        return Parser.parseDrawable(this, "@drawable/"+id);
+        return Parser.parseDrawable(this, fixPath(id, "drawable"));
     }
 
     public static class DisplayMetrics {
@@ -162,5 +168,13 @@ public final class Resources {
         ResourcesManager() {
             super("/res/", ResourcesManager.class);
         }
+    }
+
+
+    static String fixPath(String path, String def) {
+        if (!path.startsWith("@")) {
+            path = "@"+def+"/"+path;
+        }
+        return path.substring(1);
     }
 }

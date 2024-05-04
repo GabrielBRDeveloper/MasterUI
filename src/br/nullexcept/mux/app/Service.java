@@ -1,6 +1,6 @@
 package br.nullexcept.mux.app;
 
-public class Service {
+public class Service extends Context {
     Looper myLooper;
 
     protected void onCreate() {

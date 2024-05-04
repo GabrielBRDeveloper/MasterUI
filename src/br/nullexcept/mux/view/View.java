@@ -7,6 +7,8 @@ import br.nullexcept.mux.graphics.*;
 import br.nullexcept.mux.input.*;
 import br.nullexcept.mux.res.AttributeList;
 import br.nullexcept.mux.utils.Log;
+import br.nullexcept.mux.view.menu.MenuGroup;
+import br.nullexcept.mux.view.menu.MenuItem;
 
 import java.util.Objects;
 
@@ -25,6 +27,7 @@ public class View {
     private boolean focusable;
     private boolean clickable;
     private boolean hovered;
+    private boolean attached;
 
     private final Point measured = new Point();
     private final int hashCode = hash();
@@ -78,7 +81,7 @@ public class View {
         Looper.getMainLooper().post(()-> attributes = null);
     }
 
-    protected void showMenu(Menu menu, int x, int y) {
+    protected void showMenu(MenuItem menu, int x, int y) {
         Rect bounds = getBounds();
         x = Math.max(0, Math.min(x, bounds.width()));
         y = Math.max(0, Math.min(y, bounds.height()));
@@ -200,7 +203,7 @@ public class View {
         return parent;
     }
 
-    public boolean onCreateContextMenu(Menu menu){
+    public boolean onCreateContextMenu(MenuGroup menu){
         return false;
     }
 
@@ -360,8 +363,31 @@ public class View {
         invalidate();
     }
 
+    protected void onAttachedToWindow() {
+
+    }
+
+    protected void onDetachedFromWindow() {
+
+    }
+
+    protected void onViewRootChanged() {
+        if (attached && getViewRoot() == null) {
+            attached = false;
+            onDetachedFromWindow();
+        } else if ((!attached) && getViewRoot() != null) {
+            attached = true;
+            onAttachedToWindow();
+        }
+    }
+
+    protected ViewRoot getViewRoot() {
+        return parent == null ? null : parent.getViewRoot();
+    }
+
     final void setParent(ViewGroup group) {
         parent = group;
+        onViewRootChanged();
     }
 
     public int getMeasuredWidth() {

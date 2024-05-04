@@ -10,8 +10,9 @@
     height="match_parent">
     <LinearLayout
         width="match_parent"
-        height="match_parent">
-      <EditText width="match_parent" height="match_parent" hint="Text hint"/>
+        height="match_parent"
+        id="content">
+
     </LinearLayout>
   </LinearLayout>
 </FrameLayout>

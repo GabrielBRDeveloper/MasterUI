@@ -12,6 +12,11 @@ public class C {
     public static long GLFW_CONTEXT = 0;
     public static BitmapFactory BITMAP_FACTORY;
 
+    public static class Config {
+        public static boolean SET_WINDOW_GL_HINT = true;
+        public static final int[] WINDOW_GL_VERSION = new int[]{ 2, 0 };
+    }
+
     public static class Flags {
         public static final boolean FULL_DRAW;
         public static final boolean DEBUG_OVERLAY;

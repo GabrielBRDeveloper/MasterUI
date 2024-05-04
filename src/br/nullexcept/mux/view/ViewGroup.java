@@ -200,6 +200,14 @@ public class ViewGroup extends View {
         onTreeChanged();
     }
 
+    @Override
+    protected void onViewRootChanged() {
+        super.onViewRootChanged();
+        for (View child: children) {
+            child.onViewRootChanged();
+        }
+    }
+
     protected void onChildAdded(View view){
         requestLayout();
     }

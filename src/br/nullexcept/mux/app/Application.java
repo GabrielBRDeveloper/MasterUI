@@ -3,7 +3,6 @@ package br.nullexcept.mux.app;
 import br.nullexcept.mux.C;
 import br.nullexcept.mux.core.texel.TexelAPI;
 import br.nullexcept.mux.lang.Valuable;
-import br.nullexcept.mux.utils.Log;
 import br.nullexcept.mux.view.Window;
 import org.lwjgl.opengles.GLES;
 
@@ -19,9 +18,11 @@ public class Application {
     public static void initialize(Valuable<Activity> creator){
         glfwInit();
         glfwDefaultWindowHints();
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-        glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
+        if (C.Config.SET_WINDOW_GL_HINT) {
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, C.Config.WINDOW_GL_VERSION[0]);
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, C.Config.WINDOW_GL_VERSION[1]);
+            glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
+        }
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
 
         long window = glfwCreateWindow(1,1,"[MasterUI - Core]",0, 0);
@@ -98,24 +99,30 @@ public class Application {
         Looper.getMainLooper().stop();
     }
 
-    static <T extends Service> T beginService(Valuable<T> service) {
-        T sv = service.get();
-        String name = sv.getClass().getName();
+    static <T extends Service> T beginService(Launch<T> launch) {
+        String name = launch.getLaunchClass().getName();
 
         if (services.containsKey(name)) {
-            return (T) services.get(name);
+            Service service = services.get(name);
+            service._args = launch;
+            service.onParcelChanged(launch);
+            return (T) service;
         }
-        Looper looper = new Looper();
-        sv.myLooper = looper;
 
-        services.put(name, sv);
+        Service service = launch.make();
+
+        Looper looper = new Looper();
+        service.myLooper = looper;
+        service._args = launch;
+
+        services.put(name, service);
         new Thread(()->{
             looper.initialize();
-            looper.post(sv::onCreate);
+            looper.post(service::onCreate);
             looper.loop();
             services.remove(name);
-            sv.onDestroy();
+            service.onDestroy();
         }).start();
-        return sv;
+        return (T) service;
     }
 }
