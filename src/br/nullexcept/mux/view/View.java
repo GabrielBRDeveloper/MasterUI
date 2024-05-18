@@ -28,6 +28,7 @@ public class View {
     private boolean clickable;
     private boolean hovered;
     private boolean attached;
+    private boolean enable;
 
     private final Point measured = new Point();
     private final int hashCode = hash();
@@ -121,6 +122,16 @@ public class View {
             this.hovered = hovered;
             onHoveredChanged(hovered);
         }
+    }
+
+    public void setEnable(boolean enable) {
+        this.enable = enable;
+        state.set(StateList.ENABLE, enable);
+        changeDrawableState();
+    }
+
+    public boolean isEnable() {
+        return enable;
     }
 
     protected boolean isFocused() {

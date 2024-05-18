@@ -91,7 +91,7 @@ public class WindowContainer extends AbsoluteLayout implements ViewRoot {
         super.onMeasure(rootCanvas.getWidth(), rootCanvas.getHeight());
     }
 
-    private void mountRenderBag(ViewGroup group){
+    private synchronized void mountRenderBag(ViewGroup group){
         for (View child: group.getChildren()){
             int hash = child.hashCode();
             if (!renders.containsKey(hash)){
@@ -132,7 +132,7 @@ public class WindowContainer extends AbsoluteLayout implements ViewRoot {
         addFlag(FLAG_REQUIRES_DRAW);
     }
 
-    private void mountRenderBag(){
+    private synchronized void mountRenderBag(){
         for (RenderCache render: renders.values())
             render.valid = false;
 

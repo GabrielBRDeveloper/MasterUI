@@ -3,6 +3,7 @@ package br.nullexcept.mux.core.texel;
 import br.nullexcept.mux.C;
 import br.nullexcept.mux.graphics.Paint;
 import br.nullexcept.mux.graphics.Rect;
+import br.nullexcept.mux.utils.Log;
 import br.nullexcept.mux.view.View;
 import br.nullexcept.mux.view.ViewGroup;
 import br.nullexcept.mux.widget.HardwareSurface;
@@ -30,6 +31,9 @@ class ViewRenderer {
 
         if (!view.hasFlag(FLAG_REQUIRES_DRAW)) {
             return;
+        }
+        if (registry.containsKey(view.hashCode())){
+            registry.get(view.hashCode()).prepare();
         }
 
         Rect bounds = view.getBounds();

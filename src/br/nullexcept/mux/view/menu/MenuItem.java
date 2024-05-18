@@ -7,6 +7,7 @@ public class MenuItem {
     private final String summary;
     private final Drawable icon;
     private final String id;
+    private boolean visible = true;
     private boolean enable = true;
     private OnMenuClickListener clickListener;
 
@@ -29,6 +30,14 @@ public class MenuItem {
         if (clickListener != null) {
             clickListener.onClick(this);
         }
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    public boolean isVisible() {
+        return visible;
     }
 
     public String getTitle() {

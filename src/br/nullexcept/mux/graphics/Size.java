@@ -21,4 +21,9 @@ public class Size {
         this.width = width;
         this.height = height;
     }
+
+    @Override
+    public String toString() {
+        return "Size ["+width+"x"+height+"]";
+    }
 }
