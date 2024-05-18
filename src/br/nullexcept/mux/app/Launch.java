@@ -28,6 +28,24 @@ public class Launch<T> extends Parcel {
         return this;
     }
 
+    @Override
+    public Launch<T> put(String name, Number value) {
+        super.put(name, value);
+        return this;
+    }
+
+    @Override
+    public Launch<T> put(String name, String value) {
+        super.put(name, value);
+        return this;
+    }
+
+    @Override
+    public Launch<T> put(String name, Boolean value) {
+        super.put(name, value);
+        return this;
+    }
+
     public Launch<T> subFlags(int... flags) {
         for (int flag: flags) {
             if (hasFlag(flag)) {

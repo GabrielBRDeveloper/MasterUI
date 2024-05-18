@@ -7,6 +7,7 @@ class RenderCache {
     public CanvasTexel canvas;
     public View view;
     public boolean valid;
+    public boolean initialized;
     private boolean disposed = false;
 
     public RenderCache(View view) {
@@ -15,34 +16,6 @@ class RenderCache {
 
     public RenderCache createCanvas(){
         canvas = new CanvasTexel(16,16);
-        if (view instanceof HardwareSurface) {
-            ((HardwareSurface) view).onRenderBegin(new HardwareSurface.GlFBOSurface() {
-                @Override
-                public void begin() {
-                    canvas.begin();
-                }
-
-                @Override
-                public int getFramebuffer() {
-                    return canvas.getFramebuffer().getFramebuffer();
-                }
-
-                @Override
-                public int getTexture() {
-                    return canvas.getFramebuffer().getTexture().getTexture();
-                }
-
-                @Override
-                public void resize(int width, int height) {
-                    canvas.getFramebuffer().resize(width, height);
-                }
-
-                @Override
-                public void end() {
-                    canvas.end();
-                }
-            });
-        }
         return this;
     }
 
@@ -52,8 +25,45 @@ class RenderCache {
         }
         disposed = true;
         canvas.dispose();
-        if (view instanceof HardwareSurface) {
+        if (view instanceof HardwareSurface && initialized) {
             ((HardwareSurface) view).onRenderDestroy();
+        }
+    }
+
+    public synchronized void prepare() {
+        if (!initialized) {
+            initialized = true;
+            if (view instanceof HardwareSurface) {
+                ((HardwareSurface) view).onRenderBegin(new FboSurfaceRenderer());
+            }
+        }
+    }
+
+    private class FboSurfaceRenderer implements HardwareSurface.GlFBOSurface {
+
+        @Override
+        public void begin() {
+            canvas.begin();
+        }
+
+        @Override
+        public int getFramebuffer() {
+            return canvas.getFramebuffer().getFramebuffer();
+        }
+
+        @Override
+        public int getTexture() {
+            return canvas.getFramebuffer().getTexture().getTexture();
+        }
+
+        @Override
+        public void resize(int width, int height) {
+            canvas.getFramebuffer().resize(width,height);
+        }
+
+        @Override
+        public void end() {
+            canvas.end();
         }
     }
 }

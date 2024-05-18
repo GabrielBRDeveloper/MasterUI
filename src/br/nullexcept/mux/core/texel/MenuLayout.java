@@ -26,6 +26,9 @@ class MenuLayout extends LinearLayout {
     }
 
     private void inflate(LayoutInflater inflater, MenuItem item, boolean enable) {
+        if (!item.isVisible()) {
+            return;
+        }
         if (item instanceof MenuGroup) {
             for (MenuItem i : ((MenuGroup) item).getChildren()) {
                 inflate(inflater, i, enable && item.isEnable());
