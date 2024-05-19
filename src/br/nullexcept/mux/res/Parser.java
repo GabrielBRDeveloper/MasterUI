@@ -109,7 +109,13 @@ class Parser {
                 switch (shapeType){
                     case "rounded": {
                         RoundedShape shape = new RoundedShape();
-                        attrs.searchDimension(AttrList.radius, v -> shape.setRadius(Math.round(v)));
+                        Rect rect = new Rect();
+                        attrs.searchDimension(AttrList.radius, v -> rect.set(v.intValue(),v.intValue(),v.intValue(),v.intValue()));
+                        attrs.searchDimension("leftTop", v -> rect.left = v.intValue());
+                        attrs.searchDimension("rightTop", v -> rect.right = v.intValue());
+                        attrs.searchDimension("leftBottom", v -> rect.top = v.intValue());
+                        attrs.searchDimension("rightBottom", v -> rect.bottom = v.intValue());
+                        shape.setRadius(rect);
                         drawable.setShape(shape);
                     }break;
                     case "circle":

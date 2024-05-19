@@ -5,14 +5,34 @@
     background="?colorSurface"
     padding="20dp"
     orientation="horizontal">
-  <LinearLayout
-    width="match_parent"
-    height="match_parent">
+  <CardLayout
+      width="match_parent"
+      height="match_parent"
+      radius="20dp">
     <LinearLayout
         width="match_parent"
         height="match_parent"
+        background="#F00"
         id="content">
 
+      <TextView
+          width="wrap_content"
+          height="wrap_content"
+          textSize="64sp"
+          text="Hello world"/>
+
+      <TextView
+          width="wrap_content"
+          height="wrap_content"
+          textSize="32sp"
+          text="That is a example of draw with card layout"/>
+
+      <TextView
+          width="wrap_content"
+          height="wrap_content"
+          textSize="32sp"
+          text="That allow create UIs a like Material3"/>
+
     </LinearLayout>
-  </LinearLayout>
+  </CardLayout>
 </FrameLayout>
