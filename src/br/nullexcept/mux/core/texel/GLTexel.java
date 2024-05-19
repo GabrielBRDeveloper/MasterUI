@@ -121,4 +121,33 @@ class GLTexel {
         program.unbind();
         glBindTexture(GL_TEXTURE_2D,0);
     }
+
+    public static void drawTextureClip(int x, int y, int width, int height, int texture) {
+        GLProgram program = GLShaderList.TEXTURE;
+        glEnable(GL_BLEND);
+        glBlendFuncSeparate(
+                GL_ZERO, GL_SRC_ALPHA,
+                GL_ZERO, GL_SRC_ALPHA
+        );
+        prepareRect(x, y, width, height);
+        program.bind();
+
+        int vPosition = program.attribute(GLProgram.ATTRIBUTE_POSITION);
+        int vTextureCoords = program.attribute(GLProgram.ATTRIBUTE_UV);
+        int uTexture = program.uniform(GLProgram.UNIFORM_TEXTURE);
+
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glVertexAttribPointer(vPosition, 2, GL_FLOAT, false, 0, bufferRect);
+        glVertexAttribPointer(vTextureCoords, 2, GL_FLOAT, false, 0, bufferUV);
+
+        glEnableVertexAttribArray(vPosition);
+        glEnableVertexAttribArray(vTextureCoords);
+
+        glUniform1i(uTexture, GL_TEXTURE_2D);
+
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+        program.unbind();
+        glBindTexture(GL_TEXTURE_2D,0);
+        glDisable(GL_BLEND);
+    }
 }

@@ -1,6 +1,10 @@
 package br.nullexcept.mux.graphics;
 
+import br.nullexcept.mux.graphics.shape.ShapeList;
+
 public interface Canvas {
+
+    void clip(ShapeList list);
     void drawColor(int color);
     default void drawRect(float left, float top, float right, float bottom, Paint paint){
         drawRect(Math.round(left), Math.round(top), Math.round(right), Math.round(bottom), paint);
@@ -23,8 +27,12 @@ public interface Canvas {
     }
 
     void drawRoundRect(int left, int top, int right, int bottom, int radius, Paint paint);
+    void drawRoundRect(int left, int top, int right, int bottom, int radiusLeft, int radiusTop, int radiusRight, int radiusBottom, Paint paint);
     default void drawRoundRect(Rect rect, int radius, Paint paint){
         drawRoundRect(rect.left, rect.top, rect.right, rect.bottom, radius, paint);
+    }
+    default void drawRoundRect(Rect rect, Rect radius, Paint paint){
+        drawRoundRect(rect.left, rect.top, rect.right, rect.bottom, radius.left, radius.top, radius.right, radius.bottom, paint);
     }
 
     void drawPath(Path path, int x, int y, Paint paint);
