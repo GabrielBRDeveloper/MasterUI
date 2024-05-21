@@ -54,7 +54,7 @@ public class Application {
             lastGc = System.currentTimeMillis();
         }
         if (activities.size() == 0) { // Stop if contains 0 activity
-            Looper.getMainLooper().stop();
+            stop();
             return;
         }
         synchronized (activities) {
