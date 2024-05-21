@@ -2,6 +2,7 @@ package br.nullexcept.mux.res;
 
 import br.nullexcept.mux.graphics.ColorStateList;
 import br.nullexcept.mux.graphics.Drawable;
+import br.nullexcept.mux.graphics.fonts.Typeface;
 import br.nullexcept.mux.lang.Function;
 import br.nullexcept.mux.lang.xml.XmlElement;
 
@@ -93,6 +94,24 @@ class FallbackAttributes implements AttributeList {
     @Override
     public void searchBoolean(String name, Function<Boolean> apply) {
         searchRaw(name, value -> apply.call(Parser.parseBoolean(value)));
+    }
+
+    @Override
+    public void searchFont(String name, Function<Typeface> apply) {
+        Typeface font = getFont(name);
+        if (font != null) {
+            apply.call(font);
+        }
+    }
+
+    @Override
+    public Typeface getFont(String name) {
+        if (contains(name)) {
+            return Parser.parseFont(resources, resolve(map.get(name)));
+        } else if (fallback != null) {
+            return fallback.getFont(name);
+        }
+        return null;
     }
 
     @Override

@@ -2,6 +2,7 @@ package br.nullexcept.mux.widget;
 
 import br.nullexcept.mux.app.Context;
 import br.nullexcept.mux.graphics.*;
+import br.nullexcept.mux.graphics.fonts.Typeface;
 import br.nullexcept.mux.res.AttributeList;
 import br.nullexcept.mux.text.Editable;
 import br.nullexcept.mux.text.TextLayout;
@@ -25,6 +26,7 @@ public class TextView extends View {
         attrs.searchText(AttrList.text, this::setText);
         attrs.searchColorList(AttrList.textColor, value -> textColor = value);
         attrs.searchDimension(AttrList.textSize, this::setTextSize);
+        attrs.searchFont(AttrList.typeface, this::setTypeface);
     }
 
     @Override
@@ -92,6 +94,11 @@ public class TextView extends View {
         layout.update();
         measure();
         invalidate();
+    }
+
+    public void setTypeface(Typeface font) {
+        this.paint.setTypeface(font);
+        setTextSize(paint.getTextSize());
     }
 
     public CharSequence getText() {

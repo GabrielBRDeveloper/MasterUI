@@ -5,6 +5,7 @@ public class AttrList {
     public static final String textColor = "textColor";
     public static final String text = "text";
     public static final String textSize = "textSize";
+    public static final String typeface = "font";
     public static final String width="width";
     public static final String height="height";
     public static final String background = "background";
