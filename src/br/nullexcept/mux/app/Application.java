@@ -13,8 +13,8 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class Application {
     private static long lastGc = System.currentTimeMillis();
-    private static HashMap<String, Service> services = new HashMap<>();
-    private static int RUNNING_ACTIVITIES = 0;
+    private static final HashMap<String, Service> services = new HashMap<>();
+    private static final ArrayList<ActivityStack> activities = new ArrayList<>();
 
     public static void initialize(Valuable<Activity> creator){
         glfwInit();
@@ -53,18 +53,29 @@ public class Application {
             System.gc();
             lastGc = System.currentTimeMillis();
         }
-        if (RUNNING_ACTIVITIES <= 0) {
-            stop();
+        if (activities.size() == 0) { // Stop if contains 0 activity
+            Looper.getMainLooper().stop();
+            return;
+        }
+        synchronized (activities) {
+            ArrayList<ActivityStack> stack2 = new ArrayList<>(activities);
+            for (ActivityStack stack: stack2) {
+                if (stack == null || !stack.isValid()) {
+                    activities.remove(stack);
+                }
+            }
         }
         Looper.getMainLooper().post(Application::loop);
     }
 
     static Window.WindowObserver buildObserver(Activity activity) {
+        synchronized (activities) {
+            activities.add(activity.stack);
+        }
         return new Window.WindowObserver() {
             @Override
             public void onCreated() {
                 activity.onCreate();
-                RUNNING_ACTIVITIES++;
             }
 
             @Override
@@ -91,7 +102,6 @@ public class Application {
 
                 // Fire all stack list
                 stacks.forEach((item)-> {
-                    RUNNING_ACTIVITIES--;
                     if (item.isValid()) {
                         item.getActivity().finish();
                     }

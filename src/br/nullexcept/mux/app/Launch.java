@@ -4,10 +4,12 @@ import br.nullexcept.mux.lang.Parcel;
 import br.nullexcept.mux.lang.Valuable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Launch<T> extends Parcel {
     private final Class<T> clazz;
     private final Valuable<T> creator;
+    private static HashMap<String, Valuable> cacheCreators = new HashMap<>();
     private final ArrayList<Integer> flags = new ArrayList<>();
 
     public Launch(Class<T> clazz, Valuable<T> creator) {
@@ -59,9 +61,12 @@ public class Launch<T> extends Parcel {
     public Launch(Class<T> clazz) {
         this(clazz, () -> {
             try {
+                if (cacheCreators.containsKey(clazz.getName())) {
+                    return (T) cacheCreators.get(clazz.getName()).get();
+                }
                 return clazz.newInstance();
             } catch (Exception e) {
-                throw new RuntimeException("Cannot create class from constructor, your are using native-image or constructor has arguments.");
+                throw new RuntimeException("Cannot create class from constructor, your are using native-image or constructor has arguments.", e);
             }
         });
     }
@@ -72,5 +77,10 @@ public class Launch<T> extends Parcel {
 
     T make() {
         return (T) creator.get();
+    }
+
+    @SuppressWarnings("Case you want use native-image you can register class constructor after use")
+    public static <T> void registerCreator(Class<T> clazz, Valuable<T> creator) {
+        cacheCreators.put(clazz.getName(), creator);
     }
 }
