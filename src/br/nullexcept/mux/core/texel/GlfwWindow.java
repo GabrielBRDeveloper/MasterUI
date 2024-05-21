@@ -37,9 +37,10 @@ class GlfwWindow extends Window {
     private boolean running = false;
     private final Point position = new Point();
     private WindowObserver observer;
+    private CharSequence title;
 
     public GlfwWindow() {
-        window = GLFW.glfwCreateWindow(512, 512, "[MasterUI:Window]", 0, C.GLFW_CONTEXT);
+        window = GLFW.glfwCreateWindow(512, 512, title = "[MasterUI:Window]", 0, C.GLFW_CONTEXT);
         eventManager = new GlfwEventManager(this);
         GLFW.glfwIconifyWindow(window);
         setMinimumSize(256,256);
@@ -179,7 +180,7 @@ class GlfwWindow extends Window {
 
     @Override
     public void setTitle(String title) {
-        GLFW.glfwSetWindowTitle(window, title);
+        GLFW.glfwSetWindowTitle(window, this.title = title);
     }
 
     @Override
@@ -195,6 +196,7 @@ class GlfwWindow extends Window {
     @Override
     public void setContentView(View view) {
         if (container != null){
+            container.removeAllViews();
             container.dispose();
             container= null;
         }
@@ -208,7 +210,6 @@ class GlfwWindow extends Window {
 
     @Override
     public void setSize(int width, int height) {
-
         // Keep position aspect
         position.x += (windowSize.width-width)/2;
         position.y += (windowSize.height-height)/2;
@@ -348,6 +349,16 @@ class GlfwWindow extends Window {
                 }
             });
         }).start();
+    }
+
+    @Override
+    public CharSequence getTitle() {
+        return title;
+    }
+
+    @Override
+    public Size getSize() {
+        return new Size(windowSize.width, windowSize.height);
     }
 
     public void onMouseMoved(MotionEvent event) {

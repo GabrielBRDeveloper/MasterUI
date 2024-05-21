@@ -6,6 +6,7 @@ import br.nullexcept.mux.lang.Valuable;
 import br.nullexcept.mux.view.Window;
 import org.lwjgl.opengles.GLES;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -34,7 +35,9 @@ public class Application {
         Looper loop = new Looper();
         Looper.mainLooper = loop;
         loop.initialize();
-        loop.postDelayed(()->boot(TexelAPI.createWindow(), creator.get()), 0);
+        Activity nw = creator.get();
+        nw.stack = new ActivityStack(nw);
+        loop.postDelayed(()->boot(TexelAPI.createWindow(), nw), 0);
         loop.post(Application::loop);
         loop.loop();
         TexelAPI.destroy();
@@ -50,7 +53,7 @@ public class Application {
             System.gc();
             lastGc = System.currentTimeMillis();
         }
-        if (RUNNING_ACTIVITIES == 0) {
+        if (RUNNING_ACTIVITIES <= 0) {
             stop();
         }
         Looper.getMainLooper().post(Application::loop);
@@ -79,8 +82,20 @@ public class Application {
 
             @Override
             public void onDestroy() {
-                RUNNING_ACTIVITIES--;
-                activity.onDestroy();
+                ArrayList<ActivityStack> stacks = new ArrayList<>();
+                ActivityStack stack = activity.stack;
+                while (stack != null) {
+                    stacks.add(0, stack);
+                    stack = stack.getBackItem();
+                }
+
+                // Fire all stack list
+                stacks.forEach((item)-> {
+                    RUNNING_ACTIVITIES--;
+                    if (item.isValid()) {
+                        item.getActivity().finish();
+                    }
+                });
             }
         };
     }

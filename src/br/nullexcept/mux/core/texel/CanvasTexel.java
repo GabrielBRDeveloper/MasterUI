@@ -41,6 +41,7 @@ class CanvasTexel implements Canvas {
 
     @Override
     public void end() {
+        CURRENT_CANVAS = -1;
         VgTexel.endFrame();
         framebuffer.unbind();
     }

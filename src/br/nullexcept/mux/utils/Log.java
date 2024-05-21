@@ -7,7 +7,7 @@ import java.util.Date;
 public class Log {
     private static final Date date = new Date();
 
-    private static final String time(){
+    private static String time(){
         date.setTime(System.currentTimeMillis());
         return String.format("%02d:%02d", date.getHours(), date.getMinutes());
     }
