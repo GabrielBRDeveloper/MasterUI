@@ -2,6 +2,7 @@ package br.nullexcept.mux.res;
 
 import br.nullexcept.mux.graphics.*;
 import br.nullexcept.mux.graphics.drawable.*;
+import br.nullexcept.mux.graphics.fonts.Typeface;
 import br.nullexcept.mux.graphics.shape.OvalShape;
 import br.nullexcept.mux.graphics.shape.RectShape;
 import br.nullexcept.mux.graphics.shape.RoundedShape;
@@ -275,5 +276,29 @@ class Parser {
         }
         Log.error(LOG_TAG, "Invalid color value: "+value);
         return new ColorStateList(Color.RED);
+    }
+
+    public static Typeface parseFont(Resources res, String name) {
+
+        {
+            String low = name.toLowerCase().trim();
+            switch (low) {
+                case "default":
+                case "normal":
+                    return Typeface.DEFAULT;
+                case "bold":
+                    return Typeface.DEFAULT_BOLD;
+            }
+        }
+
+        Typeface font = res.requestFont(Resources.fixPath(name, "font"));
+        if (font == null) {
+            font = res.requestFont(Resources.fixPath(name, "fonts"));
+            if (font == null && name.contains(":")) {
+                String[] pats = name.split(":");
+                return parseFont(res, pats[0]+"/"+pats[1]);
+            }
+        }
+        return font;
     }
 }

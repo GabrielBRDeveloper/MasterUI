@@ -12,6 +12,7 @@ import java.util.UUID;
 public class Typeface {
     protected static final float SCALE = 1024.0f;
     public static Typeface DEFAULT;
+    public static Typeface DEFAULT_BOLD;
 
     protected final float ascent;
     protected final float descent;

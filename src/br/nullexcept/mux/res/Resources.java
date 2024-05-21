@@ -18,9 +18,12 @@ import java.util.Locale;
  * Stylesheet basics:
  * Stylesheet -> parent -> parent -> theme
  */
+
 public final class Resources {
     private DisplayMetrics metrics;
     private static final HashMap<String, XmlElement> cache = new HashMap<>();
+    private static final HashMap<String, Typeface> fonts = new HashMap<>();
+
     private final HashMap<String, StylePreset> styles = new HashMap<>();
 
     private final LayoutInflater inflater;
@@ -35,6 +38,7 @@ public final class Resources {
     static {
         Manager = new ResourcesManager();
         Typeface.DEFAULT = TypefaceFactory.create(Manager.openDocument("fonts/Roboto/Roboto-Regular.ttf"));
+        Typeface.DEFAULT_BOLD = TypefaceFactory.create(Manager.openDocument("fonts/Roboto/Roboto-Bold.ttf"));
     }
 
     public Resources(Context ctx){
@@ -116,6 +120,18 @@ public final class Resources {
 
     public DisplayMetrics getDisplayMetrics() {
         return metrics;
+    }
+
+    Typeface requestFont(String path) {
+        if (fonts.containsKey(path)) {
+            return fonts.get(path);
+        }
+        String pth = path + ".ttf";
+        if (Manager.exists(path)) {
+            Typeface typeface = TypefaceFactory.create(Manager.openDocument(pth));
+            fonts.put(path, typeface);
+        }
+        return null;
     }
 
     XmlElement requestXml(String path){

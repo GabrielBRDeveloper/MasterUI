@@ -12,25 +12,25 @@
     <LinearLayout
         width="match_parent"
         height="match_parent"
-        background="#F00"
         id="content">
 
       <TextView
           width="wrap_content"
           height="wrap_content"
-          textSize="64sp"
+          textSize="14sp"
+          font="bold"
           text="Hello world"/>
 
       <TextView
           width="wrap_content"
           height="wrap_content"
-          textSize="32sp"
+          textSize="14sp"
           text="That is a example of draw with card layout"/>
 
       <TextView
           width="wrap_content"
           height="wrap_content"
-          textSize="32sp"
+          textSize="14sp"
           text="That allow create UIs a like Material3"/>
 
     </LinearLayout>
