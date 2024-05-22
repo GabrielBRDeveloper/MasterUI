@@ -7,6 +7,8 @@ import br.nullexcept.mux.graphics.*;
 import br.nullexcept.mux.input.*;
 import br.nullexcept.mux.res.AttributeList;
 import br.nullexcept.mux.utils.Log;
+import br.nullexcept.mux.view.menu.MenuGroup;
+import br.nullexcept.mux.view.menu.MenuItem;
 
 import java.util.Objects;
 
@@ -25,6 +27,8 @@ public class View {
     private boolean focusable;
     private boolean clickable;
     private boolean hovered;
+    private boolean attached;
+    private boolean enable;
 
     private final Point measured = new Point();
     private final int hashCode = hash();
@@ -78,7 +82,7 @@ public class View {
         Looper.getMainLooper().post(()-> attributes = null);
     }
 
-    protected void showMenu(Menu menu, int x, int y) {
+    protected void showMenu(MenuItem menu, int x, int y) {
         Rect bounds = getBounds();
         x = Math.max(0, Math.min(x, bounds.width()));
         y = Math.max(0, Math.min(y, bounds.height()));
@@ -118,6 +122,16 @@ public class View {
             this.hovered = hovered;
             onHoveredChanged(hovered);
         }
+    }
+
+    public void setEnable(boolean enable) {
+        this.enable = enable;
+        state.set(StateList.ENABLE, enable);
+        changeDrawableState();
+    }
+
+    public boolean isEnable() {
+        return enable;
     }
 
     protected boolean isFocused() {
@@ -200,7 +214,7 @@ public class View {
         return parent;
     }
 
-    public boolean onCreateContextMenu(Menu menu){
+    public boolean onCreateContextMenu(MenuGroup menu){
         return false;
     }
 
@@ -231,6 +245,12 @@ public class View {
     public final void requestFocus() {
         if (parent != null) {
             parent.requestFocus(this);
+        }
+    }
+
+    protected void requestNextFocus() {
+        if (parent != null) {
+            parent.findNextFocus(this);
         }
     }
 
@@ -308,6 +328,9 @@ public class View {
     }
 
     protected void onKeyEvent(KeyEvent keyEvent) {
+        if (keyEvent.getAction() == KeyEvent.ACTION_UP && keyEvent.getKeyCode() == KeyEvent.KEY_TAB && isFocused()) {
+            requestNextFocus();
+        }
     }
 
     protected void onMouseMoved(MotionEvent event) {
@@ -360,8 +383,31 @@ public class View {
         invalidate();
     }
 
+    protected void onAttachedToWindow() {
+
+    }
+
+    protected void onDetachedFromWindow() {
+
+    }
+
+    protected void onViewRootChanged() {
+        if (attached && getViewRoot() == null) {
+            attached = false;
+            onDetachedFromWindow();
+        } else if ((!attached) && getViewRoot() != null) {
+            attached = true;
+            onAttachedToWindow();
+        }
+    }
+
+    protected ViewRoot getViewRoot() {
+        return parent == null ? null : parent.getViewRoot();
+    }
+
     final void setParent(ViewGroup group) {
         parent = group;
+        onViewRootChanged();
     }
 
     public int getMeasuredWidth() {

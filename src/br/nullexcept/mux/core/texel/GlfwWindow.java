@@ -37,11 +37,19 @@ class GlfwWindow extends Window {
     private boolean running = false;
     private final Point position = new Point();
     private WindowObserver observer;
+    private CharSequence title;
 
     public GlfwWindow() {
-        window = GLFW.glfwCreateWindow(512, 512, "[MasterUI:Window]", 0, C.GLFW_CONTEXT);
+        window = GLFW.glfwCreateWindow(512, 512, title = "[MasterUI:Window]", 0, C.GLFW_CONTEXT);
         eventManager = new GlfwEventManager(this);
         GLFW.glfwIconifyWindow(window);
+        GLFW.glfwSetWindowSizeCallback(window, (l, w,h) -> {
+            windowSize.set(w,h);
+            Looper.getMainLooper().post(this::drawSurface);
+        });
+        GLFW.glfwSetWindowPosCallback(window, (l, x, y) -> {
+            p.set(x,y);
+        });
         setMinimumSize(256,256);
         center();
     }
@@ -84,6 +92,21 @@ class GlfwWindow extends Window {
 
     private long[] times = new long[8];
     private long last = System.currentTimeMillis();
+    private Point p = new Point();
+    private Point pd = new Point();
+
+    private void drawSurface() {
+        if (destroyed)return;
+        GLFW.glfwSwapBuffers(C.GLFW_CONTEXT);
+        GLFW.glfwMakeContextCurrent(window);
+        glfwSwapInterval(0); //NEED THAT FOR NOT SLOW MAIN LOOP
+        GLES.glViewport(0, 0, windowSize.width, windowSize.height);
+        GLES.glClearColor(0,0,0,1);
+        GLES.glClear(GLES20.GL_COLOR_BUFFER_BIT| GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_STENCIL_BUFFER_BIT);
+        GLTexel.drawTexture(0, 0, windowSize.width, windowSize.height, container.getCanvas().getFramebuffer().getTexture());
+        GLFW.glfwSwapBuffers(window);
+        GLFW.glfwMakeContextCurrent(C.GLFW_CONTEXT);
+    }
 
     private void update() {
         if(destroyed)
@@ -108,22 +131,14 @@ class GlfwWindow extends Window {
             container.resize(windowSize.width, windowSize.height);
 
             container.drawFrame();
-            GLFW.glfwSwapBuffers(C.GLFW_CONTEXT);
-            GLFW.glfwMakeContextCurrent(window);
-            glfwSwapInterval(0); //NEED THAT FOR NOT SLOW MAIN LOOP
-            GLES.glViewport(0, 0, windowSize.width, windowSize.height);
-            GLES.glClearColor(0,0,0,1);
-            GLES.glClear(GLES20.GL_COLOR_BUFFER_BIT| GLES20.GL_DEPTH_BUFFER_BIT | GLES20.GL_STENCIL_BUFFER_BIT);
-            GLTexel.drawTexture(0, 0, windowSize.width, windowSize.height, container.getCanvas().getFramebuffer().getTexture());
-
+            drawSurface();
             times[1] += System.currentTimeMillis() - begin;
             if (C.Flags.DEBUG_OVERLAY) {
                 drawDebug();
             }
-
-            GLFW.glfwSwapBuffers(window);
-            GLFW.glfwMakeContextCurrent(C.GLFW_CONTEXT);
         }
+
+
         if (GLFW.glfwWindowShouldClose(window)) {
             destroy();
         }
@@ -179,7 +194,7 @@ class GlfwWindow extends Window {
 
     @Override
     public void setTitle(String title) {
-        GLFW.glfwSetWindowTitle(window, title);
+        GLFW.glfwSetWindowTitle(window, this.title = title);
     }
 
     @Override
@@ -195,6 +210,7 @@ class GlfwWindow extends Window {
     @Override
     public void setContentView(View view) {
         if (container != null){
+            container.removeAllViews();
             container.dispose();
             container= null;
         }
@@ -208,7 +224,6 @@ class GlfwWindow extends Window {
 
     @Override
     public void setSize(int width, int height) {
-
         // Keep position aspect
         position.x += (windowSize.width-width)/2;
         position.y += (windowSize.height-height)/2;
@@ -219,7 +234,7 @@ class GlfwWindow extends Window {
 
     @Override
     public void setMinimumSize(int width, int height) {
-        GLFW.glfwSetWindowSizeLimits(window, width,height,Integer.MAX_VALUE, Integer.MAX_VALUE);
+        //GLFW.glfwSetWindowSizeLimits(window, width,height,Integer.MAX_VALUE, Integer.MAX_VALUE);
     }
 
     public void onMouseEvent(MouseEvent event) {
@@ -251,6 +266,7 @@ class GlfwWindow extends Window {
         if (visible) {
             align();
             GLFW.glfwShowWindow(window);
+            GLFW.glfwFocusWindow(window);
         } else {
             refresh();
             align();
@@ -348,6 +364,16 @@ class GlfwWindow extends Window {
                 }
             });
         }).start();
+    }
+
+    @Override
+    public CharSequence getTitle() {
+        return title;
+    }
+
+    @Override
+    public Size getSize() {
+        return new Size(windowSize.width, windowSize.height);
     }
 
     public void onMouseMoved(MotionEvent event) {

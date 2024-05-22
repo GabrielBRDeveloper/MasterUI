@@ -9,7 +9,7 @@ import java.nio.ByteBuffer;
 import static org.lwjgl.opengles.GLES20.*;
 
 public class GLTexture implements Bindable, Disposable {
-    private final int format;
+    private int format;
 
     private int[] texture = new int[1];
     private int width, height;
@@ -42,6 +42,11 @@ public class GLTexture implements Bindable, Disposable {
     }
 
     public void recreate(int width, int height, ByteBuffer buffer) {
+        recreate(width, height, format, buffer);
+    }
+
+    public void recreate(int width, int height, int format, ByteBuffer buffer) {
+        this.format = format;
         bind();
         if (buffer != null)
             glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, buffer);

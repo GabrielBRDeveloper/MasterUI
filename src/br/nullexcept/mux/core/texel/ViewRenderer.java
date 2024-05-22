@@ -3,8 +3,10 @@ package br.nullexcept.mux.core.texel;
 import br.nullexcept.mux.C;
 import br.nullexcept.mux.graphics.Paint;
 import br.nullexcept.mux.graphics.Rect;
+import br.nullexcept.mux.utils.Log;
 import br.nullexcept.mux.view.View;
 import br.nullexcept.mux.view.ViewGroup;
+import br.nullexcept.mux.widget.HardwareSurface;
 import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.nanovg.NanoVGGLES2;
 
@@ -30,11 +32,21 @@ class ViewRenderer {
         if (!view.hasFlag(FLAG_REQUIRES_DRAW)) {
             return;
         }
+        if (registry.containsKey(view.hashCode())){
+            registry.get(view.hashCode()).prepare();
+        }
 
         Rect bounds = view.getBounds();
+
+        if (view instanceof HardwareSurface) {
+            ((HardwareSurface) view).onRenderFrame();
+            view.subFlag(FLAG_REQUIRES_DRAW);
+            return;
+        }
         if (bounds.width() != canvas.getWidth() || bounds.height() != canvas.getHeight()) {
             canvas.getFramebuffer().resize(bounds.width(), bounds.height());
         }
+
         canvas.begin();
         canvas.reset();
         canvas.alpha(view.getAlpha());

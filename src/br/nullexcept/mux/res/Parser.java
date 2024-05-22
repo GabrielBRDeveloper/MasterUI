@@ -2,12 +2,14 @@ package br.nullexcept.mux.res;
 
 import br.nullexcept.mux.graphics.*;
 import br.nullexcept.mux.graphics.drawable.*;
+import br.nullexcept.mux.graphics.fonts.Typeface;
 import br.nullexcept.mux.graphics.shape.OvalShape;
 import br.nullexcept.mux.graphics.shape.RectShape;
 import br.nullexcept.mux.graphics.shape.RoundedShape;
 import br.nullexcept.mux.lang.xml.XmlElement;
 import br.nullexcept.mux.utils.Log;
 import br.nullexcept.mux.view.AttrList;
+import br.nullexcept.mux.view.Gravity;
 import org.lwjgl.nanovg.NSVGImage;
 import org.lwjgl.nanovg.NSVGPath;
 import org.lwjgl.nanovg.NSVGShape;
@@ -66,16 +68,27 @@ class Parser {
                     } else {
                         childDrawable = inflateXmlDrawable(res, child.childAt(0));
                     }
+
                     attrs = res.obtainStyled(child);
                     attrs.searchDimension(AttrList.padding, v -> {
                         int x = Math.round(v);
                         padding.set(x,x,x,x);
                     });
+
+                    Size size = new Size(-1,-1);
+                    int[] gravity = new int[]{ Gravity.LEFT };
+
+                    attrs.searchDimension(AttrList.padding, v -> padding.set(v.intValue(),v.intValue(),v.intValue(),v.intValue()));
+                    attrs.searchDimension(AttrList.width, v -> size.width = v.intValue());
+                    attrs.searchDimension(AttrList.height, v -> size.height = v.intValue());
+                    attrs.searchRaw(AttrList.gravity, v -> gravity[0] = Gravity.parseGravity(v));
+
                     attrs.searchDimension("left", v -> padding.left = Math.round(v));
                     attrs.searchDimension("right", v -> padding.right = Math.round(v));
                     attrs.searchDimension("bottom", v -> padding.bottom = Math.round(v));
                     attrs.searchDimension("top", v -> padding.top = Math.round(v));
-                    drawable.addLayer(childDrawable, padding);
+
+                    drawable.addLayer(childDrawable, padding, size, gravity[0]);
                 }
                 return drawable;
             }
@@ -97,7 +110,13 @@ class Parser {
                 switch (shapeType){
                     case "rounded": {
                         RoundedShape shape = new RoundedShape();
-                        attrs.searchDimension(AttrList.radius, v -> shape.setRadius(Math.round(v)));
+                        Rect rect = new Rect();
+                        attrs.searchDimension(AttrList.radius, v -> rect.set(v.intValue(),v.intValue(),v.intValue(),v.intValue()));
+                        attrs.searchDimension("leftTop", v -> rect.left = v.intValue());
+                        attrs.searchDimension("rightTop", v -> rect.right = v.intValue());
+                        attrs.searchDimension("leftBottom", v -> rect.top = v.intValue());
+                        attrs.searchDimension("rightBottom", v -> rect.bottom = v.intValue());
+                        shape.setRadius(rect);
                         drawable.setShape(shape);
                     }break;
                     case "circle":
@@ -135,6 +154,13 @@ class Parser {
                 MaterialIconDrawable drawable  = new MaterialIconDrawable();
                 attrs.searchRaw("name", drawable::setIcon);
                 attrs.searchColor("color", drawable::setColor);
+
+                return drawable;
+            }
+            case "nine-path": {
+                NinePathDrawable drawable = new NinePathDrawable();
+                drawable.setBitmap(openBitmap(attrs.getRawValue("src").substring(1)));
+                drawable.setBorder(Integer.parseInt(attrs.getRawValue("border")));
 
                 return drawable;
             }
@@ -195,21 +221,31 @@ class Parser {
         return p;
     }
 
+    private static Bitmap openBitmap(String path) {
+        String[] supportedImages = new String[]{
+                "png", "jpg", "jpeg"
+        };
+        for (String format: supportedImages){
+            if (Resources.Manager.exists(path+"."+format)){
+                return BitmapFactory.openBitmap(Resources.Manager.openDocument(path+"."+format));
+            }
+        }
+        return null;
+    }
+
     public static Drawable parseDrawable(Resources resources, String value) {
         if (value.startsWith("#")){
             return new ColorDrawable(Color.parseColor(value));
-        } else if (value.startsWith("@")){
-            value = value.substring(1);
+        } else {
+            if (value.startsWith("@")) {
+                value = value.substring(1);
+            }
             if (Resources.Manager.exists(value+".xml")){
                 return inflateXmlDrawable(resources, resources.requestXml(value));
             } else {
-                String[] supportedImages = new String[]{
-                        "png", "jpg", "jpeg"
-                };
-                for (String format: supportedImages){
-                    if (Resources.Manager.exists(value+"."+format)){
-                        return new BitmapDrawable(BitmapFactory.openBitmap(Resources.Manager.openDocument(value+"."+format)));
-                    }
+                Bitmap res = openBitmap(value);
+                if (res != null) {
+                    return new BitmapDrawable(res);
                 }
             }
         }

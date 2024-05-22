@@ -23,7 +23,10 @@ public class LayoutInflater {
 
     public <T extends View> T inflate(String resource){
         Resources res = context.getResources();
-        XmlElement element = res.requestXml("layout/" +resource);
+        if (!resource.startsWith("@")) {
+            resource = "@layout/"+resource;
+        }
+        XmlElement element = res.requestXml(Resources.fixPath(resource, "layout"));
         return inflate(element);
     }
 
@@ -90,6 +93,7 @@ public class LayoutInflater {
 
     static {
         registerView("AbsoluteLayout", AbsoluteLayout::new);
+        registerView("CardLayout", CardLayout::new);
         registerView("LinearLayout", LinearLayout::new);
         registerView("FrameLayout", FrameLayout::new);
         registerView("ScrollView", ScrollView::new);

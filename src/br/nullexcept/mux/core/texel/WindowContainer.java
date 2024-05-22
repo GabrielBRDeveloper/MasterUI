@@ -7,11 +7,10 @@ import br.nullexcept.mux.graphics.Rect;
 import br.nullexcept.mux.graphics.drawable.ColorDrawable;
 import br.nullexcept.mux.input.*;
 import br.nullexcept.mux.res.LayoutInflater;
-import br.nullexcept.mux.view.Menu;
-import br.nullexcept.mux.view.View;
-import br.nullexcept.mux.view.ViewGroup;
-import br.nullexcept.mux.view.Window;
+import br.nullexcept.mux.view.*;
 import br.nullexcept.mux.view.anim.AlphaAnimation;
+import br.nullexcept.mux.view.menu.MenuGroup;
+import br.nullexcept.mux.view.menu.MenuItem;
 import br.nullexcept.mux.widget.AbsoluteLayout;
 import br.nullexcept.mux.widget.ImageView;
 import br.nullexcept.mux.widget.LinearLayout;
@@ -19,15 +18,16 @@ import br.nullexcept.mux.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 
-public class WindowContainer extends AbsoluteLayout {
+public class WindowContainer extends AbsoluteLayout implements ViewRoot {
     static final int FLAG_REQUIRES_DRAW = 2;
     private static final int FLAG_FOCUSED = 4;
 
     private final HashMap<Integer, RenderCache> renders = new HashMap<>();
     private final CanvasTexel rootCanvas;
     private final ViewRenderer drawer;
-    private Menu currentMenu;
+    private MenuGroup currentMenu = new MenuGroup(UUID.randomUUID().toString());
 
     private final MenuLayout menuLayout;
     private final AbsoluteLayout content;
@@ -91,12 +91,11 @@ public class WindowContainer extends AbsoluteLayout {
         super.onMeasure(rootCanvas.getWidth(), rootCanvas.getHeight());
     }
 
-    private void mountRenderBag(ViewGroup group){
+    private synchronized void mountRenderBag(ViewGroup group){
         for (View child: group.getChildren()){
             int hash = child.hashCode();
             if (!renders.containsKey(hash)){
-                RenderCache render = new RenderCache(child);
-                render.canvas = new CanvasTexel(1,1);
+                RenderCache render = new RenderCache(child).createCanvas();
                 renders.put(hash, render);
             }
             renders.get(hash).valid = true;
@@ -104,6 +103,11 @@ public class WindowContainer extends AbsoluteLayout {
                 mountRenderBag((ViewGroup) child);
             }
         }
+    }
+
+    @Override
+    protected ViewRoot getViewRoot() {
+        return this;
     }
 
     @Override
@@ -128,7 +132,7 @@ public class WindowContainer extends AbsoluteLayout {
         addFlag(FLAG_REQUIRES_DRAW);
     }
 
-    private void mountRenderBag(){
+    private synchronized void mountRenderBag(){
         for (RenderCache render: renders.values())
             render.valid = false;
 
@@ -137,7 +141,7 @@ public class WindowContainer extends AbsoluteLayout {
         for (RenderCache render: renders){
             if (!render.valid){
                 this.renders.remove(render.view.hashCode());
-                render.canvas.dispose();
+                render.dispose();
             }
         }
         invalidateAll();
@@ -174,7 +178,7 @@ public class WindowContainer extends AbsoluteLayout {
 
     public void dispose(){
         for (RenderCache render: renders.values()){
-            render.canvas.dispose();
+            render.dispose();
         }
         renders.clear();
         drawer.dispose();
@@ -206,7 +210,7 @@ public class WindowContainer extends AbsoluteLayout {
     }
 
     @Override
-    protected void showMenu(Menu menu, int x, int y) {
+    protected void showMenu(MenuItem menu, int x, int y) {
         menuLayout.hide();
         menuLayout.setPosition(x,y);
         menuLayout.show(menu);
@@ -219,7 +223,7 @@ public class WindowContainer extends AbsoluteLayout {
         if (menuLayout.getMeasuredWidth() == 0) {
             if(event.getButton() == MouseEvent.RIGHT_BUTTON  && event.getAction() == MotionEvent.ACTION_UP) {
                 View child = content.getChildAt((int)event.getX(), (int)event.getY());
-                currentMenu = new Menu();
+                currentMenu = new MenuGroup();
                 while (child != null && !(child.onCreateContextMenu(currentMenu))) {
                     child = child.getParent();
                 }

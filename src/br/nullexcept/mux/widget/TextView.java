@@ -2,12 +2,17 @@ package br.nullexcept.mux.widget;
 
 import br.nullexcept.mux.app.Context;
 import br.nullexcept.mux.graphics.*;
+import br.nullexcept.mux.graphics.fonts.Typeface;
 import br.nullexcept.mux.res.AttributeList;
 import br.nullexcept.mux.text.Editable;
 import br.nullexcept.mux.text.TextLayout;
 import br.nullexcept.mux.view.AttrList;
 import br.nullexcept.mux.view.View;
 import br.nullexcept.mux.view.ViewGroup;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class TextView extends View {
     private final Paint paint = new Paint();
@@ -25,6 +30,25 @@ public class TextView extends View {
         attrs.searchText(AttrList.text, this::setText);
         attrs.searchColorList(AttrList.textColor, value -> textColor = value);
         attrs.searchDimension(AttrList.textSize, this::setTextSize);
+
+        String[] fontFamily = new String[]{"default"};
+        int[] fontStyle = new int[1];
+
+        attrs.searchRaw(AttrList.fontFamily, value -> fontFamily[0] = value);
+        attrs.searchRaw(AttrList.textStyle, value -> {
+            List<String> values = Arrays.asList(value.toLowerCase().split("\\|"));
+            if (values.contains("italic")) {
+                fontStyle[0] |= Typeface.STYLE_ITALIC;
+            }
+            if (values.contains("bold")) {
+                fontStyle[0] |= Typeface.STYLE_BOLD;
+            }
+        });
+
+        Typeface font = context.getResources().getFont(fontFamily[0], fontStyle[0]);
+        if (font != null) {
+            setTypeface(font);
+        }
     }
 
     @Override
@@ -92,6 +116,11 @@ public class TextView extends View {
         layout.update();
         measure();
         invalidate();
+    }
+
+    public void setTypeface(Typeface font) {
+        this.paint.setTypeface(font);
+        setTextSize(paint.getTextSize());
     }
 
     public CharSequence getText() {

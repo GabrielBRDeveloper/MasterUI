@@ -22,13 +22,17 @@ class TexelBitmap implements Bitmap {
         height = 0;
     }
 
-    public TexelBitmap(ByteBuffer encodedData){
-        id = NanoVG.nvgCreateImageMem(C.VG_CONTEXT,0,encodedData);
+    public TexelBitmap(int id) {
+        this.id = id;
         int[][] sizes = new int[2][1];
         NanoVG.nnvgImageSize(C.VG_CONTEXT, id, sizes[0], sizes[1]);
         width = sizes[0][0];
         height = sizes[1][0];
         setupImage(NanoVGGLES2.nvglImageHandle(C.VG_CONTEXT, id));
+    }
+
+    public TexelBitmap(ByteBuffer encodedData){
+        this(NanoVG.nvgCreateImageMem(C.VG_CONTEXT,0,encodedData));
     }
 
     private void setupImage(int texture){

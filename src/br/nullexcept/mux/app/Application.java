@@ -5,24 +5,28 @@ import br.nullexcept.mux.core.texel.TexelAPI;
 import br.nullexcept.mux.lang.Valuable;
 import br.nullexcept.mux.utils.Log;
 import br.nullexcept.mux.view.Window;
+import org.lwjgl.egl.EGL;
+import org.lwjgl.egl.EGL10;
+import org.lwjgl.egl.EGL11;
+import org.lwjgl.glfw.GLFWNativeEGL;
 import org.lwjgl.opengles.GLES;
+import org.lwjgl.system.MemoryUtil;
 
+import java.nio.IntBuffer;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import static org.lwjgl.glfw.GLFW.*;
 
 public class Application {
     private static long lastGc = System.currentTimeMillis();
-    private static HashMap<String, Service> services = new HashMap<>();
-    private static int RUNNING_ACTIVITIES = 0;
+    private static final HashMap<String, Service> services = new HashMap<>();
+    private static final ArrayList<ActivityStack> activities = new ArrayList<>();
 
     public static void initialize(Valuable<Activity> creator){
         glfwInit();
-        glfwDefaultWindowHints();
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-        glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
-        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+
+        setupEGL();
 
         long window = glfwCreateWindow(1,1,"[MasterUI - Core]",0, 0);
         glfwMakeContextCurrent(window);
@@ -33,14 +37,34 @@ public class Application {
         Looper loop = new Looper();
         Looper.mainLooper = loop;
         loop.initialize();
-        loop.postDelayed(()->boot(TexelAPI.createWindow(), creator.get()), 0);
+        Activity nw = creator.get();
+        nw.stack = new ActivityStack(nw);
+        loop.postDelayed(()->boot(TexelAPI.createWindow(), nw), 0);
         loop.post(Application::loop);
         loop.loop();
         TexelAPI.destroy();
         glfwTerminate();
         System.gc();
-        Looper.sleep(2000,0); // Wait for all services stop
+        Looper.sleep(2000); // Wait for all services stop
         System.exit(0);
+    }
+
+    private static void setupEGL() {
+        glfwDefaultWindowHints();
+        if (C.Config.SET_WINDOW_GL_HINT) {
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, C.Config.WINDOW_GL_VERSION[0]);
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, C.Config.WINDOW_GL_VERSION[1]);
+            glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_EGL_CONTEXT_API);
+            glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
+
+            long display = GLFWNativeEGL.glfwGetEGLDisplay();
+            try {// Setup EGL
+                int[][] version = new int[2][1];
+                EGL10.eglInitialize(display, version[0], version[1]);
+                EGL.createDisplayCapabilities(display, version[0][0], version[1][0]);
+            } catch (Exception e) {}
+        }
+        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
     }
 
     private static void loop(){
@@ -49,18 +73,29 @@ public class Application {
             System.gc();
             lastGc = System.currentTimeMillis();
         }
-        if (RUNNING_ACTIVITIES == 0) {
+        if (activities.size() == 0) { // Stop if contains 0 activity
             stop();
+            return;
+        }
+        synchronized (activities) {
+            ArrayList<ActivityStack> stack2 = new ArrayList<>(activities);
+            for (ActivityStack stack: stack2) {
+                if (stack == null || !stack.isValid()) {
+                    activities.remove(stack);
+                }
+            }
         }
         Looper.getMainLooper().post(Application::loop);
     }
 
     static Window.WindowObserver buildObserver(Activity activity) {
+        synchronized (activities) {
+            activities.add(activity.stack);
+        }
         return new Window.WindowObserver() {
             @Override
             public void onCreated() {
                 activity.onCreate();
-                RUNNING_ACTIVITIES++;
             }
 
             @Override
@@ -78,8 +113,19 @@ public class Application {
 
             @Override
             public void onDestroy() {
-                RUNNING_ACTIVITIES--;
-                activity.onDestroy();
+                ArrayList<ActivityStack> stacks = new ArrayList<>();
+                ActivityStack stack = activity.stack;
+                while (stack != null) {
+                    stacks.add(0, stack);
+                    stack = stack.getBackItem();
+                }
+
+                // Fire all stack list
+                stacks.forEach((item)-> {
+                    if (item.isValid()) {
+                        item.getActivity().finish();
+                    }
+                });
             }
         };
     }
@@ -98,24 +144,30 @@ public class Application {
         Looper.getMainLooper().stop();
     }
 
-    static <T extends Service> T beginService(Valuable<T> service) {
-        T sv = service.get();
-        String name = sv.getClass().getName();
+    static synchronized  <T extends Service> T beginService(Launch<T> launch) {
+        String name = launch.getLaunchClass().getName();
 
         if (services.containsKey(name)) {
-            return (T) services.get(name);
+            Service service = services.get(name);
+            service._args = launch;
+            service.onParcelChanged(launch);
+            return (T) service;
         }
-        Looper looper = new Looper();
-        sv.myLooper = looper;
 
-        services.put(name, sv);
+        Service service = launch.make();
+
+        Looper looper = new Looper();
+        service.myLooper = looper;
+        service._args = launch;
+
+        services.put(name, service);
         new Thread(()->{
             looper.initialize();
-            looper.post(sv::onCreate);
+            looper.post(service::onCreate);
             looper.loop();
             services.remove(name);
-            sv.onDestroy();
+            service.onDestroy();
         }).start();
-        return sv;
+        return (T) service;
     }
 }

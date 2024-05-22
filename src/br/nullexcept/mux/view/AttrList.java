@@ -5,6 +5,8 @@ public class AttrList {
     public static final String textColor = "textColor";
     public static final String text = "text";
     public static final String textSize = "textSize";
+    public static final String fontFamily = "fontFamily";
+    public static final String textStyle = "textStyle";
     public static final String width="width";
     public static final String height="height";
     public static final String background = "background";
@@ -39,4 +41,7 @@ public class AttrList {
     public static final String checked = "checked";
     public static final String scrollbar = "scrollbar";
     public static final String hint = "hint";
+    public static final String title = "title";
+    public static final String summary = "summary";
+    public static final String icon = "icon";
 }

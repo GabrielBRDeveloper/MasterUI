@@ -1,3 +1,5 @@
+precision mediump float;
+
 attribute vec4 vPos;
 attribute vec2 vTexCoords;
 

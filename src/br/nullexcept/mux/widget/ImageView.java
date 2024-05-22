@@ -33,8 +33,8 @@ public class ImageView extends View {
     @Override
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        float w = getWidth()-getPaddingLeft()-getPaddingRight();
-        float h = getHeight()-getPaddingTop()-getPaddingBottom();
+        float w = getMeasuredWidth()-getPaddingLeft()-getPaddingRight();
+        float h = getMeasuredHeight()-getPaddingTop()-getPaddingBottom();
         float iw, ih;
 
         if (image != null){

@@ -18,12 +18,14 @@ import java.util.Locale;
  * Stylesheet basics:
  * Stylesheet -> parent -> parent -> theme
  */
+
 public final class Resources {
     private DisplayMetrics metrics;
-    private static final HashMap<String, XmlElement> cache = new HashMap<>();
+
     private final HashMap<String, StylePreset> styles = new HashMap<>();
 
     private final LayoutInflater inflater;
+    private final MenuInflater menuInflater;
     private final Context context;
     private final AssetsManager assetsManager;
     private FallbackAttributes theme;
@@ -40,6 +42,7 @@ public final class Resources {
         this.context = ctx;
         metrics = new DisplayMetrics();
         inflater = new LayoutInflater(ctx);
+        menuInflater = new MenuInflater(this);
         assetsManager = new AssetsManager("/assets/", ctx.getClass());
         importStylesheet(requestXml("style/defaults"));
 
@@ -50,6 +53,10 @@ public final class Resources {
 
         importLanguage();
         setTheme("Base.Theme");
+    }
+
+    public MenuInflater getMenuInflater() {
+        return menuInflater;
     }
 
     /**
@@ -112,11 +119,25 @@ public final class Resources {
         return metrics;
     }
 
-    XmlElement requestXml(String path){
-        if (cache.containsKey(path)){
-            return cache.get(path);
+    Typeface requestFont(String path) {
+        if (ResourceCache.hasFont(path)) {
+            return ResourceCache.obtainTypeface(path);
         }
-        cache.put(path, XmlElement.parse(Resources.Manager.openDocument(path+".xml")));
+
+        String pth = path + ".ttf";
+        if (Manager.exists(pth)) {
+            Typeface typeface = TypefaceFactory.create(Manager.openDocument(pth));
+            ResourceCache.store(path, typeface);
+            return typeface;
+        }
+        return null;
+    }
+
+    XmlElement requestXml(String path){
+        if (ResourceCache.hasXml(path)){
+            return ResourceCache.obtainXml(path);
+        }
+        ResourceCache.store(path, XmlElement.parse(Resources.Manager.openDocument(path+".xml")));
         return requestXml(path);
     }
 
@@ -129,7 +150,32 @@ public final class Resources {
     }
 
     public Drawable getDrawable(String id) {
-        return Parser.parseDrawable(this, "@drawable/"+id);
+        return Parser.parseDrawable(this, fixPath(id, "drawable"));
+    }
+
+    public Typeface getFont(String family, int style) {
+        if (family.toLowerCase().equals("default")) {
+            family = "roboto";
+        }
+        XmlElement fonts = requestXml(fixPath(family, "font"));
+        Typeface font = Typeface.DEFAULT;
+
+        boolean bold = (style & Typeface.STYLE_BOLD) != 0;
+        boolean italic = (style & Typeface.STYLE_ITALIC) != 0;
+        for (XmlElement child: fonts.children()) {
+            if (child.has("bold") && !String.valueOf(bold).equals(child.attr("bold"))) {
+                continue;
+            }
+            if (child.has("italic") && !String.valueOf(italic).equals(child.attr("italic"))) {
+                continue;
+            }
+            String value = child.value().trim();
+            if (value.length() > 0) {
+                return requestFont(fixPath(value, "raw"));
+            }
+        }
+
+        return font;
     }
 
     public static class DisplayMetrics {
@@ -162,5 +208,13 @@ public final class Resources {
         ResourcesManager() {
             super("/res/", ResourcesManager.class);
         }
+    }
+
+
+    static String fixPath(String path, String def) {
+        if (!path.startsWith("@")) {
+            path = "@"+def+"/"+path;
+        }
+        return path.substring(1);
     }
 }

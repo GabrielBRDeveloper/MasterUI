@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<FrameLayout
+    width="match_parent"
+    height="match_parent"
+    background="?colorSurface"
+    padding="20dp"
+    orientation="horizontal">
+  <CardLayout
+      width="match_parent"
+      height="match_parent"
+      radius="20dp">
+    <LinearLayout
+        width="match_parent"
+        height="match_parent"
+        id="content">
+
+      <TextView
+          width="wrap_content"
+          height="wrap_content"
+          textSize="14sp"
+          text="Hello world"/>
+
+      <TextView
+          width="wrap_content"
+          height="wrap_content"
+          textSize="14sp"
+          text="That is a example of draw with card layout"/>
+
+      <TextView
+          width="wrap_content"
+          height="wrap_content"
+          textSize="14sp"
+          text="That allow create UIs a like Material3"/>
+
+      <EditText
+        width="128dp"
+        height="128dp"/>
+
+      <EditText
+          width="128dp"
+          height="128dp"/>
+      <EditText
+          width="128dp"
+          height="128dp"/>
+      <EditText
+          width="128dp"
+          height="128dp"/>
+    </LinearLayout>
+  </CardLayout>
+</FrameLayout>
