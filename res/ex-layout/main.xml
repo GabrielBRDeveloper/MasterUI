@@ -18,7 +18,7 @@
           width="wrap_content"
           height="wrap_content"
           textSize="14sp"
-          font="bold"
+          textStyle="bold"
           text="Hello world"/>
 
       <TextView

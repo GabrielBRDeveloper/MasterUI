@@ -21,8 +21,6 @@ import java.util.Locale;
 
 public final class Resources {
     private DisplayMetrics metrics;
-    private static final HashMap<String, XmlElement> cache = new HashMap<>();
-    private static final HashMap<String, Typeface> fonts = new HashMap<>();
 
     private final HashMap<String, StylePreset> styles = new HashMap<>();
 
@@ -38,7 +36,6 @@ public final class Resources {
     static {
         Manager = new ResourcesManager();
         Typeface.DEFAULT = TypefaceFactory.create(Manager.openDocument("fonts/Roboto/Roboto-Regular.ttf"));
-        Typeface.DEFAULT_BOLD = TypefaceFactory.create(Manager.openDocument("fonts/Roboto/Roboto-Bold.ttf"));
     }
 
     public Resources(Context ctx){
@@ -123,22 +120,24 @@ public final class Resources {
     }
 
     Typeface requestFont(String path) {
-        if (fonts.containsKey(path)) {
-            return fonts.get(path);
+        if (ResourceCache.hasFont(path)) {
+            return ResourceCache.obtainTypeface(path);
         }
+
         String pth = path + ".ttf";
-        if (Manager.exists(path)) {
+        if (Manager.exists(pth)) {
             Typeface typeface = TypefaceFactory.create(Manager.openDocument(pth));
-            fonts.put(path, typeface);
+            ResourceCache.store(path, typeface);
+            return typeface;
         }
         return null;
     }
 
     XmlElement requestXml(String path){
-        if (cache.containsKey(path)){
-            return cache.get(path);
+        if (ResourceCache.hasXml(path)){
+            return ResourceCache.obtainXml(path);
         }
-        cache.put(path, XmlElement.parse(Resources.Manager.openDocument(path+".xml")));
+        ResourceCache.store(path, XmlElement.parse(Resources.Manager.openDocument(path+".xml")));
         return requestXml(path);
     }
 
@@ -152,6 +151,31 @@ public final class Resources {
 
     public Drawable getDrawable(String id) {
         return Parser.parseDrawable(this, fixPath(id, "drawable"));
+    }
+
+    public Typeface getFont(String family, int style) {
+        if (family.toLowerCase().equals("default")) {
+            family = "roboto";
+        }
+        XmlElement fonts = requestXml(fixPath(family, "font"));
+        Typeface font = Typeface.DEFAULT;
+
+        boolean bold = (style & Typeface.STYLE_BOLD) != 0;
+        boolean italic = (style & Typeface.STYLE_ITALIC) != 0;
+        for (XmlElement child: fonts.children()) {
+            if (child.has("bold") && !String.valueOf(bold).equals(child.attr("bold"))) {
+                continue;
+            }
+            if (child.has("italic") && !String.valueOf(italic).equals(child.attr("italic"))) {
+                continue;
+            }
+            String value = child.value().trim();
+            if (value.length() > 0) {
+                return requestFont(fixPath(value, "raw"));
+            }
+        }
+
+        return font;
     }
 
     public static class DisplayMetrics {

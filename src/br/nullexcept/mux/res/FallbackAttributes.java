@@ -97,24 +97,6 @@ class FallbackAttributes implements AttributeList {
     }
 
     @Override
-    public void searchFont(String name, Function<Typeface> apply) {
-        Typeface font = getFont(name);
-        if (font != null) {
-            apply.call(font);
-        }
-    }
-
-    @Override
-    public Typeface getFont(String name) {
-        if (contains(name)) {
-            return Parser.parseFont(resources, resolve(map.get(name)));
-        } else if (fallback != null) {
-            return fallback.getFont(name);
-        }
-        return null;
-    }
-
-    @Override
     public String[] names() {
         return map.keySet().toArray(new String[0]);
     }

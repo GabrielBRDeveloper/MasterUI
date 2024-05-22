@@ -11,8 +11,12 @@ import java.util.UUID;
 
 public class Typeface {
     protected static final float SCALE = 1024.0f;
+
+    public static final int STYLE_NORMAL = 0;
+    public static final int STYLE_BOLD = 1;
+    public static final int STYLE_ITALIC = 2;
+
     public static Typeface DEFAULT;
-    public static Typeface DEFAULT_BOLD;
 
     protected final float ascent;
     protected final float descent;
@@ -40,7 +44,6 @@ public class Typeface {
         this.lineHeight = lineHeight[0];
         NVGGlyphPosition.create();
         NVGGlyphPosition.Buffer b = NVGGlyphPosition.create(1);
-        ByteBuffer bf = MemoryUtil.memByteBuffer(b.address(),b.sizeof());
         for (int i = 0; i < this.bounds.length; i++){
             String character = String.valueOf((char)i);
             NanoVG.nvgTextGlyphPositions(context,0,0,character,b);
