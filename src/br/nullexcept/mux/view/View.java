@@ -248,6 +248,12 @@ public class View {
         }
     }
 
+    protected void requestNextFocus() {
+        if (parent != null) {
+            parent.findNextFocus(this);
+        }
+    }
+
     public void setFocusable(boolean focusable) {
         if (parent != null && this.focusable && !focusable) {
             parent.requestFocus(null);
@@ -322,6 +328,9 @@ public class View {
     }
 
     protected void onKeyEvent(KeyEvent keyEvent) {
+        if (keyEvent.getAction() == KeyEvent.ACTION_UP && keyEvent.getKeyCode() == KeyEvent.KEY_TAB && isFocused()) {
+            requestNextFocus();
+        }
     }
 
     protected void onMouseMoved(MotionEvent event) {

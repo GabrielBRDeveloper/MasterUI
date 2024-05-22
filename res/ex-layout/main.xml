@@ -18,7 +18,6 @@
           width="wrap_content"
           height="wrap_content"
           textSize="14sp"
-          textStyle="bold"
           text="Hello world"/>
 
       <TextView
@@ -33,6 +32,19 @@
           textSize="14sp"
           text="That allow create UIs a like Material3"/>
 
+      <EditText
+        width="128dp"
+        height="128dp"/>
+
+      <EditText
+          width="128dp"
+          height="128dp"/>
+      <EditText
+          width="128dp"
+          height="128dp"/>
+      <EditText
+          width="128dp"
+          height="128dp"/>
     </LinearLayout>
   </CardLayout>
 </FrameLayout>

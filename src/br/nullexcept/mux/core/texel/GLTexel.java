@@ -84,9 +84,11 @@ class GLTexel {
             glVertexAttribPointer(program.uv, 2, GL_FLOAT, false, 0, bufferUV);
             glUniform1i(program.texture, GL_TEXTURE_2D);
 
-            glUniform1iv(program.params, new int[]{
-                    0,
-                    Math.round(alphas[i] * 255)
+            glUniform1fv(program.params, new float[]{
+                    0.0f,
+                    Math.round(alphas[i] * 255) / 255.0f,
+                    0.0f,
+                    0.0f
             });
             glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         }

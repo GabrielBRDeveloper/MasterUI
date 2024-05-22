@@ -10,7 +10,7 @@ class GlesUtils {
         int[] res = new int[1];
         glGetShaderiv(shader, GL_COMPILE_STATUS,res);
         if (res[0] != GL_TRUE){
-            throw new RuntimeException("Error on compile gl shader: "+ glGetShaderInfoLog(shader));
+            throw new RuntimeException("Error on compile gl shader: "+ glGetShaderInfoLog(shader)+"\nSource: \n"+source);
         }
         return shader;
     }

@@ -1,13 +1,9 @@
 package br.nullexcept.mux.app;
 
-import br.nullexcept.mux.utils.Log;
-
-import java.util.HashMap;
+import java.util.ArrayList;
 
 public class Looper {
-    private static final String LOG_TAG = "Looper";
-
-    private final HashMap<Long, Runnable> executions = new HashMap<>();
+    private final ArrayList<Callback> executions = new ArrayList<>();
     static Looper mainLooper;
     private boolean stop = false;
 
@@ -21,8 +17,9 @@ public class Looper {
     }
 
     public void postDelayed(Runnable runnable, long msTime){
+        msTime = Math.max(0, msTime);
         synchronized (executions) {
-            executions.put(System.nanoTime() + (msTime * 1000000L), runnable);
+            executions.add(new Callback(runnable,System.currentTimeMillis()+msTime));
         }
     }
 
@@ -32,28 +29,24 @@ public class Looper {
 
     public void loop(){
         while (!stop) {
-            long time = System.nanoTime();
-            Long[] keys;
+            Callback[] list;
+            int i = 0;
             synchronized (executions) {
-                keys = executions.keySet().toArray(new Long[0]);
-            }
-            for (long key : keys) {
-                if (key <= time) {
-                    Runnable runnable;
-                    synchronized (executions) {
-                        runnable = executions.get(key);
-                        executions.remove(key);
+                list = executions.toArray(new Callback[0]);
+                for (Callback call: list) {
+                    if (call.time <= System.currentTimeMillis()) {
+                        executions.remove(call);
+                    } else {
+                        list[i] = null;
                     }
-                    try {
-                        runnable.run();
-                    } catch (Throwable e) {
-                        Log.error(LOG_TAG, "[ERROR ON LOOPER]",e);
-                        stop = true;
-                    }
+                    i++;
                 }
             }
-
-            sleep(0, (int) (Math.random()*400));
+            for (Callback call: list) {
+                if (call == null) continue;
+                call.handle.run();
+            }
+            sleep(0, (int) (Math.random()*100));
         }
     }
 
@@ -69,5 +62,30 @@ public class Looper {
 
     public void stop(){
         this.stop = true;
+    }
+
+    private static class Callback {
+        private static long current;
+        private final Runnable handle;
+        private final long time;
+        private final long id = hash();
+
+        private Callback(Runnable handle, long time) {
+            this.handle = handle;
+            this.time = time;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj instanceof Callback) {
+                return ((Callback) obj).id == id;
+            }
+            return false;
+        }
+
+        public static synchronized long hash() {
+            current++;
+            return current;
+        }
     }
 }

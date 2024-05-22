@@ -94,6 +94,55 @@ public class ViewGroup extends View {
         measureBounds();
     }
 
+    private View searchFocus(View vw) {
+        if (!vw.isVisible()) {
+            return null;
+        }
+        if (vw.isFocusable()) {
+            return vw;
+        }
+        if (vw instanceof ViewGroup) {
+            for (View child : ((ViewGroup) vw).children) {
+                View v = searchFocus(child);
+                if (v != null) {
+                    return v;
+                }
+            }
+        }
+        return null;
+    }
+
+    boolean findNextFocus(View child) {
+        int index = children.indexOf(child);
+        if (index + 1 < children.size()) {
+            for (int i = index+1; i < children.size(); i++) {
+                View ch = searchFocus(children.get(i));
+                if (ch != null) {
+                    ch.requestFocus();
+                    return true;
+                }
+            }
+            if (getParent() != null) {
+                return getParent().findNextFocus(this);
+            } else {
+                View fcs = searchFocus(this);
+                if (fcs != null) {
+                    fcs.requestFocus();;
+                    return true;
+                }
+            }
+        } else if (getParent() != null) {
+            return getParent().findNextFocus(this);
+        } else {
+            View focus = searchFocus(this);
+            if (focus != null) {
+                focus.requestFocus();
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     protected boolean dispatchMouseEvent(MouseEvent mouseEvent) {
         boolean handle = false;
