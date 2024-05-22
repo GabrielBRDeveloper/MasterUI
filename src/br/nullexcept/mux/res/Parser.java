@@ -236,8 +236,10 @@ class Parser {
     public static Drawable parseDrawable(Resources resources, String value) {
         if (value.startsWith("#")){
             return new ColorDrawable(Color.parseColor(value));
-        } else if (value.startsWith("@")){
-            value = value.substring(1);
+        } else {
+            if (value.startsWith("@")) {
+                value = value.substring(1);
+            }
             if (Resources.Manager.exists(value+".xml")){
                 return inflateXmlDrawable(resources, resources.requestXml(value));
             } else {
@@ -276,29 +278,5 @@ class Parser {
         }
         Log.error(LOG_TAG, "Invalid color value: "+value);
         return new ColorStateList(Color.RED);
-    }
-
-    public static Typeface parseFont(Resources res, String name) {
-
-        {
-            String low = name.toLowerCase().trim();
-            switch (low) {
-                case "default":
-                case "normal":
-                    return Typeface.DEFAULT;
-                case "bold":
-                    return Typeface.DEFAULT_BOLD;
-            }
-        }
-
-        Typeface font = res.requestFont(Resources.fixPath(name, "font"));
-        if (font == null) {
-            font = res.requestFont(Resources.fixPath(name, "fonts"));
-            if (font == null && name.contains(":")) {
-                String[] pats = name.split(":");
-                return parseFont(res, pats[0]+"/"+pats[1]);
-            }
-        }
-        return font;
     }
 }

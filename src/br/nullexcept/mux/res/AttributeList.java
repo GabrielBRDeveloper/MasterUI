@@ -22,15 +22,10 @@ public interface AttributeList {
 
     void searchBoolean(String name, Function<Boolean> apply);
 
-    void searchFont(String name, Function<Typeface> apply);
-
     String[] names();
 
     String getRawValue(String name);
 
-    default Typeface getFont(String name) {
-        return null;
-    }
 
     default CharSequence getText(String name) {
         return "";

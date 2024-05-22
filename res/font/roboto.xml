@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<font>
+  <font bold="true">@fonts/Roboto/Roboto-Bold</font>
+  <font>@fonts/Roboto/Roboto-Regular</font>
+</font>
