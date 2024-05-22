@@ -300,6 +300,10 @@ public class EditText extends View {
                     }
                     break;
             }
+        } else {
+            if (keyEvent.getKeyCode() == KeyEvent.KEY_TAB) {
+                requestNextFocus();
+            }
         }
     }
 

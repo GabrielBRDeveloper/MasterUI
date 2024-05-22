@@ -48,8 +48,6 @@ public class TextView extends View {
         Typeface font = context.getResources().getFont(fontFamily[0], fontStyle[0]);
         if (font != null) {
             setTypeface(font);
-        } else {
-            System.err.println("Font is null");
         }
     }
 

@@ -3,9 +3,16 @@ package br.nullexcept.mux.app;
 import br.nullexcept.mux.C;
 import br.nullexcept.mux.core.texel.TexelAPI;
 import br.nullexcept.mux.lang.Valuable;
+import br.nullexcept.mux.utils.Log;
 import br.nullexcept.mux.view.Window;
+import org.lwjgl.egl.EGL;
+import org.lwjgl.egl.EGL10;
+import org.lwjgl.egl.EGL11;
+import org.lwjgl.glfw.GLFWNativeEGL;
 import org.lwjgl.opengles.GLES;
+import org.lwjgl.system.MemoryUtil;
 
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -18,13 +25,8 @@ public class Application {
 
     public static void initialize(Valuable<Activity> creator){
         glfwInit();
-        glfwDefaultWindowHints();
-        if (C.Config.SET_WINDOW_GL_HINT) {
-            glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, C.Config.WINDOW_GL_VERSION[0]);
-            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, C.Config.WINDOW_GL_VERSION[1]);
-            glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
-        }
-        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+
+        setupEGL();
 
         long window = glfwCreateWindow(1,1,"[MasterUI - Core]",0, 0);
         glfwMakeContextCurrent(window);
@@ -43,8 +45,26 @@ public class Application {
         TexelAPI.destroy();
         glfwTerminate();
         System.gc();
-        Looper.sleep(2000,0); // Wait for all services stop
+        Looper.sleep(2000); // Wait for all services stop
         System.exit(0);
+    }
+
+    private static void setupEGL() {
+        glfwDefaultWindowHints();
+        if (C.Config.SET_WINDOW_GL_HINT) {
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, C.Config.WINDOW_GL_VERSION[0]);
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, C.Config.WINDOW_GL_VERSION[1]);
+            glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_EGL_CONTEXT_API);
+            glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
+
+            long display = GLFWNativeEGL.glfwGetEGLDisplay();
+            try {// Setup EGL
+                int[][] version = new int[2][1];
+                EGL10.eglInitialize(display, version[0], version[1]);
+                EGL.createDisplayCapabilities(display, version[0][0], version[1][0]);
+            } catch (Exception e) {}
+        }
+        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
     }
 
     private static void loop(){
@@ -124,7 +144,7 @@ public class Application {
         Looper.getMainLooper().stop();
     }
 
-    static <T extends Service> T beginService(Launch<T> launch) {
+    static synchronized  <T extends Service> T beginService(Launch<T> launch) {
         String name = launch.getLaunchClass().getName();
 
         if (services.containsKey(name)) {
