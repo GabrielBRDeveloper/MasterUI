@@ -6,6 +6,6 @@ import br.nullexcept.mux.graphics.Paint;
 public class OvalShape extends Shape {
     @Override
     public void draw(Canvas canvas, Paint paint) {
-        canvas.drawEllipse(0,0,getWidth(),getHeight(), paint);
+        canvas.drawEllipse(bounds, paint);
     }
 }

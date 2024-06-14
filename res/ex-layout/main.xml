@@ -20,17 +20,32 @@
           textSize="14sp"
           text="Hello world"/>
 
+      <Button
+        width="300dp"
+        height="64dp"/>
+
       <TextView
           width="wrap_content"
           height="wrap_content"
           textSize="14sp"
           text="That is a example of draw with card layout"/>
 
+      <Button
+          width="300dp"
+          height="64dp"
+          visibility="gone"/>
+
       <TextView
+          id="animate"
           width="wrap_content"
           height="wrap_content"
           textSize="14sp"
+          background="#CC0000"
           text="That allow create UIs a like Material3"/>
+
+      <Button
+          width="300dp"
+          height="64dp"/>
 
       <EditText
         width="128dp"

@@ -10,6 +10,7 @@ import br.nullexcept.mux.view.AttrList;
 public class CardLayout extends AbsoluteLayout {
     private final RoundedShape shape = new RoundedShape();
     private final ShapeList clipArea = new ShapeList(shape);
+
     public CardLayout(Context context) {
         this(context, null);
     }
@@ -27,7 +28,8 @@ public class CardLayout extends AbsoluteLayout {
     @Override
     public void onDrawForeground(Canvas canvas) {
         super.onDrawForeground(canvas);
-        shape.resize(canvas.getWidth(),canvas.getHeight());
+        shape.setPosition(1,1);
+        shape.resize(canvas.getWidth()-2,canvas.getHeight()-2);
         canvas.clip(clipArea);
     }
 }

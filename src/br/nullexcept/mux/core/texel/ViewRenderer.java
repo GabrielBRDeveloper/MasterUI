@@ -3,7 +3,6 @@ package br.nullexcept.mux.core.texel;
 import br.nullexcept.mux.C;
 import br.nullexcept.mux.graphics.Paint;
 import br.nullexcept.mux.graphics.Rect;
-import br.nullexcept.mux.utils.Log;
 import br.nullexcept.mux.view.View;
 import br.nullexcept.mux.view.ViewGroup;
 import br.nullexcept.mux.widget.HardwareSurface;
@@ -49,7 +48,8 @@ class ViewRenderer {
 
         canvas.begin();
         canvas.reset();
-        canvas.alpha(view.getAlpha());
+        final float alpha = view.getAlpha() * view.getTransition().getAlpha();
+        canvas.alpha(alpha);
         view.onDraw(canvas);
         if (view instanceof ViewGroup){
             canvas.end();
@@ -69,13 +69,13 @@ class ViewRenderer {
                 if (child.isVisible()){
                     CanvasTexel texel = registry.get(child.hashCode()).canvas;
                     borders[index] = createMesh(canvas, child);
-                    alphas[index] = child.getAlpha();
+                    alphas[index] = child.getAlpha() * child.getTransition().getAlpha();
                     textures[index] = texel.getFramebuffer().getTexture().getTexture();
                     index++;
                 }
             }
 
-            if (view.getAlpha() == 1.0f) { //FAST DRAW
+            if (alpha == 1.0f) { //FAST DRAW
                 canvas.begin();
                 GLTexel.drawViewLayers(borders,textures, alphas);
             } else {
@@ -106,10 +106,10 @@ class ViewRenderer {
         float w = dest.getWidth();
         float h = dest.getHeight();
         Rect bounds = view.getBounds();
-        float vw = bounds.width();
-        float vh = bounds.height();
-        float x = bounds.left;
-        float y = bounds.top;
+        float vw = bounds.width() * view.getTransition().getScale().x;
+        float vh = bounds.height() * view.getTransition().getScale().y;
+        float x = bounds.left + view.getTransition().getTranslate().x;
+        float y = bounds.top + view.getTransition().getTranslate().y;
 
 
         if (view.getScale() != 1.0){
@@ -127,10 +127,10 @@ class ViewRenderer {
         y = h - y - vh;
 
         float[] mesh = new float[]{
-                x   ,   y,
-                x+vw,   y,
-                x   ,   y+vh,
-                x+vw,   y+vh
+                x       ,   y,
+                (x+vw)  ,   y,
+                x       ,   (y+vh),
+                (x+vw)  ,   (y+vh)
         };
 
 
@@ -141,9 +141,10 @@ class ViewRenderer {
          *  - Rotate by view
          */
 
-        if (view.getRotation() != 0){
+        final float rotation = view.getRotation() + view.getTransition().getRotation();
+        if (rotation != 0){
             // PI/180 = Degrees to radians
-            final double radians = (view.getRotation() * (Math.PI/180.0));
+            final double radians = (rotation * (Math.PI/180.0));
             // Configure pivots
             final float px = x + (vw/2.0f);
             final float py = y + (vh/2.0f);

@@ -29,7 +29,7 @@ import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
 class GlfwWindow extends Window {
     private final long window;
     private final GlfwEventManager eventManager;
-    private final Size windowSize = new Size(512,512);
+    private final Size windowSize = new Size(900,512);
 
     private WindowContainer container;
     private boolean destroyed = true;
@@ -40,15 +40,14 @@ class GlfwWindow extends Window {
     private CharSequence title;
 
     public GlfwWindow() {
-        window = GLFW.glfwCreateWindow(512, 512, title = "[MasterUI:Window]", 0, C.GLFW_CONTEXT);
+        window = GLFW.glfwCreateWindow(900, 512, title = "[MasterUI:Window]", 0, C.GLFW_CONTEXT);
         eventManager = new GlfwEventManager(this);
         GLFW.glfwIconifyWindow(window);
         GLFW.glfwSetWindowSizeCallback(window, (l, w,h) -> {
             windowSize.set(w,h);
-            Looper.getMainLooper().post(this::drawSurface);
+            Looper.getMainLooper().post(()-> drawSurface());
         });
         GLFW.glfwSetWindowPosCallback(window, (l, x, y) -> {
-            p.set(x,y);
         });
         setMinimumSize(256,256);
         center();
@@ -90,10 +89,7 @@ class GlfwWindow extends Window {
         position.set(buffer[0][0], buffer[1][0]);
     }
 
-    private long[] times = new long[8];
     private long last = System.currentTimeMillis();
-    private Point p = new Point();
-    private Point pd = new Point();
 
     private void drawSurface() {
         if (destroyed)return;
@@ -115,29 +111,16 @@ class GlfwWindow extends Window {
 
         if (System.currentTimeMillis() - last >= 1000) {
             last = System.currentTimeMillis();
-            times[5] = times[0];
-            times[6] = times[1] / times[0];
-
-            times[0] = 0;
-            times[1] = 0;
         }
-        times[0]++;
         eventManager.runFrame();
 
         long time = System.currentTimeMillis();
         if (isVisible() && container != null) {
-            long begin = System.currentTimeMillis();
             refresh();
             container.resize(windowSize.width, windowSize.height);
-
             container.drawFrame();
             drawSurface();
-            times[1] += System.currentTimeMillis() - begin;
-            if (C.Flags.DEBUG_OVERLAY) {
-                drawDebug();
-            }
         }
-
 
         if (GLFW.glfwWindowShouldClose(window)) {
             destroy();
@@ -153,38 +136,6 @@ class GlfwWindow extends Window {
         } else {
             running = false;
         }
-    }
-
-    private final NVGColor color1 = NVGColor.create();
-    private final NVGColor color2 = NVGColor.create();
-    private void drawDebug() {
-        NanoVG.nvgBeginFrame(C.VG_CONTEXT,windowSize.width, windowSize.height,1);
-        NanoVG.nvgFontFaceId(C.VG_CONTEXT, Typeface.DEFAULT.hashCode());
-        NanoVG.nvgFontSize(C.VG_CONTEXT, 16);
-
-        NanoVG.nvgBeginPath(C.VG_CONTEXT);
-        NanoVG.nvgRGBAf(0,0,0,.5f, color2);
-        NanoVG.nvgFillColor(C.VG_CONTEXT, color2);
-        NanoVG.nvgRect(C.VG_CONTEXT, 10, 10, 160,72);
-        NanoVG.nvgFill(C.VG_CONTEXT);
-        NanoVG.nvgClosePath(C.VG_CONTEXT);
-
-        NanoVG.nvgRGBAf(1,1,1,1, color1);
-        NanoVG.nvgFillColor(C.VG_CONTEXT, color1);
-        NanoVG.nvgText(C.VG_CONTEXT,15,32,"FPS: "+times[5]);
-        NanoVG.nvgText(C.VG_CONTEXT,15,48,"DRAW TIME: "+times[6]+"ms");
-        NanoVG.nvgText(C.VG_CONTEXT,15,64,"VIEWS: "+viewCount(container));
-        NanoVG.nvgEndFrame(C.VG_CONTEXT);
-    }
-
-    private int viewCount(ViewGroup container) {
-        int count = 0;
-        for (View view: container.getChildren()) {
-            if (view instanceof ViewGroup)
-                count += viewCount((ViewGroup) view);
-            count++;
-        }
-        return count;
     }
 
     @Override
@@ -234,7 +185,7 @@ class GlfwWindow extends Window {
 
     @Override
     public void setMinimumSize(int width, int height) {
-        //GLFW.glfwSetWindowSizeLimits(window, width,height,Integer.MAX_VALUE, Integer.MAX_VALUE);
+
     }
 
     public void onMouseEvent(MouseEvent event) {

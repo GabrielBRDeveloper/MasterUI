@@ -32,7 +32,7 @@ class TexelBitmap implements Bitmap {
     }
 
     public TexelBitmap(ByteBuffer encodedData){
-        this(NanoVG.nvgCreateImageMem(C.VG_CONTEXT,0,encodedData));
+        this(NanoVG.nvgCreateImageMem(C.VG_CONTEXT,NanoVG.NVG_IMAGE_GENERATE_MIPMAPS,encodedData));
     }
 
     private void setupImage(int texture){

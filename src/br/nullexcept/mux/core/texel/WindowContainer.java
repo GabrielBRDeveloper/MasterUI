@@ -7,6 +7,7 @@ import br.nullexcept.mux.graphics.Rect;
 import br.nullexcept.mux.graphics.drawable.ColorDrawable;
 import br.nullexcept.mux.input.*;
 import br.nullexcept.mux.res.LayoutInflater;
+import br.nullexcept.mux.utils.Log;
 import br.nullexcept.mux.view.*;
 import br.nullexcept.mux.view.anim.AlphaAnimation;
 import br.nullexcept.mux.view.menu.MenuGroup;
@@ -113,7 +114,7 @@ public class WindowContainer extends AbsoluteLayout implements ViewRoot {
     @Override
     protected void requestFocus(View focused) {
         focused = focused == null ? this : focused;
-        if (!focused.hasFlag(FLAG_FOCUSED)){
+        if ((!focused.hasFlag(FLAG_FOCUSED)) || focused.hashCode() != focusedView){
             if (renders.containsKey(focusedView)){
                 View oldFocus = renders.get(focusedView).view;
                 oldFocus.onFocusChanged(false);
@@ -185,6 +186,7 @@ public class WindowContainer extends AbsoluteLayout implements ViewRoot {
     }
 
     public void performInputEvent(Event event) {
+        refreshFocus();
         if (event instanceof MouseEvent){
             if(performMenuEvent((MouseEvent) event)) {
                 return;
@@ -206,6 +208,12 @@ public class WindowContainer extends AbsoluteLayout implements ViewRoot {
             }
         } else {
             dispatchEvent(event);
+        }
+    }
+
+    private void refreshFocus() {
+        if (!renders.containsKey(focusedView)) {
+            focusedView = hashCode();
         }
     }
 

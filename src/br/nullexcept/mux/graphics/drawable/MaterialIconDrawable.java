@@ -41,7 +41,13 @@ public class MaterialIconDrawable extends Drawable {
 
     @Override
     public void draw(Canvas canvas) {
+        char c = '0';
         if (codePoints.containsKey(icon)) {
+            c = codePoints.get(icon);
+        } else if (icon != null && icon.startsWith("#")) {
+            c = (char) Integer.parseInt(icon.substring(1).toUpperCase(),16);
+        }
+        if (c != '0') {
             Rect bounds = getBounds();
             int s = Math.min(bounds.width(), bounds.height());
             paint.setTextSize(s);
@@ -52,7 +58,7 @@ public class MaterialIconDrawable extends Drawable {
             Rect rect = new Rect();
             int h = Math.round(paint.getFontMetrics().getLineHeight());
             Gravity.applyGravity(Gravity.CENTER, h, h, bounds.width(), bounds.height(), rect);
-            String ic = codePoints.get(icon).toString();
+            String ic = String.valueOf(c);
             canvas.drawText(ic, rect.left+bounds.left, rect.top + h +bounds.top, paint);
         }
     }

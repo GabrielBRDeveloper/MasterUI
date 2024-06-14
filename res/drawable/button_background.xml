@@ -10,6 +10,16 @@
       </item>
     </layer-list>
   </item>
+  <item focused="true">
+    <layer-list>
+      <item>
+        <shape
+            type="rounded"
+            radius="14dp"
+            color="?colorPrimary"/>
+      </item>
+    </layer-list>
+  </item>
   <item>
     <layer-list>
       <item>

@@ -21,13 +21,13 @@ public class AlphaAnimation extends LinearAnimation {
 
     @Override
     public void onBegin() {
-        src = view.getAlpha();
-        view.setAlpha(from);
+        src = view.getTransition().getAlpha();
     }
 
     @Override
     public void onFrame(double delta) {
-        view.setAlpha(from+(float) (diff * delta));
+        view.getTransition().setAlpha(from+(float) (diff * delta));
+        view.invalidate();
     }
 
     @Override

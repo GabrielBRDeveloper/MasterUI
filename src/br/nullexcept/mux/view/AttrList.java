@@ -44,4 +44,5 @@ public class AttrList {
     public static final String title = "title";
     public static final String summary = "summary";
     public static final String icon = "icon";
+    public static final String visibility = "visibility";
 }

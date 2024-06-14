@@ -47,6 +47,9 @@ public class ViewGroup extends View {
 
     protected boolean measureChild(View child) {
         LayoutParams params = child.getLayoutParams();
+        if (child.getVisibility() == VISIBILITY_GONE) {
+            return false;
+        }
         if (child instanceof ViewGroup) {
             ((ViewGroup) child).measureChildren();
         }
@@ -116,6 +119,37 @@ public class ViewGroup extends View {
         int index = children.indexOf(child);
         if (index + 1 < children.size()) {
             for (int i = index+1; i < children.size(); i++) {
+                View ch = searchFocus(children.get(i));
+                if (ch != null) {
+                    ch.requestFocus();
+                    return true;
+                }
+            }
+            if (getParent() != null) {
+                return getParent().findNextFocus(this);
+            } else {
+                View fcs = searchFocus(this);
+                if (fcs != null) {
+                    fcs.requestFocus();;
+                    return true;
+                }
+            }
+        } else if (getParent() != null) {
+            return getParent().findNextFocus(this);
+        } else {
+            View focus = searchFocus(this);
+            if (focus != null) {
+                focus.requestFocus();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    boolean findBackFocus(View child) {
+        int index = children.indexOf(child);
+        if (index + 1 < children.size()) {
+            for (int i = index-1; i >= 0; i--) {
                 View ch = searchFocus(children.get(i));
                 if (ch != null) {
                     ch.requestFocus();

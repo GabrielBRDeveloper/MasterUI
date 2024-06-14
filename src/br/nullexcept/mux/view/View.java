@@ -7,6 +7,7 @@ import br.nullexcept.mux.graphics.*;
 import br.nullexcept.mux.input.*;
 import br.nullexcept.mux.res.AttributeList;
 import br.nullexcept.mux.utils.Log;
+import br.nullexcept.mux.view.anim.ViewTransition;
 import br.nullexcept.mux.view.menu.MenuGroup;
 import br.nullexcept.mux.view.menu.MenuItem;
 
@@ -16,7 +17,11 @@ public class View {
     private static final String LOG_TAG = "View";
 
     static final int FLAG_REQUIRES_DRAW = 2;
+    public static final int VISIBILITY_VISIBLE = 0;
+    public static final int VISIBILITY_HIDDEN = 1;
+    public static final int VISIBILITY_GONE = 2;
 
+    private final ViewTransition animInfo = new ViewTransition();
     private static int currentHash = 0;
     private ViewGroup parent;
     private final Rect bounds = new Rect();
@@ -41,6 +46,7 @@ public class View {
     private float scale = 1.0f;
     private float rotation = 0.0f;
     private int flags = 0;
+    private int visibility = VISIBILITY_VISIBLE;
     private int gravity = Gravity.NO_GRAVITY;
     private ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -70,6 +76,15 @@ public class View {
         attrs.searchFloat(AttrList.scale, this::setScale);
         attrs.searchFloat(AttrList.rotation, this::setRotation);
         attrs.searchRaw(AttrList.tag, (value) -> setTag(String.valueOf(value)));
+        attrs.searchRaw(AttrList.visibility, value -> {
+            value = String.valueOf(value).toLowerCase();
+            switch (value) {
+                case "visible": visibility = VISIBILITY_VISIBLE; break;
+                case "hidden": visibility = VISIBILITY_HIDDEN; break;
+                case "gone": visibility = VISIBILITY_GONE; break;
+                default: throw new IllegalArgumentException("Invalid visibility key: "+value);
+            }
+        });
         attrs.searchFloat(AttrList.alpha, this::setAlpha);
         attrs.searchDrawable(AttrList.background, this::setBackground);
         attrs.searchRaw(AttrList.pointerIcon, value -> setPointerIcon(new PointerIcon(PointerIcon.Model.fromName(value))));
@@ -102,6 +117,10 @@ public class View {
         invalidate();
     }
 
+    public ViewTransition getTransition() {
+        return animInfo;
+    }
+
     public PointerIcon getPointerIcon() {
         return pointerIcon;
     }
@@ -111,6 +130,10 @@ public class View {
             return getParent().getFocused();
         }
         return null;
+    }
+
+    public int getVisibility() {
+        return visibility;
     }
 
     public boolean isHovered() {
@@ -128,6 +151,15 @@ public class View {
         this.enable = enable;
         state.set(StateList.ENABLE, enable);
         changeDrawableState();
+    }
+
+    public void setVisibility(int visibility) {
+        if (visibility < 0 || visibility > 2) {
+            throw new RuntimeException("INVALID VISIBILITY FLAG");
+        }
+        this.visibility = visibility;
+        measure();
+        invalidate();
     }
 
     public boolean isEnable() {
@@ -248,9 +280,22 @@ public class View {
         }
     }
 
+    public final void releaseFocus() {
+        if (parent != null) {
+            parent.requestFocus(null);
+            changeDrawableState();
+        }
+    }
+
     protected void requestNextFocus() {
         if (parent != null) {
             parent.findNextFocus(this);
+        }
+    }
+
+    protected void requestBackFocus() {
+        if (parent != null) {
+            parent.findBackFocus(this);
         }
     }
 
@@ -277,6 +322,8 @@ public class View {
     protected Size onMeasureContent(int parentWidth, int parentHeight) {
         return new Size(0,0);
     }
+
+
 
     public <T extends View> T findViewByTag(Object tag) {
         if (tag != null && Objects.equals(tag, this.tag)) {
@@ -328,8 +375,18 @@ public class View {
     }
 
     protected void onKeyEvent(KeyEvent keyEvent) {
-        if (keyEvent.getAction() == KeyEvent.ACTION_UP && keyEvent.getKeyCode() == KeyEvent.KEY_TAB && isFocused()) {
-            requestNextFocus();
+        if (keyEvent.getAction() == KeyEvent.ACTION_UP && isFocused()) {
+            switch (keyEvent.getKeyCode()) {
+                case KeyEvent.KEY_LEFT:  requestBackFocus(); break;
+                case KeyEvent.KEY_RIGHT:  requestNextFocus(); break;
+                case KeyEvent.KEY_TAB: {
+                    if (keyEvent.hasShift() || keyEvent.hasCtrl()) {
+                        requestBackFocus();
+                    } else {
+                        requestNextFocus();
+                    }
+                } break;
+            }
         }
     }
 
@@ -399,6 +456,7 @@ public class View {
             attached = true;
             onAttachedToWindow();
         }
+        animInfo.reset();
     }
 
     protected ViewRoot getViewRoot() {
@@ -411,18 +469,11 @@ public class View {
     }
 
     public int getMeasuredWidth() {
-        return measured.x;
-    }
-
-    protected void getInternalSize(Rect dest) {
-        dest.left = getPaddingLeft();
-        dest.top = getPaddingTop();
-        dest.right = getMeasuredWidth() - getPaddingRight();
-        dest.bottom = getMeasuredHeight() - getPaddingBottom();
+        return visibility == VISIBILITY_GONE ? 0 : measured.x;
     }
 
     public int getMeasuredHeight() {
-        return measured.y;
+        return visibility == VISIBILITY_GONE ? 0 : measured.y;
     }
 
     public ViewGroup.LayoutParams getLayoutParams() {
@@ -456,8 +507,13 @@ public class View {
     }
 
     public boolean isVisible() {
-        boolean basic = parent != null && parent.isVisible() &&
-                bounds.width() > 0 && bounds.height() > 0;
+        boolean basic =
+                visibility == VISIBILITY_VISIBLE &&
+                parent != null &&
+                parent.isVisible() &&
+                bounds.width() > 0 &&
+                bounds.height() > 0;
+
         if (basic) {
             basic &= bounds.left < parent.getMeasuredWidth();
             basic &= bounds.top < parent.getMeasuredHeight();

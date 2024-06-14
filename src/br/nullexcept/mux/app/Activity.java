@@ -15,13 +15,11 @@ public class Activity extends Context {
     private WindowState windowState;
     ActivityStack stack;
 
-    public void onCreate(){
+    public void onCreate() {
         running = true;
         AttributeList attrs = getResources().obtainStyled("Widget.Window");
-        attrs.searchText("title", (text)-> mWindow.setTitle(""+text));
+        attrs.searchText("title", (text) -> mWindow.setTitle("" + text));
         attrs.searchDrawable("icon", (icon) -> mWindow.setIcon(icon));
-        attrs.searchDimension("width", (size) -> mWindow.setSize(size.intValue(), mWindow.getHeight()));
-        attrs.searchDimension("height", (size) -> mWindow.setSize(mWindow.getWidth(), size.intValue()));
     }
 
     public void onDestroy() {

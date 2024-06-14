@@ -17,6 +17,6 @@ public class RoundedShape extends Shape {
 
     @Override
     public void draw(Canvas canvas, Paint paint) {
-        canvas.drawRoundRect(0,0,getWidth(),getHeight(), radius.left, radius.top, radius.right, radius.bottom,paint);
+        canvas.drawRoundRect(bounds, radius,paint);
     }
 }

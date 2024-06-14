@@ -17,4 +17,8 @@ public class Point {
         this.x = x;
         this.y = y;
     }
+
+    public void set(Point position) {
+        this.set(position.x, position.y);
+    }
 }

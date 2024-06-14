@@ -2,19 +2,16 @@ package br.nullexcept.mux.app;
 
 import br.nullexcept.mux.C;
 import br.nullexcept.mux.core.texel.TexelAPI;
-import br.nullexcept.mux.lang.Valuable;
-import br.nullexcept.mux.utils.Log;
 import br.nullexcept.mux.view.Window;
 import org.lwjgl.egl.EGL;
 import org.lwjgl.egl.EGL10;
-import org.lwjgl.egl.EGL11;
 import org.lwjgl.glfw.GLFWNativeEGL;
 import org.lwjgl.opengles.GLES;
-import org.lwjgl.system.MemoryUtil;
 
-import java.nio.IntBuffer;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -22,22 +19,26 @@ public class Application {
     private static long lastGc = System.currentTimeMillis();
     private static final HashMap<String, Service> services = new HashMap<>();
     private static final ArrayList<ActivityStack> activities = new ArrayList<>();
+    private static Project current;
 
-    public static void initialize(Valuable<Activity> creator){
+    public static void initialize(Project project){
+        Application.current = project;
+        Files.build();
+
         glfwInit();
-
         setupEGL();
 
-        long window = glfwCreateWindow(1,1,"[MasterUI - Core]",0, 0);
+        long window = glfwCreateWindow(1,1,"[MasterUI:Core]",0, 0);
         glfwMakeContextCurrent(window);
         glfwSwapInterval(0);
+
         C.GLFW_CONTEXT = window;
         GLES.createCapabilities();
         TexelAPI.initialize();
         Looper loop = new Looper();
         Looper.mainLooper = loop;
         loop.initialize();
-        Activity nw = creator.get();
+        Activity nw = project.getLaunch().make();
         nw.stack = new ActivityStack(nw);
         loop.postDelayed(()->boot(TexelAPI.createWindow(), nw), 0);
         loop.post(Application::loop);
@@ -169,5 +170,39 @@ public class Application {
             service.onDestroy();
         }).start();
         return (T) service;
+    }
+
+
+    protected static class Files {
+        public static File DEVICE_DATA;
+        public static File APP_DIR;
+
+        private static void build() {
+            String appId = "";
+            {
+                final String allowed = " ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._-";
+                String pack = current.getPackage() + "";
+                for (int i = 0; i < pack.length(); i++) {
+                    if (allowed.indexOf(pack.charAt(i)) >= 0) {
+                        appId += pack.charAt(i);
+                    } else {
+                        appId += '.';
+                    }
+                }
+            }
+            Map<String, String> env = System.getenv();
+            { // Obtain app data dir
+                if (env.containsKey("APPDATA")) {
+                    DEVICE_DATA = new File(env.get("APPDATA")); // WINDOWS DEVICE
+                } else if (env.containsKey("HOME")) { // UNIX DEVICES (MAC-OS, LINUX, UNIX)
+                    DEVICE_DATA = new File(env.get("HOME"), ".local/share");
+                } else {
+                    DEVICE_DATA = new File(System.getProperty("user.home"), ".var");
+                }
+                DEVICE_DATA.mkdirs();
+                APP_DIR = new File(DEVICE_DATA, "MasterApps/" + appId).getAbsoluteFile();
+                APP_DIR.mkdirs();
+            }
+        }
     }
 }

@@ -6,6 +6,7 @@ import br.nullexcept.mux.res.AssetsManager;
 import br.nullexcept.mux.res.LayoutInflater;
 import br.nullexcept.mux.res.Resources;
 
+import java.io.File;
 import java.util.HashMap;
 
 public class Context {
@@ -18,6 +19,10 @@ public class Context {
     public Context(){
         mResource = new Resources(this);
         applets.putAll(TexelAPI.obtainApplets());
+    }
+
+    public File getFilesDir() {
+        return Application.Files.APP_DIR;
     }
 
     protected void onParcelChanged(Parcel parcel) {}

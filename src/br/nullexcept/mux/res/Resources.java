@@ -8,6 +8,7 @@ import br.nullexcept.mux.lang.xml.XmlElement;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWVidMode;
 
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -76,6 +77,10 @@ public final class Resources {
             if (Manager.exists("values-"+tag+"/strings.xml"))
                 language.merge(requestXml("values-"+tag+"/strings"));
         }
+    }
+
+    public InputStream openRawStream(String path) {
+        return Manager.openDocument(fixPath(path, "raw"));
     }
 
     public String getString(String id) {

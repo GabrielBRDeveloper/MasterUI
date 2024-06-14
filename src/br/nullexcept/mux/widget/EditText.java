@@ -246,7 +246,6 @@ public class EditText extends View {
 
     @Override
     protected void onKeyEvent(KeyEvent keyEvent) {
-        super.onKeyEvent(keyEvent);
         if (keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
             switch (keyEvent.getKeyCode()) {
                 case KeyEvent.KEY_ENTER:
@@ -302,7 +301,11 @@ public class EditText extends View {
             }
         } else {
             if (keyEvent.getKeyCode() == KeyEvent.KEY_TAB) {
-                requestNextFocus();
+                if (keyEvent.hasCtrl() || keyEvent.hasShift()) {
+                    requestBackFocus();
+                } else {
+                    requestNextFocus();
+                }
             }
         }
     }
