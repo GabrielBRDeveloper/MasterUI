@@ -1,65 +1,60 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<FrameLayout
+<LinearLayout
     width="match_parent"
-    height="match_parent"
-    background="?colorSurface"
-    padding="20dp"
-    orientation="horizontal">
-  <CardLayout
+    height="wrap_content"
+    paddingBottom="8dp"
+    background="#AAA">
+
+  <LinearLayout
       width="match_parent"
-      height="match_parent"
-      radius="20dp">
+      height="wrap_content"
+      orientation="horizontal"
+      padding="10dp"
+      background="#555"
+      gravity="center">
+
+    <ImageView
+        id="icon"
+        width="64dp"
+        height="64dp"
+        padding="10dp"
+        background="#F0F"/>
+
     <LinearLayout
         width="match_parent"
-        height="match_parent"
-        id="content">
+        height="wrap_content"
+        paddingLeft="20dp"
+        background="#F00">
 
       <TextView
-          width="wrap_content"
+          tag="title"
+          width="match_parent"
           height="wrap_content"
-          textSize="14sp"
-          text="Hello world"/>
-
-      <Button
-        width="300dp"
-        height="64dp"/>
+          textSize="19dp"
+          text="Title"/>
 
       <TextView
-          width="wrap_content"
+          tag="subtitle"
+          width="match_parent"
           height="wrap_content"
-          textSize="14sp"
-          text="That is a example of draw with card layout"/>
-
-      <Button
-          width="300dp"
-          height="64dp"
-          visibility="gone"/>
+          textSize="14dp"
+          textStyle="bold"
+          textColor="?colorPrimary"
+          paddingTop="4dp"
+          paddingBottom="3dp"
+          text="Title"/>
 
       <TextView
-          id="animate"
-          width="wrap_content"
+          tag="desc"
+          width="match_parent"
           height="wrap_content"
-          textSize="14sp"
-          background="#CC0000"
-          text="That allow create UIs a like Material3"/>
-
-      <Button
-          width="300dp"
-          height="64dp"/>
-
-      <EditText
-        width="128dp"
-        height="128dp"/>
-
-      <EditText
-          width="128dp"
-          height="128dp"/>
-      <EditText
-          width="128dp"
-          height="128dp"/>
-      <EditText
-          width="128dp"
-          height="128dp"/>
+          textSize="13dp"
+          alpha="0.5"
+          paddingTop="4dp"
+          paddingBottom="3dp"
+          text="Title"/>
     </LinearLayout>
-  </CardLayout>
-</FrameLayout>
+
+  </LinearLayout>
+
+</LinearLayout>

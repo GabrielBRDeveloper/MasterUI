@@ -243,13 +243,18 @@ public class ViewGroup extends View {
         return (T) children.get(index);
     }
 
-    public void addChild(View view){
+    public void addChild(View view, LayoutParams params) {
+        view.setLayoutParams(params == null ? new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT) : params);
         children.add(view);
         view.setParent(this);
         onChildAdded(view);
         view.addFlag(View.FLAG_REQUIRES_DRAW);
         requestLayout();
         notifyTreeChanged();
+    }
+
+    public void addChild(View view){
+        addChild(view, view.getLayoutParams());
     }
 
     protected void requestFocus(View focused){

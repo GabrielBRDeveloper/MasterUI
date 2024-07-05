@@ -39,11 +39,14 @@ public class FrameLayout extends ViewGroup {
     }
 
     @Override
-    public void addChild(View view) {
-        LayoutParams params = new LayoutParams(0,0);
-        params.from(view.getLayoutParams());
-        view.setLayoutParams(params);
-        super.addChild(view);
+    public void addChild(View view, ViewGroup.LayoutParams params) {
+        if (params == null) {
+            params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+        LayoutParams newParams = new LayoutParams(0,0);
+        newParams.from(params);
+
+        super.addChild(view, newParams);
     }
 
     public static class LayoutParams extends MarginLayoutParams {

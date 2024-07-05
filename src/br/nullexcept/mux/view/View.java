@@ -593,6 +593,15 @@ public class View {
         return tag;
     }
 
+    @Override
+    public String toString() {
+        return getClass().getSimpleName()+" { " +
+                "id=" + id +";"+
+                "tag=" + tag +";" +
+                "attached="+ (getViewRoot() != null) +";"+
+                "}";
+    }
+
     public interface OnClickListener {
         void onClick(View view);
     }

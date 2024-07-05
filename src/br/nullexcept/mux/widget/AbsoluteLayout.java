@@ -18,13 +18,16 @@ public class AbsoluteLayout extends ViewGroup {
     }
 
     @Override
-    public void addChild(View view) {
-        if (!(view.getLayoutParams() instanceof LayoutParams)){
-            view.setLayoutParams(new LayoutParams(view.getLayoutParams().width, view.getLayoutParams().height));
+    public void addChild(View view, ViewGroup.LayoutParams params) {
+        if (params == null) {
+            params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         }
-        super.addChild(view);
+        if (!(params instanceof LayoutParams)) {
+            params = new LayoutParams(params.width, params.height);
+        }
+        super.addChild(view, params);
     }
-
+    
     @Override
     protected Point getChildLocation(View view) {
         LayoutParams params = (LayoutParams) view.getLayoutParams();

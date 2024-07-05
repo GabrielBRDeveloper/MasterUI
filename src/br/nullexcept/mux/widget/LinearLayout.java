@@ -7,6 +7,8 @@ import br.nullexcept.mux.graphics.Size;
 import br.nullexcept.mux.res.AttributeList;
 import br.nullexcept.mux.view.*;
 
+import java.util.List;
+
 public class LinearLayout extends ViewGroup {
     public static int ORIENTATION_HORIZONTAL = 1;
     public static int ORIENTATION_VERTICAL = 0;
@@ -25,7 +27,7 @@ public class LinearLayout extends ViewGroup {
         attrs = initialAttributes();
         attrs.searchDimension(AttrList.dividerSize, value -> dividerSize = value.intValue());
         attrs.searchRaw(AttrList.orientation, value -> {
-            if ("horizontal".equals(value)){
+            if ("horizontal".equals((value+"").toLowerCase())){
                 setOrientation(ORIENTATION_HORIZONTAL);
             } else {
                 setOrientation(ORIENTATION_VERTICAL);
@@ -33,46 +35,119 @@ public class LinearLayout extends ViewGroup {
         });
     }
 
-
     @Override
-    public void addChild(View view) {
-        LayoutParams params = new LayoutParams(0,0);
-        params.from(view.getLayoutParams());
-        view.setLayoutParams(params);
-        super.addChild(view);
+    public void addChild(View view, ViewGroup.LayoutParams params) {
+        if (params == null) {
+            params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+
+        LayoutParams newParams = new LayoutParams(0,0);
+        newParams.from(params);
+        view.setLayoutParams(newParams);
+
+        super.addChild(view, newParams);
     }
 
     @Override
     protected Point getChildLocation(View view) {
-        Point point = new Point(getPaddingLeft(), getPaddingTop());
-        int mh = getMeasuredHeight() - getPaddingTop() - getPaddingBottom();
-        int mw = getMeasuredWidth()  - getPaddingRight() - getPaddingLeft();
-        int index = getChildIndex(view);
-        Gravity.applyGravity(getGravity(),view.getMeasuredWidth(),view.getMeasuredHeight(),mw,mh,rect);
+        return orientation == ORIENTATION_VERTICAL ? getChildLocationVertical(view) : getChildLocationHorizontal(view);
+    }
 
-        for (int i = 0; i < index; i++){
+    private Size measureHorizontal() {
+        Size size = new Size();
+        for (int i = 0; i < getChildrenCount(); i++) {
             View child = getChildAt(i);
+            if (child.getVisibility() == VISIBILITY_GONE) continue;
             LayoutParams params = (LayoutParams) child.getLayoutParams();
-            if (orientation == ORIENTATION_HORIZONTAL){
-                point.x += child.getMeasuredWidth() + params.getMarginLeft() + params.getMarginRight() + dividerSize;
-            } else {
-                point.y += child.getMeasuredHeight() + params.getMarginTop() + params.getMarginBottom() + dividerSize;
-            }
+            size.width += child.getMeasuredWidth() + params.getMarginLeft() + params.getMarginRight();
+            size.height = Math.max(child.getMeasuredHeight() + params.getMarginTop() + params.getMarginBottom(), size.height);
+            if (i != getChildrenCount()) size.width += dividerSize;
         }
+        return size;
+    }
+
+    private Size measureVertical() {
+        Size size = new Size();
+        for (int i = 0; i < getChildrenCount(); i++) {
+            View child = getChildAt(i);
+            if (child.getVisibility() == VISIBILITY_GONE) continue;
+            LayoutParams params = (LayoutParams) child.getLayoutParams();
+            size.width  = Math.max(size.width, child.getMeasuredWidth() + params.getMarginLeft() + params.getMarginRight());
+            size.height += child.getMeasuredHeight() + params.getMarginTop() + params.getMarginBottom();
+            if (i != getChildrenCount()) size.height += dividerSize;
+        }
+        return size;
+    }
+
+    @Override
+    protected Size onMeasureContent(int parentWidth, int parentHeight) {
+        return super.onMeasureContent(parentWidth, parentHeight);
+    }
+
+    private Point getChildLocationVertical(View view) {
+        if (view.getVisibility() == VISIBILITY_GONE)
+            return new Point(0,0);
+        Size wrapSize = measureVertical();
+        LayoutParams params = (LayoutParams) view.getLayoutParams();
+
+        int w = Math.max(0, getMeasuredWidth() - getPaddingLeft() - getPaddingRight() - params.getMarginRight());
+        int h = Math.max(0, getMeasuredHeight() - getPaddingTop() - getPaddingBottom() - params.getMarginBottom());
+
+        int posX = Gravity.apply(Gravity.horizontal(getGravity()),w,wrapSize.width);
+        int posY = Gravity.apply(Gravity.vertical(getGravity()),h, wrapSize.height);
+
+        posX = Math.max(0, posX);
+        posY = Math.max(0, posY);
+
+        Point pos = new Point(0, posY);
+        for (int i = 0; i < getChildrenCount(); i++) {
+            View child = getChildAt(i);
+            if (child.equals(view)) break;
+            if (child.getVisibility() == VISIBILITY_GONE) continue;
+            LayoutParams childParams = (LayoutParams) child.getLayoutParams();
+            pos.y += childParams.getMarginTop() + childParams.getMarginBottom() + child.getMeasuredHeight();
+        }
+
+        pos.x = posX + Gravity.apply(Gravity.horizontal(getGravity()),wrapSize.width,view.getMeasuredWidth());
+        pos.x += params.getMarginLeft();
+
+        pos.y += getPaddingTop();
+        pos.x += getPaddingLeft();
+
+        return pos;
+    }
+
+    private Point getChildLocationHorizontal(View view) {
+        if (view.getVisibility() == VISIBILITY_GONE)
+            return new Point(0,0);
+        Size wrapSize = measureHorizontal();
 
         LayoutParams params = (LayoutParams) view.getLayoutParams();
 
-        point.x += params.getMarginLeft() - params.getMarginRight();
-        point.y += params.getMarginTop() - params.getMarginBottom();
+        int w = Math.max(0, getMeasuredWidth() - getPaddingLeft() - getPaddingRight() - params.getMarginRight());
+        int h = Math.max(0, getMeasuredHeight() - getPaddingBottom() - getPaddingTop() - params.getMarginBottom());
 
-        if (orientation == ORIENTATION_HORIZONTAL) {
-            point.y += rect.top;
-        } else {
-            point.x += rect.left;
+        int posX = Gravity.apply(Gravity.horizontal(getGravity()),w,wrapSize.width);
+        int posY = Gravity.apply(Gravity.vertical(getGravity()),h, wrapSize.height);
+
+        posX = Math.max(0, posX);
+        posY = Math.max(0, posY);
+
+        Point pos = new Point(posX, 0);
+        for (int i = 0; i < getChildrenCount(); i++) {
+            View child = getChildAt(i);
+            if (child.equals(view)) break;
+            if (child.getVisibility() == VISIBILITY_GONE) continue;
+            LayoutParams childParams = (LayoutParams) child.getLayoutParams();
+            pos.x += dividerSize;
+            pos.x += childParams.getMarginLeft() + childParams.getMarginRight() + child.getMeasuredWidth();
         }
 
+        pos.y = posY + Gravity.apply(Gravity.vertical(getGravity()),wrapSize.height,view.getMeasuredHeight());
+        pos.y += params.getMarginTop() + getPaddingTop();
+        pos.x += getPaddingLeft();
 
-        return point;
+        return pos;
     }
 
     public void setOrientation(int orientation) {
