@@ -8,6 +8,7 @@ import br.nullexcept.mux.app.Project;
 public class TexelProject implements Project {
     private final String package_;
     private final Launch<Activity> initial;
+    private TexelAPI core = new TexelAPI();
 
     public <T extends Activity> TexelProject(String package_, Launch<T> initial) {
         this.package_ = package_;
@@ -26,6 +27,6 @@ public class TexelProject implements Project {
 
     @Override
     public CoreBoostrap getCoreBootstrap() {
-        return new TexelAPI();
+        return core;
     }
 }
