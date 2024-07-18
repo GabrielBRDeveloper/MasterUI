@@ -1,6 +1,5 @@
 package br.nullexcept.mux.app;
 
-import br.nullexcept.mux.core.texel.TexelAPI;
 import br.nullexcept.mux.res.AttributeList;
 import br.nullexcept.mux.view.View;
 import br.nullexcept.mux.view.Window;
@@ -84,7 +83,7 @@ public class Activity extends Context {
             Activity nw = launch.make();
             nw._args = launch;
             nw.stack = new ActivityStack(nw);
-            Application.boot(TexelAPI.createWindow(), nw);
+            Application.boot(Application.getProject().getCoreBootstrap().makeWindow(), nw);
         }
     }
 

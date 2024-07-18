@@ -18,7 +18,7 @@ import java.util.Map;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.glfwSwapInterval;
 
-public class TexelAPI implements CoreBoostrap {
+class TexelAPI implements CoreBoostrap {
     static final HashMap<String, Applet> applets = new HashMap<>();
     private static final HashMap<PointerIcon.Model, Long> pointers = new HashMap<>();
 
@@ -95,5 +95,10 @@ public class TexelAPI implements CoreBoostrap {
     @Override
     public Window makeWindow() {
         return createWindow();
+    }
+
+    @Override
+    public Map<? extends String, ? extends Applet> getSystemApplets() {
+        return TexelAPI.obtainApplets();
     }
 }

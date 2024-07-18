@@ -3,7 +3,7 @@ package br.nullexcept.mux.core.texel;
 import br.nullexcept.mux.graphics.Paint;
 import br.nullexcept.mux.graphics.fonts.FontMetrics;
 
-public class TexelFontMetrics extends FontMetrics  {
+class TexelFontMetrics extends FontMetrics  {
     private final Paint paint;
 
     protected TexelFontMetrics(Paint paint){

@@ -7,7 +7,7 @@ import br.nullexcept.mux.utils.BufferUtils;
 
 import java.io.InputStream;
 
-public class TexelFontFactory extends TypefaceFactory {
+class TexelFontFactory extends TypefaceFactory {
 
     public TexelFontFactory() {
         Typeface.DEFAULT = decodeTypeface(TexelFontFactory.class.getResourceAsStream("/res/fonts/Roboto/Roboto-Regular.ttf"));

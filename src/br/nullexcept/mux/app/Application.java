@@ -1,6 +1,5 @@
 package br.nullexcept.mux.app;
 
-import br.nullexcept.mux.core.texel.TexelAPI;
 import br.nullexcept.mux.view.Window;
 
 import java.io.File;
@@ -14,10 +13,12 @@ public class Application {
     private static final ArrayList<ActivityStack> activities = new ArrayList<>();
     private static Project current;
 
-    public static void initialize(Project project){
-        initialize(project, new TexelAPI());
+    public static Project getProject() {
+        return current;
     }
-    public static void initialize(Project project, CoreBoostrap boostrap){
+
+    public static void initialize(Project project){
+        CoreBoostrap boostrap = project.getCoreBootstrap();;
         Application.current = project;
         Looper loop = new Looper();
         Looper.mainLooper = loop;

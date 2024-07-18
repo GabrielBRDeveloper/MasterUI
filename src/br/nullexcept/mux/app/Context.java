@@ -1,6 +1,5 @@
 package br.nullexcept.mux.app;
 
-import br.nullexcept.mux.core.texel.TexelAPI;
 import br.nullexcept.mux.lang.Parcel;
 import br.nullexcept.mux.res.AssetsManager;
 import br.nullexcept.mux.res.LayoutInflater;
@@ -18,7 +17,7 @@ public class Context {
 
     public Context(){
         mResource = new Resources(this);
-        applets.putAll(TexelAPI.obtainApplets());
+        applets.putAll(Application.getProject().getCoreBootstrap().getSystemApplets());
     }
 
     public File getFilesDir() {
