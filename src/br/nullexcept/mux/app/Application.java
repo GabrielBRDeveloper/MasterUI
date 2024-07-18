@@ -1,19 +1,12 @@
 package br.nullexcept.mux.app;
 
-import br.nullexcept.mux.C;
 import br.nullexcept.mux.core.texel.TexelAPI;
 import br.nullexcept.mux.view.Window;
-import org.lwjgl.egl.EGL;
-import org.lwjgl.egl.EGL10;
-import org.lwjgl.glfw.GLFWNativeEGL;
-import org.lwjgl.opengles.GLES;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.lwjgl.glfw.GLFW.*;
 
 public class Application {
     private static long lastGc = System.currentTimeMillis();
@@ -22,54 +15,28 @@ public class Application {
     private static Project current;
 
     public static void initialize(Project project){
+        initialize(project, new TexelAPI());
+    }
+    public static void initialize(Project project, CoreBoostrap boostrap){
         Application.current = project;
-        Files.build();
-
-        glfwInit();
-        setupEGL();
-
-        long window = glfwCreateWindow(1,1,"[MasterUI:Core]",0, 0);
-        glfwMakeContextCurrent(window);
-        glfwSwapInterval(0);
-
-        C.GLFW_CONTEXT = window;
-        GLES.createCapabilities();
-        TexelAPI.initialize();
         Looper loop = new Looper();
         Looper.mainLooper = loop;
+        Files.build();
         loop.initialize();
+        boostrap.boot();
+
         Activity nw = project.getLaunch().make();
         nw.stack = new ActivityStack(nw);
-        loop.postDelayed(()->boot(TexelAPI.createWindow(), nw), 0);
+        loop.postDelayed(()->boot(boostrap.makeWindow(), nw), 0);
         loop.post(Application::loop);
         loop.loop();
-        TexelAPI.destroy();
-        glfwTerminate();
+        boostrap.finish();
         System.gc();
         Looper.sleep(2000); // Wait for all services stop
         System.exit(0);
     }
 
-    private static void setupEGL() {
-        glfwDefaultWindowHints();
-        if (C.Config.SET_WINDOW_GL_HINT) {
-            glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, C.Config.WINDOW_GL_VERSION[0]);
-            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, C.Config.WINDOW_GL_VERSION[1]);
-            glfwWindowHint(GLFW_CONTEXT_CREATION_API, GLFW_EGL_CONTEXT_API);
-            glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
-
-            long display = GLFWNativeEGL.glfwGetEGLDisplay();
-            try {// Setup EGL
-                int[][] version = new int[2][1];
-                EGL10.eglInitialize(display, version[0], version[1]);
-                EGL.createDisplayCapabilities(display, version[0][0], version[1][0]);
-            } catch (Exception e) {}
-        }
-        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-    }
-
     private static void loop(){
-        glfwPollEvents();
         if (System.currentTimeMillis() - lastGc > 5000){
             System.gc();
             lastGc = System.currentTimeMillis();
