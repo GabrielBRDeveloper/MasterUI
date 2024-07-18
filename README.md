@@ -13,7 +13,7 @@ Java library for make a beautiful apps, based in android code design.
 
 public class Example extends Activity {
     public static void main(String[] args) {
-        Application.initialize(Example::new);
+        Application.initialize(new TexelProject("application.package",new Launch<>(Example.class)));
     }
 
     @Override
