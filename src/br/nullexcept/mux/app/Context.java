@@ -10,14 +10,13 @@ import java.util.HashMap;
 
 public class Context {
     public static final String CLIPBOARD_APPLET = "applet.os.clipboard";
+    public static final String DISPLAY_APPLET = "applet.os.display";
 
     private final Resources mResource;
-    private final HashMap<String, Applet> applets = new HashMap<>();
     Launch _args;
 
     public Context(){
         mResource = new Resources(this);
-        applets.putAll(Application.getProject().getCoreBootstrap().getSystemApplets());
     }
 
     public File getFilesDir() {
@@ -39,7 +38,7 @@ public class Context {
     }
 
     public <T extends Applet> T getApplet(String name) {
-        return (T) applets.get(name);
+        return (T) Application.getProject().getCoreBootstrap().getSystemApplets().get(name);
     }
 
     public LayoutInflater getLayoutInflater(){

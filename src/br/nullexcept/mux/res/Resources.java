@@ -1,7 +1,9 @@
 package br.nullexcept.mux.res;
 
 import br.nullexcept.mux.app.Context;
+import br.nullexcept.mux.app.applets.DisplayApplet;
 import br.nullexcept.mux.graphics.Drawable;
+import br.nullexcept.mux.graphics.Size;
 import br.nullexcept.mux.graphics.fonts.Typeface;
 import br.nullexcept.mux.graphics.fonts.TypefaceFactory;
 import br.nullexcept.mux.lang.xml.XmlElement;
@@ -41,7 +43,7 @@ public final class Resources {
 
     public Resources(Context ctx){
         this.context = ctx;
-        metrics = new DisplayMetrics();
+        metrics = new DisplayMetrics(ctx);
         inflater = new LayoutInflater(ctx);
         menuInflater = new MenuInflater(this);
         assetsManager = new AssetsManager("/assets/", ctx.getClass());
@@ -190,22 +192,17 @@ public final class Resources {
         public final double sp;
         public final double px = 1.0;
 
-        public DisplayMetrics() {
-            long monitor = GLFW.glfwGetPrimaryMonitor();
-            GLFWVidMode mode =GLFW.glfwGetVideoMode(monitor);
-            int dw = mode.width();
+        public DisplayMetrics(Context ctx) {
+            DisplayApplet manager = ctx.getApplet(Context.DISPLAY_APPLET);
+            DisplayInformation display = manager.getPrimaryDisplay();
+            int dw = display.getResolution().width;
             {
-                int[][] sizes = new int[2][1];
-                GLFW.glfwGetMonitorPhysicalSize(monitor, sizes[0], sizes[1]);
-                pm = (double) dw / sizes[0][0];
+                Size realSize = display.getPhysicalSize();
+                pm = (double) dw / realSize.width;
                 pt = (pm * 0.35277777777778); //72pt = 1inch
                 cm = pm * 10;
             }
-            {
-                float[] scale = new float[1];
-                GLFW.glfwGetMonitorContentScale(monitor,scale,scale);
-                sp = scale[0];
-            }
+            sp = display.getMonitorScale();
         }
     }
 

@@ -24,12 +24,11 @@ class TexelAPI implements CoreBoostrap {
 
     public static void initialize() {
         VgTexel.initialize();
+        GlfwApplets.initialize();
         pointers.put(PointerIcon.Model.ARROW, GLFW.glfwCreateStandardCursor(GLFW.GLFW_ARROW_CURSOR));
         pointers.put(PointerIcon.Model.HAND, GLFW.glfwCreateStandardCursor(GLFW.GLFW_HAND_CURSOR));
         pointers.put(PointerIcon.Model.RESIZE, GLFW.glfwCreateStandardCursor(GLFW.GLFW_HRESIZE_CURSOR));
         pointers.put(PointerIcon.Model.TEXT_SELECTION, GLFW.glfwCreateStandardCursor(GLFW.GLFW_IBEAM_CURSOR));
-
-        GlfwApplets.initialize();
     }
 
     public static void destroy() {
