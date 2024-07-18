@@ -27,6 +27,7 @@ class VgTexel {
             clipContext = NanoVGGLES2.nvgCreate(NanoVGGLES2.NVG_ANTIALIAS);
             globalPaint.setTextSize(-1f);
             C.VG_CONTEXT = globalContext;
+            C.TYPEFACE_FACTORY = new TexelFontFactory();
             C.BITMAP_FACTORY = new TexelBitmapFactory();
             GLShaderList.build();
 

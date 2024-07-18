@@ -1,6 +1,7 @@
 package br.nullexcept.mux;
 
 import br.nullexcept.mux.graphics.BitmapFactory;
+import br.nullexcept.mux.graphics.fonts.TypefaceFactory;
 import br.nullexcept.mux.utils.Log;
 
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ public class C {
     public static long VG_CONTEXT = -1;
     public static long GLFW_CONTEXT = 0;
     public static BitmapFactory BITMAP_FACTORY;
+    public static TypefaceFactory TYPEFACE_FACTORY;
 
     public static class Config {
         public static boolean SET_WINDOW_GL_HINT = true;

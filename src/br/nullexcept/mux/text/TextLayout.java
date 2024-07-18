@@ -11,7 +11,7 @@ public class TextLayout {
     private final FontMetrics font;
     private final Size viewport = new Size();
     private final Selection selection;
-    private final TextRenderer drawer;
+    private TextRenderer drawer;
 
     private int gravity;
     // [INTERNAL LINE] => LINE | START | END | WIDTH
@@ -23,6 +23,10 @@ public class TextLayout {
         this.text = text;
         this.selection = text.getSelection();
         this.font = paint.getFontMetrics();
+        this.drawer = drawer;
+    }
+
+    public void setRenderer(TextRenderer drawer) {
         this.drawer = drawer;
     }
 

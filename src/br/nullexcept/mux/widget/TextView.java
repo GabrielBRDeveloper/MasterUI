@@ -74,6 +74,10 @@ public class TextView extends View {
         invalidate();
     }
 
+    protected TextLayout getLayout() {
+        return layout;
+    }
+
     @Override
     protected void changeDrawableState() {
         super.changeDrawableState();

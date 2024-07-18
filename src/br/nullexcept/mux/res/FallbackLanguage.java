@@ -5,7 +5,7 @@ import br.nullexcept.mux.lang.xml.XmlElement;
 import java.util.HashMap;
 
 class FallbackLanguage {
-    private HashMap<String, String> values = new HashMap<>();
+    private final HashMap<String, String> values = new HashMap<>();
 
     public String getString(String id) {
         return values.getOrDefault(id, id);
