@@ -5,7 +5,7 @@ on:
     branches:
       - master
       - dev
-    pull_request:
+  pull_request:
 
 jobs:
   build-linux:
@@ -24,10 +24,10 @@ jobs:
       - name: Upload Core
         uses: actions/upload-artifact@v4
         with:
-          name: MasterUI ( Core )
+          name: MasterUI - Core
           path: ./out/artifacts/core/core.jar
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: MasterUI ( Texel )
+          name: MasterUI - Texel
           path: ./out/artifacts/texel/texel.jar
