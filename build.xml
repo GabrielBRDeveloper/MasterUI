@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="masterui" default="all">
+  
+  
+  <property file="build.properties"/>
+  <!-- Uncomment the following property if no tests compilation is needed -->
+  <!-- 
+  <property name="skip.tests" value="true"/>
+   -->
+  
+  <!-- Compiler options -->
+  
+  <property name="compiler.debug" value="on"/>
+  <property name="compiler.generate.no.warnings" value="off"/>
+  <property name="compiler.args" value=""/>
+  <property name="compiler.max.memory" value="700m"/>
+  <patternset id="ignored.files">
+    <exclude name="**/*.hprof/**"/>
+    <exclude name="**/*.pyc/**"/>
+    <exclude name="**/*.pyo/**"/>
+    <exclude name="**/*.rbc/**"/>
+    <exclude name="**/*.yarb/**"/>
+    <exclude name="**/*~/**"/>
+    <exclude name="**/.DS_Store/**"/>
+    <exclude name="**/.git/**"/>
+    <exclude name="**/.hg/**"/>
+    <exclude name="**/.svn/**"/>
+    <exclude name="**/CVS/**"/>
+    <exclude name="**/__pycache__/**"/>
+    <exclude name="**/_svn/**"/>
+    <exclude name="**/vssver.scc/**"/>
+    <exclude name="**/vssver2.scc/**"/>
+  </patternset>
+  <patternset id="library.patterns">
+    <include name="*.apk"/>
+    <include name="*.egg"/>
+    <include name="*.zip"/>
+    <include name="*.war"/>
+    <include name="*.swc"/>
+    <include name="*.ear"/>
+    <include name="*.jar"/>
+    <include name="*.ane"/>
+  </patternset>
+  <patternset id="compiler.resources">
+    <exclude name="**/?*.java"/>
+    <exclude name="**/?*.form"/>
+    <exclude name="**/?*.class"/>
+    <exclude name="**/?*.groovy"/>
+    <exclude name="**/?*.scala"/>
+    <exclude name="**/?*.flex"/>
+    <exclude name="**/?*.kt"/>
+    <exclude name="**/?*.clj"/>
+    <exclude name="**/?*.aj"/>
+  </patternset>
+  
+  <!-- JDK definitions -->
+  
+  <property name="jdk.bin.1.8" value="${jdk.home.1.8}/bin"/>
+  <path id="jdk.classpath.1.8">
+    <fileset dir="${jdk.home.1.8}">
+      <include name="jre/lib/charsets.jar"/>
+      <include name="jre/lib/ext/cldrdata.jar"/>
+      <include name="jre/lib/ext/dnsns.jar"/>
+      <include name="jre/lib/ext/icedtea-sound.jar"/>
+      <include name="jre/lib/ext/jaccess.jar"/>
+      <include name="jre/lib/ext/java-atk-wrapper.jar"/>
+      <include name="jre/lib/ext/localedata.jar"/>
+      <include name="jre/lib/ext/nashorn.jar"/>
+      <include name="jre/lib/ext/sunec.jar"/>
+      <include name="jre/lib/ext/sunjce_provider.jar"/>
+      <include name="jre/lib/ext/sunpkcs11.jar"/>
+      <include name="jre/lib/ext/zipfs.jar"/>
+      <include name="jre/lib/jce.jar"/>
+      <include name="jre/lib/jfr.jar"/>
+      <include name="jre/lib/jsse.jar"/>
+      <include name="jre/lib/management-agent.jar"/>
+      <include name="jre/lib/resources.jar"/>
+      <include name="jre/lib/rt.jar"/>
+    </fileset>
+  </path>
+  
+  <property name="project.jdk.home" value="${jdk.home.1.8}"/>
+  <property name="project.jdk.bin" value="${jdk.bin.1.8}"/>
+  <property name="project.jdk.classpath" value="jdk.classpath.1.8"/>
+  
+  
+  <!-- Project Libraries -->
+  
+  <path id="library.texel-libs.classpath">
+    <fileset dir="${basedir}/texel/libs">
+      <patternset refid="library.patterns"/>
+    </fileset>
+    <fileset dir="${basedir}/texel/libs/natives">
+      <patternset refid="library.patterns"/>
+    </fileset>
+  </path>
+  
+  <!-- Modules -->
+  
+  
+  <!-- Module core -->
+  
+  <dirname property="module.core.basedir" file="${ant.file}"/>
+  
+  
+  <property name="module.jdk.home.core" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.core" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.core" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.core" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="core.output.dir" value="${module.core.basedir}/out/production/core"/>
+  <property name="core.testoutput.dir" value="${module.core.basedir}/out/test/core"/>
+  
+  <path id="core.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="core.module.production.classpath">
+    <path refid="${module.jdk.classpath.core}"/>
+  </path>
+  
+  <path id="core.runtime.production.module.classpath">
+    <pathelement location="${core.output.dir}"/>
+  </path>
+  
+  <path id="core.module.classpath">
+    <path refid="${module.jdk.classpath.core}"/>
+    <pathelement location="${core.output.dir}"/>
+  </path>
+  
+  <path id="core.runtime.module.classpath">
+    <pathelement location="${core.testoutput.dir}"/>
+    <pathelement location="${core.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.core">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.core">
+    <patternset refid="excluded.from.module.core"/>
+  </patternset>
+  
+  <path id="core.module.sourcepath">
+    <dirset dir="${module.core.basedir}/core">
+      <include name="src"/>
+      <include name="res"/>
+      <include name="assets"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.core" depends="compile.module.core.production,compile.module.core.tests" description="Compile module core"/>
+  
+  <target name="compile.module.core.production" description="Compile module core; production classes">
+    <mkdir dir="${core.output.dir}"/>
+    <javac destdir="${core.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.core}/javac">
+      <compilerarg line="${compiler.args.core}"/>
+      <bootclasspath refid="core.module.bootclasspath"/>
+      <classpath refid="core.module.production.classpath"/>
+      <src refid="core.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.core"/>
+    </javac>
+    
+    <copy todir="${core.output.dir}">
+      <fileset dir="${module.core.basedir}/core/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+    <copy todir="${core.output.dir}/res">
+      <fileset dir="${module.core.basedir}/core/res">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+    <copy todir="${core.output.dir}/assets">
+      <fileset dir="${module.core.basedir}/core/assets">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.core.tests" depends="compile.module.core.production" description="compile module core; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.core" description="cleanup module">
+    <delete dir="${core.output.dir}"/>
+    <delete dir="${core.testoutput.dir}"/>
+  </target>
+  
+  
+  <!-- Module texel -->
+  
+  <dirname property="module.texel.basedir" file="${ant.file}"/>
+  
+  
+  <property name="module.jdk.home.texel" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.texel" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.texel" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.texel" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="texel.output.dir" value="${module.texel.basedir}/out/production/texel"/>
+  <property name="texel.testoutput.dir" value="${module.texel.basedir}/out/test/texel"/>
+  
+  <path id="texel.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="texel.module.production.classpath">
+    <path refid="${module.jdk.classpath.texel}"/>
+    <path refid="library.texel-libs.classpath"/>
+    <pathelement location="${core.output.dir}"/>
+  </path>
+  
+  <path id="texel.runtime.production.module.classpath">
+    <pathelement location="${texel.output.dir}"/>
+    <path refid="library.texel-libs.classpath"/>
+    <path refid="core.runtime.production.module.classpath"/>
+  </path>
+  
+  <path id="texel.module.classpath">
+    <path refid="${module.jdk.classpath.texel}"/>
+    <pathelement location="${texel.output.dir}"/>
+    <path refid="library.texel-libs.classpath"/>
+    <pathelement location="${core.testoutput.dir}"/>
+    <pathelement location="${core.output.dir}"/>
+  </path>
+  
+  <path id="texel.runtime.module.classpath">
+    <pathelement location="${texel.testoutput.dir}"/>
+    <pathelement location="${texel.output.dir}"/>
+    <path refid="library.texel-libs.classpath"/>
+    <path refid="core.runtime.module.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.texel">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.texel">
+    <patternset refid="excluded.from.module.texel"/>
+  </patternset>
+  
+  <path id="texel.module.sourcepath">
+    <dirset dir="${module.texel.basedir}/texel">
+      <include name="src"/>
+      <include name="res"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.texel" depends="compile.module.texel.production,compile.module.texel.tests" description="Compile module texel"/>
+  
+  <target name="compile.module.texel.production" depends="compile.module.core" description="Compile module texel; production classes">
+    <mkdir dir="${texel.output.dir}"/>
+    <javac destdir="${texel.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.texel}/javac">
+      <compilerarg line="${compiler.args.texel}"/>
+      <bootclasspath refid="texel.module.bootclasspath"/>
+      <classpath refid="texel.module.production.classpath"/>
+      <src refid="texel.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.texel"/>
+    </javac>
+    
+    <copy todir="${texel.output.dir}">
+      <fileset dir="${module.texel.basedir}/texel/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+    <copy todir="${texel.output.dir}/res">
+      <fileset dir="${module.texel.basedir}/texel/res">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.texel.tests" depends="compile.module.texel.production" description="compile module texel; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.texel" description="cleanup module">
+    <delete dir="${texel.output.dir}"/>
+    <delete dir="${texel.testoutput.dir}"/>
+  </target>
+  
+  <target name="init" description="Build initialization">
+    <!-- Perform any build initialization in this target -->
+  </target>
+  
+  <target name="clean" depends="clean.module.core, clean.module.texel, clean.artifact.core:jar" description="cleanup all"/>
+  
+  <target name="build.modules" depends="init, clean, compile.module.core, compile.module.texel" description="build all modules"/>
+  
+  <target name="init.artifacts">
+    <property name="artifacts.temp.dir" value="${basedir}/__artifacts_temp"/>
+    <property name="artifact.output.core:jar" value="${basedir}/out/artifacts/core"/>
+    <property name="artifact.output.texel:jar" value="${basedir}/out/artifacts/texel"/>
+    <mkdir dir="${artifacts.temp.dir}"/>
+    <property name="temp.jar.path.core.jar" value="${artifacts.temp.dir}/core.jar"/>
+    <property name="temp.jar.path.texel.jar" value="${artifacts.temp.dir}/texel.jar"/>
+  </target>
+  
+  <target name="clean.artifact.core:jar" description="clean core:jar artifact output">
+    <delete dir="${artifact.output.core:jar}"/>
+  </target>
+  
+  <target name="artifact.core:jar" depends="init.artifacts, compile.module.core" description="Build &#39;core:jar&#39; artifact">
+    <mkdir dir="${artifact.output.core:jar}"/>
+    <jar destfile="${temp.jar.path.core.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
+      <zipfileset dir="${core.output.dir}"/>
+    </jar>
+    <copy file="${temp.jar.path.core.jar}" tofile="${artifact.output.core:jar}/core.jar"/>
+  </target>
+  
+  <target name="artifact.texel:jar" depends="init.artifacts, compile.module.texel, compile.module.core" description="Build &#39;texel:jar&#39; artifact">
+    <property name="artifact.temp.output.texel:jar" value="${artifacts.temp.dir}/texel"/>
+    <mkdir dir="${artifact.temp.output.texel:jar}"/>
+    <jar destfile="${temp.jar.path.texel.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
+      <zipfileset dir="${texel.output.dir}"/>
+      <zipfileset dir="${core.output.dir}"/>
+      <zipfileset src="${basedir}/texel/libs/lwjgl.jar"/>
+      <zipfileset src="${basedir}/texel/libs/lwjgl-egl.jar"/>
+      <zipfileset src="${basedir}/texel/libs/lwjgl-glfw.jar"/>
+      <zipfileset src="${basedir}/texel/libs/lwjgl-nanovg.jar"/>
+      <zipfileset src="${basedir}/texel/libs/lwjgl-opengles.jar"/>
+      <zipfileset src="${basedir}/texel/libs/natives/lwjgl-natives-linux.jar"/>
+      <zipfileset src="${basedir}/texel/libs/natives/lwjgl-glfw-natives-linux.jar"/>
+      <zipfileset src="${basedir}/texel/libs/natives/lwjgl-nanovg-natives-linux.jar"/>
+      <zipfileset src="${basedir}/texel/libs/natives/lwjgl-opengles-natives-linux.jar"/>
+    </jar>
+    <copy file="${temp.jar.path.texel.jar}" tofile="${artifact.temp.output.texel:jar}/texel.jar"/>
+  </target>
+  
+  <target name="build.all.artifacts" depends="artifact.core:jar, artifact.texel:jar" description="Build all artifacts">
+    <mkdir dir="${artifact.output.texel:jar}"/>
+    <copy todir="${artifact.output.texel:jar}">
+      <fileset dir="${artifact.temp.output.texel:jar}"/>
+    </copy>
+    
+    <!-- Delete temporary files -->
+    <delete dir="${artifacts.temp.dir}"/>
+  </target>
+  
+  <target name="all" depends="build.modules, build.all.artifacts" description="build all"/>
+</project>
