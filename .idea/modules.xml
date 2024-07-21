@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/MasterUI.iml" filepath="$PROJECT_DIR$/MasterUI.iml" />
+      <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/texel/texel.iml" filepath="$PROJECT_DIR$/texel/texel.iml" />
     </modules>
   </component>
 </project>

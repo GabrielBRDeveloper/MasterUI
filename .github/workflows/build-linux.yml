@@ -21,8 +21,13 @@ jobs:
         run: chmod +x .github/build.sh
       - name: Build project
         run: .github/build.sh
+      - name: Upload Core
+        uses: actions/upload-artifact@v4
+        with:
+          name: MasterUI ( Core )
+          path: ./out/artifacts/core/core.jar
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: MasterUI-Linux
-          path: ./out/artifacts/MasterUI/MasterUI.jar
+          name: MasterUI ( Texel )
+          path: ./out/artifacts/texel/texel.jar

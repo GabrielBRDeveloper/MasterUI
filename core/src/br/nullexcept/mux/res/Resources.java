@@ -7,8 +7,6 @@ import br.nullexcept.mux.graphics.Size;
 import br.nullexcept.mux.graphics.fonts.Typeface;
 import br.nullexcept.mux.graphics.fonts.TypefaceFactory;
 import br.nullexcept.mux.lang.xml.XmlElement;
-import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWVidMode;
 
 import java.io.InputStream;
 import java.util.HashMap;
