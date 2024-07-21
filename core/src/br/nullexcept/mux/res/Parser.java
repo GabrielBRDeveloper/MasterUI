@@ -2,7 +2,6 @@ package br.nullexcept.mux.res;
 
 import br.nullexcept.mux.graphics.*;
 import br.nullexcept.mux.graphics.drawable.*;
-import br.nullexcept.mux.graphics.fonts.Typeface;
 import br.nullexcept.mux.graphics.shape.OvalShape;
 import br.nullexcept.mux.graphics.shape.RectShape;
 import br.nullexcept.mux.graphics.shape.RoundedShape;
@@ -10,13 +9,7 @@ import br.nullexcept.mux.lang.xml.XmlElement;
 import br.nullexcept.mux.utils.Log;
 import br.nullexcept.mux.view.AttrList;
 import br.nullexcept.mux.view.Gravity;
-import org.lwjgl.nanovg.NSVGImage;
-import org.lwjgl.nanovg.NSVGPath;
-import org.lwjgl.nanovg.NSVGShape;
-import org.lwjgl.nanovg.NanoSVG;
 
-import java.nio.FloatBuffer;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 class Parser {
@@ -175,8 +168,7 @@ class Parser {
     }
 
     private static Path parseVectorPath(String src, int w, int h) {
-
-        String code =
+        /*String code =
                 "<svg xmlns=\"http://www.w3.org/2000/svg\" " +
                         "width=\""+w+"\" " +
                         "height=\""+h+"\" " +
@@ -218,7 +210,8 @@ class Parser {
             p.add(bx, by, path.closed() == 1, points.toArray(new float[0][0]));
             points.clear();
         }
-        return p;
+        return p;*/
+        return null;
     }
 
     private static Bitmap openBitmap(String path) {

@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="texel-libs">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/texel/libs" />
+      <root url="file://$PROJECT_DIR$/texel/libs/natives" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+    <jarDirectory url="file://$PROJECT_DIR$/texel/libs" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/texel/libs/natives" recursive="false" />
+  </library>
+</component>
