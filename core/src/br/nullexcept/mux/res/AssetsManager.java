@@ -1,5 +1,8 @@
 package br.nullexcept.mux.res;
 
+import br.nullexcept.mux.C;
+import br.nullexcept.mux.lang.ValuedFunction;
+
 import java.io.InputStream;
 
 public class AssetsManager {
@@ -13,20 +16,30 @@ public class AssetsManager {
 
     /** @TODO: NEED FIX FOR NATIVE COMPILE */
     public InputStream openDocument(String dir){
-        return clazz.getResourceAsStream((prefix+"/"+dir).replaceAll("//","/"));
+        String abs = (prefix+"/"+dir).replaceAll("//","/");
+        InputStream stream;
+        for (AssetsLoader loader : C.ASSETS_LOADER) {
+            try {
+                if ((stream = loader.open(clazz, abs)) != null) {
+                    return stream;
+                }
+            } catch (Exception e){}
+        }
+        return null;
     }
 
     public boolean exists(String dir) {
-        try {
-            InputStream input = openDocument(dir);
-            if (input.read() != -1){
-                input.close();
+        String abs = (prefix+"/"+dir).replaceAll("//","/");
+        for (AssetsLoader loader: C.ASSETS_LOADER) {
+            if (loader.exists(clazz, abs)) {
                 return true;
             }
-            input.close();
-            return false;
-        } catch (Exception e){
-            return false;
         }
+        return false;
+    }
+
+    public interface AssetsLoader {
+        InputStream open(Class loader, String directory) throws Exception;
+        boolean exists(Class loader, String directory);
     }
 }

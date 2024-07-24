@@ -77,13 +77,13 @@ public class Activity extends Context {
             nw._args = launch;
             nw.mWindow = window;
 
-            window.setWindowObserver(Application.buildObserver(nw));
+            window.setWindowObserver(getApplication().buildObserver(nw));
             window.getWindowObserver().onCreated();
         } else {
             Activity nw = launch.make();
             nw._args = launch;
             nw.stack = new ActivityStack(nw);
-            Application.boot(Application.getProject().getCoreBootstrap().makeWindow(), nw);
+            getApplication().boot(getApplication().getBootstrap().makeWindow(), nw);
         }
     }
 
@@ -105,7 +105,7 @@ public class Activity extends Context {
     }
 
     protected void postDelayed(Runnable runnable, int time){
-        Looper.getMainLooper().postDelayed(()->{
+        getApplication().getLooper().postDelayed(()->{
             if(isRunning()) {
                 runnable.run();
             }

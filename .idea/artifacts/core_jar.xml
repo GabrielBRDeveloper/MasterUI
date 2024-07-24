@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact name="core:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/core_jar</output-path>
+    <output-path>$PROJECT_DIR$/out/artifacts/core</output-path>
     <root id="root">
       <element id="archive" name="core.jar">
         <element id="module-output" name="core" />

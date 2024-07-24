@@ -5,8 +5,10 @@ import br.nullexcept.mux.app.Looper;
 public abstract class LinearAnimation {
     private int duration;
     private boolean loop  = false;
+    private final Looper looper;
     public LinearAnimation(int duration) {
         this.duration = duration;
+        this.looper = Looper.getCurrentLooper();
     }
 
     public void play() {
@@ -26,11 +28,11 @@ public abstract class LinearAnimation {
             onFrame((double)data[1]/data[0]);
             data[1] += (System.currentTimeMillis() - data[2]);
             data[2] = System.currentTimeMillis();
-            Looper.getMainLooper().post(loops[0]);
+            looper.post(loops[0]);
         };
         loops[0] = update;
         onBegin();
-        Looper.getMainLooper().post(update);
+        looper.post(update);
     }
 
     public void setLoop(boolean loop) {

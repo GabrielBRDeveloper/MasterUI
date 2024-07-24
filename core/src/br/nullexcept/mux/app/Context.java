@@ -6,21 +6,23 @@ import br.nullexcept.mux.res.LayoutInflater;
 import br.nullexcept.mux.res.Resources;
 
 import java.io.File;
-import java.util.HashMap;
 
 public class Context {
     public static final String CLIPBOARD_APPLET = "applet.os.clipboard";
     public static final String DISPLAY_APPLET = "applet.os.display";
 
-    private final Resources mResource;
+    ApplicationRuntime appRuntime;
     Launch _args;
 
     public Context(){
-        mResource = new Resources(this);
     }
 
     public File getFilesDir() {
-        return Application.Files.APP_DIR;
+        return appRuntime.getFilesDir();
+    }
+
+    public ApplicationRuntime getApplication() {
+        return appRuntime;
     }
 
     protected void onParcelChanged(Parcel parcel) {}
@@ -30,19 +32,19 @@ public class Context {
     }
 
     public <T extends Service> T startService(Launch<T> service) {
-        return Application.beginService(service);
+        return appRuntime.beginService(service);
     }
 
     public String getString(String id) {
-        return mResource.getString(id);
+        return getResources().getString(id);
     }
 
     public <T extends Applet> T getApplet(String name) {
-        return (T) Application.getProject().getCoreBootstrap().getSystemApplets().get(name);
+        return appRuntime.getApplet(name);
     }
 
     public LayoutInflater getLayoutInflater(){
-        return mResource.getInflater();
+        return getResources().getInflater();
     }
 
     public AssetsManager getAssetsManager() {
@@ -50,6 +52,6 @@ public class Context {
     }
 
     public Resources getResources() {
-        return mResource;
+        return appRuntime.getResources();
     }
 }

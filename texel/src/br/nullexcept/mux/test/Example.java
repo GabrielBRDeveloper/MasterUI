@@ -1,4 +1,4 @@
-package br.nullexcept.mux.core.test;
+package br.nullexcept.mux.test;
 
 import br.nullexcept.mux.app.Activity;
 import br.nullexcept.mux.app.Application;

@@ -1,5 +1,6 @@
 package br.nullexcept.mux.res;
 
+import br.nullexcept.mux.C;
 import br.nullexcept.mux.graphics.fonts.Typeface;
 import br.nullexcept.mux.lang.xml.XmlElement;
 

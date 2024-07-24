@@ -24,9 +24,9 @@ public class TextView extends View {
         this(context, null);
     }
 
-    public TextView(Context context, AttributeList attrs) {
-        super(context, attrs);
-        attrs = initialAttributes();
+    public TextView(Context context, AttributeList initial) {
+        super(context, initial);
+        AttributeList attrs = initialAttributes();
         attrs.searchText(AttrList.text, this::setText);
         attrs.searchColorList(AttrList.textColor, value -> textColor = value);
         attrs.searchDimension(AttrList.textSize, this::setTextSize);
@@ -105,6 +105,9 @@ public class TextView extends View {
     }
 
     public void setText(CharSequence text) {
+        if (text == null) {
+            text = "";
+        }
         this.text.delete(0, this.text.length());
         this.text.insert(text);
         layout.update();

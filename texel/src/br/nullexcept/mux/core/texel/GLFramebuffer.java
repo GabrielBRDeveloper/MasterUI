@@ -4,7 +4,7 @@ import br.nullexcept.mux.graphics.Color;
 import br.nullexcept.mux.lang.Bindable;
 import br.nullexcept.mux.lang.Disposable;
 
-import static br.nullexcept.mux.hardware.GLES.*;
+import static br.nullexcept.mux.core.texel.GLES.*;
 
 class GLFramebuffer implements Disposable, Bindable {
     private int width, height;

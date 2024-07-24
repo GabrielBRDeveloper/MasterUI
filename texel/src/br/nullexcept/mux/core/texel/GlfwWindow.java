@@ -6,20 +6,15 @@ import br.nullexcept.mux.graphics.Drawable;
 import br.nullexcept.mux.graphics.Point;
 import br.nullexcept.mux.graphics.Rect;
 import br.nullexcept.mux.graphics.Size;
-import br.nullexcept.mux.graphics.fonts.Typeface;
-import br.nullexcept.mux.hardware.GLES;
 import br.nullexcept.mux.input.CharEvent;
 import br.nullexcept.mux.input.KeyEvent;
 import br.nullexcept.mux.input.MotionEvent;
 import br.nullexcept.mux.input.MouseEvent;
 import br.nullexcept.mux.view.View;
-import br.nullexcept.mux.view.ViewGroup;
 import br.nullexcept.mux.view.Window;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWImage;
-import org.lwjgl.nanovg.NVGColor;
-import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.opengles.GLES20;
 
 import java.nio.ByteBuffer;
@@ -36,16 +31,18 @@ class GlfwWindow extends Window {
     private boolean visible;
     private boolean running = false;
     private final Point position = new Point();
+    private final Looper looper;
     private WindowObserver observer;
     private CharSequence title;
 
     public GlfwWindow() {
+        looper = Looper.getCurrentLooper();
         window = GLFW.glfwCreateWindow(900, 512, title = "[MasterUI:Window]", 0, C.GLFW_CONTEXT);
         eventManager = new GlfwEventManager(this);
         GLFW.glfwIconifyWindow(window);
         GLFW.glfwSetWindowSizeCallback(window, (l, w,h) -> {
             windowSize.set(w,h);
-            Looper.getMainLooper().post(()-> drawSurface());
+            looper.post(this::drawSurface);
         });
         GLFW.glfwSetWindowPosCallback(window, (l, x, y) -> {
         });
@@ -132,7 +129,7 @@ class GlfwWindow extends Window {
             time = 1;
         }
         if (!destroyed) {
-            Looper.getMainLooper().postDelayed(this::update, time);
+            looper.postDelayed(this::update, time);
         } else {
             running = false;
         }
@@ -305,7 +302,7 @@ class GlfwWindow extends Window {
 
             flipY.flip();
 
-            Looper.getMainLooper().post(()->{
+            looper.post(()->{
                 if (!destroyed) {
                     GLFWImage ic = GLFWImage.malloc();
                     ic.set(iconSize, iconSize, flipY);

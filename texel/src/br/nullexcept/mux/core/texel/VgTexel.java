@@ -2,7 +2,6 @@ package br.nullexcept.mux.core.texel;
 
 import br.nullexcept.mux.C;
 import br.nullexcept.mux.graphics.*;
-import br.nullexcept.mux.hardware.GLES;
 import br.nullexcept.mux.utils.Log;
 import org.lwjgl.nanovg.*;
 import org.lwjgl.opengles.GLES20;

@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="jar" name="texel:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/texel_jar</output-path>
+    <output-path>$PROJECT_DIR$/out/artifacts/texel</output-path>
     <root id="archive" name="texel.jar">
       <element id="module-output" name="texel" />
       <element id="module-output" name="core" />

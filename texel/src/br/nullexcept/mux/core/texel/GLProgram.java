@@ -3,7 +3,7 @@ package br.nullexcept.mux.core.texel;
 import br.nullexcept.mux.lang.Bindable;
 import br.nullexcept.mux.lang.Disposable;
 
-import static br.nullexcept.mux.hardware.GLES.*;
+import static br.nullexcept.mux.core.texel.GLES.*;
 
 abstract class GLProgram implements Bindable, Disposable {
 

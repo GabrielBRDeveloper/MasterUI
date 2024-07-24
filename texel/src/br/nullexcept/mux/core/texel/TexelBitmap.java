@@ -67,7 +67,7 @@ class TexelBitmap implements Bitmap {
 
     @Override
     protected void finalize() throws Throwable {
-        Looper.getMainLooper().post(()->{
+        Looper.getCurrentLooper().post(()->{
             try {
                 NanoVG.nvgDeleteImage(C.VG_CONTEXT, id);
             } catch (Exception e){}

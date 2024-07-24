@@ -1,6 +1,5 @@
 package br.nullexcept.mux.core.texel;
 
-import br.nullexcept.mux.hardware.GLES;
 import br.nullexcept.mux.utils.BufferUtils;
 
 class GLProgramView extends GLProgram {

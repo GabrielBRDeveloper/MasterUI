@@ -1,5 +1,6 @@
-package br.nullexcept.mux.app;
+package br.nullexcept.mux.app.base;
 
+import br.nullexcept.mux.app.Applet;
 import br.nullexcept.mux.view.Window;
 
 import java.util.Map;

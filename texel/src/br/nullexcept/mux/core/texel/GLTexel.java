@@ -5,7 +5,7 @@ import org.lwjgl.BufferUtils;
 
 import java.nio.FloatBuffer;
 
-import static br.nullexcept.mux.hardware.GLES.*;
+import static br.nullexcept.mux.core.texel.GLES.*;
 
 class GLTexel {
     private static final FloatBuffer bufferRect = BufferUtils.createFloatBuffer(2*4);

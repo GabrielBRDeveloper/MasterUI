@@ -1,6 +1,6 @@
 package br.nullexcept.mux.core.texel;
 
-import static br.nullexcept.mux.hardware.GLES.*;
+import static br.nullexcept.mux.core.texel.GLES.*;
 
 class GlesUtils {
     public static int compileShader(String source, int type){

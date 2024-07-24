@@ -64,6 +64,7 @@ public class View {
         if (attrs == null){
             attrs = context.getResources().obtainStyled("Widget."+getClass().getSimpleName());
         }
+        attributes = attrs;
 
         { // SETUP PADDING
             attrs.searchDimension(AttrList.padding, value -> setPadding(value.intValue(), value.intValue(), value.intValue(), value.intValue()));
@@ -93,8 +94,7 @@ public class View {
 
         state.set(StateList.CLICKABLE, false);
 
-        attributes = attrs;
-        Looper.getMainLooper().post(()-> attributes = null);
+        Looper.getCurrentLooper().postDelayed(()-> attributes = null,2);
     }
 
     protected void showMenu(MenuItem menu, int x, int y) {
@@ -258,7 +258,7 @@ public class View {
     }
 
     public void post(Runnable runnable, long time) {
-        Looper.getMainLooper().postDelayed(() -> {
+        Looper.getCurrentLooper().postDelayed(() -> {
             if (isVisible()) {
                 runnable.run();
             }

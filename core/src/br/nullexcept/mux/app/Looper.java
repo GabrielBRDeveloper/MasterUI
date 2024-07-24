@@ -1,11 +1,24 @@
 package br.nullexcept.mux.app;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Looper {
+    private static final HashMap<Long, Looper> activeLoops = new HashMap<>();
     private final ArrayList<Callback> executions = new ArrayList<>();
     static Looper mainLooper;
     private boolean stop = false;
+
+
+    public static Looper getCurrentLooper() {
+        Thread current = Thread.currentThread();
+        synchronized (activeLoops) {
+            if (activeLoops.containsKey(current.getId())) {
+                return activeLoops.get(current.getId());
+            }
+        }
+        return getMainLooper();
+    }
 
     public static Looper getMainLooper() {
         return mainLooper;
@@ -28,6 +41,10 @@ public class Looper {
     }
 
     public void loop(){
+        Long threadID = Thread.currentThread().getId();
+        synchronized (activeLoops) {
+            activeLoops.put(threadID, this);
+        }
         while (!stop) {
             Callback[] list;
             int i = 0;
@@ -47,6 +64,9 @@ public class Looper {
                 call.handle.run();
             }
             sleep(0, (int) (Math.random()*100));
+        }
+        synchronized (activeLoops) {
+            activeLoops.remove(threadID);
         }
     }
 

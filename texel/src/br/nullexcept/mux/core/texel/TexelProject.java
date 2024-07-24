@@ -1,9 +1,9 @@
 package br.nullexcept.mux.core.texel;
 
 import br.nullexcept.mux.app.Activity;
-import br.nullexcept.mux.app.CoreBoostrap;
+import br.nullexcept.mux.app.base.CoreBoostrap;
 import br.nullexcept.mux.app.Launch;
-import br.nullexcept.mux.app.Project;
+import br.nullexcept.mux.app.base.Project;
 
 public class TexelProject implements Project {
     private final String package_;

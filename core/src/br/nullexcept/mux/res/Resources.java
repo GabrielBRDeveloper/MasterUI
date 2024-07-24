@@ -1,5 +1,6 @@
 package br.nullexcept.mux.res;
 
+import br.nullexcept.mux.C;
 import br.nullexcept.mux.app.Context;
 import br.nullexcept.mux.app.applets.DisplayApplet;
 import br.nullexcept.mux.graphics.Drawable;
@@ -125,8 +126,10 @@ public final class Resources {
     }
 
     Typeface requestFont(String path) {
-        if (ResourceCache.hasFont(path)) {
-            return ResourceCache.obtainTypeface(path);
+        if (C.Flags.RESOURCES_CACHE_FONTS) {
+            if (ResourceCache.hasFont(path)) {
+                return ResourceCache.obtainTypeface(path);
+            }
         }
 
         String pth = path + ".ttf";
@@ -139,11 +142,15 @@ public final class Resources {
     }
 
     XmlElement requestXml(String path){
-        if (ResourceCache.hasXml(path)){
-            return ResourceCache.obtainXml(path);
+        if (C.Flags.RESOURCES_CACHE_XML) {
+            if (ResourceCache.hasXml(path)) {
+                return ResourceCache.obtainXml(path);
+            }
+            ResourceCache.store(path, XmlElement.parse(Resources.Manager.openDocument(path + ".xml")));
+            return requestXml(path);
+        } else {
+            return XmlElement.parse(Manager.openDocument(path+".xml"));
         }
-        ResourceCache.store(path, XmlElement.parse(Resources.Manager.openDocument(path+".xml")));
-        return requestXml(path);
     }
 
     StylePreset obtainStyle(String id) {

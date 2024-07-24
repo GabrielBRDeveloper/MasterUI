@@ -2,7 +2,7 @@ package br.nullexcept.mux.core.texel;
 
 import br.nullexcept.mux.C;
 import br.nullexcept.mux.app.Applet;
-import br.nullexcept.mux.app.CoreBoostrap;
+import br.nullexcept.mux.app.base.CoreBoostrap;
 import br.nullexcept.mux.app.Looper;
 import br.nullexcept.mux.view.PointerIcon;
 import br.nullexcept.mux.view.Window;
@@ -59,12 +59,12 @@ class TexelAPI implements CoreBoostrap {
         C.GLFW_CONTEXT = window;
         GLES.createCapabilities();
         TexelAPI.initialize();
-        Looper.getMainLooper().postDelayed(this::loop, 1);
+        Looper.getCurrentLooper().postDelayed(this::loop, 1);
     }
 
     private void loop() {
         glfwPollEvents();
-        Looper.getMainLooper().postDelayed(this::loop,1);
+        Looper.getCurrentLooper().postDelayed(this::loop,1);
     }
 
     private static void setupEGL() {
