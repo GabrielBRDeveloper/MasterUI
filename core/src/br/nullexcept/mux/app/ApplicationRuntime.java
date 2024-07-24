@@ -85,9 +85,9 @@ public class ApplicationRuntime extends Context {
 
     void boot(Window window, Activity activity) {
         window.destroy();
-        window.setWindowObserver(buildObserver(activity));
         activity.appRuntime = this;
         activity.mWindow = window;
+        window.setWindowObserver(buildObserver(activity));
         window.create();
         window.setVisible(true);
     }
@@ -183,6 +183,7 @@ public class ApplicationRuntime extends Context {
         synchronized (activities) {
             activities.add(activity.stack);
         }
+        activity.appRuntime = this;
         return new WindowObserver(activity);
     }
 
