@@ -8,7 +8,7 @@ public class Looper {
     private final ArrayList<Callback> executions = new ArrayList<>();
     static Looper mainLooper;
     private boolean stop = false;
-
+    private boolean running = false;
 
     public static Looper getCurrentLooper() {
         Thread current = Thread.currentThread();
@@ -36,6 +36,17 @@ public class Looper {
         }
     }
 
+    public void cancel(Runnable run) {
+        synchronized (executions) {
+            ArrayList<Callback> raw = new ArrayList<>(executions);
+            for (Callback callback: raw) {
+                if (callback.handle.equals(run)) {
+                    executions.remove(callback);
+                }
+            }
+        }
+    }
+
     public void post(Runnable runnable){
         postDelayed(runnable, 1);
     }
@@ -45,6 +56,7 @@ public class Looper {
         synchronized (activeLoops) {
             activeLoops.put(threadID, this);
         }
+        running = true;
         while (!stop) {
             Callback[] list;
             int i = 0;
@@ -65,6 +77,7 @@ public class Looper {
             }
             sleep(0, (int) (Math.random()*100));
         }
+        running = false;
         synchronized (activeLoops) {
             activeLoops.remove(threadID);
         }
@@ -82,6 +95,10 @@ public class Looper {
 
     public void stop(){
         this.stop = true;
+    }
+
+    public boolean isRunning() {
+        return running;
     }
 
     private static class Callback {

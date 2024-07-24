@@ -159,6 +159,14 @@ public class ApplicationRuntime extends Context {
         looper.postDelayed(this::loop, 0);
     }
 
+    public void destroy() {
+        looper.post(this::stop);
+    }
+
+    public boolean isRunning() {
+        return looper.isRunning();
+    }
+
     @Override
     public Resources getResources() {
         return resources;

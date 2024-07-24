@@ -74,14 +74,16 @@ public class LinearLayout extends ViewGroup {
             LayoutParams params = (LayoutParams) child.getLayoutParams();
             size.width  = Math.max(size.width, child.getMeasuredWidth() + params.getMarginLeft() + params.getMarginRight());
             size.height += child.getMeasuredHeight() + params.getMarginTop() + params.getMarginBottom();
-            if (i != getChildrenCount()) size.height += dividerSize;
+            if (i < getChildrenCount()-1) {
+                size.height += dividerSize;
+            }
         }
         return size;
     }
 
     @Override
     protected Size onMeasureContent(int parentWidth, int parentHeight) {
-        return super.onMeasureContent(parentWidth, parentHeight);
+        return orientation == ORIENTATION_VERTICAL ? measureVertical() : measureHorizontal();
     }
 
     private Point getChildLocationVertical(View view) {
@@ -111,8 +113,8 @@ public class LinearLayout extends ViewGroup {
         pos.x = posX + Gravity.apply(Gravity.horizontal(getGravity()),wrapSize.width,view.getMeasuredWidth());
         pos.x += params.getMarginLeft();
 
-        pos.y += getPaddingTop();
-        pos.x += getPaddingLeft();
+        pos.y += getPaddingTop() + params.getMarginTop();
+        pos.x += getPaddingLeft() + params.getMarginLeft();
 
         return pos;
     }
@@ -145,7 +147,7 @@ public class LinearLayout extends ViewGroup {
 
         pos.y = posY + Gravity.apply(Gravity.vertical(getGravity()),wrapSize.height,view.getMeasuredHeight());
         pos.y += params.getMarginTop() + getPaddingTop();
-        pos.x += getPaddingLeft();
+        pos.x += getPaddingLeft() + params.getMarginLeft();
 
         return pos;
     }

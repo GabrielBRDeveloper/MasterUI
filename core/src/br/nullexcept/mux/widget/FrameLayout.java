@@ -2,6 +2,7 @@ package br.nullexcept.mux.widget;
 
 import br.nullexcept.mux.app.Context;
 import br.nullexcept.mux.graphics.Point;
+import br.nullexcept.mux.graphics.Size;
 import br.nullexcept.mux.res.AttributeList;
 import br.nullexcept.mux.view.Gravity;
 import br.nullexcept.mux.view.MarginLayoutParams;
@@ -24,11 +25,14 @@ public class FrameLayout extends ViewGroup {
         int w = getMeasuredWidth()-getPaddingLeft()-getPaddingRight();
         int h = getMeasuredHeight()-getPaddingTop()-getPaddingBottom();
 
-        int x = Gravity.apply(Gravity.horizontal(params.gravity), w, view.getMeasuredWidth());
-        int y = Gravity.apply(Gravity.vertical(params.gravity), h, view.getMeasuredHeight());
+        int cw = view.getMeasuredWidth() + params.getMarginLeft() + params.getMarginRight();
+        int ch = view.getMeasuredHeight() + params.getMarginTop() + params.getMarginTop();
 
-        x += params.getMarginLeft() - params.getMarginRight();
-        y += params.getMarginTop() - params.getMarginBottom();
+        int x = Gravity.apply(Gravity.horizontal(params.gravity), w, cw);
+        int y = Gravity.apply(Gravity.vertical(params.gravity), h, ch);
+
+        y += params.getMarginTop();
+        x += params.getMarginLeft();
 
         x += getPaddingLeft();
         y += getPaddingTop();
@@ -36,6 +40,19 @@ public class FrameLayout extends ViewGroup {
         point.set(x,y);
 
         return point;
+    }
+
+    @Override
+    protected Size onMeasureContent(int parentWidth, int parentHeight) {
+        Size size = new Size();
+        for (View child: getChildren()){
+            LayoutParams params = (LayoutParams) child.getLayoutParams();
+            int x = Math.max(0, getChildLocation(child).x - getPaddingLeft());
+            size.width = Math.max(x + child.getMeasuredWidth() + params.getMarginRight(), size.width);
+            int y = Math.max(0, getChildLocation(child).y - getPaddingTop());
+            size.height = Math.max(y+child.getMeasuredHeight() + params.getMarginBottom(), size.height);
+        }
+        return size;
     }
 
     @Override
