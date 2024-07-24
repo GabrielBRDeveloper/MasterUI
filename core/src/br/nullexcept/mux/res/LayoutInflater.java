@@ -3,7 +3,6 @@ package br.nullexcept.mux.res;
 import br.nullexcept.mux.app.Context;
 import br.nullexcept.mux.lang.ValuedFunction;
 import br.nullexcept.mux.lang.xml.XmlElement;
-import br.nullexcept.mux.view.AttrList;
 import br.nullexcept.mux.view.Gravity;
 import br.nullexcept.mux.view.View;
 import br.nullexcept.mux.view.ViewGroup;
@@ -85,8 +84,12 @@ public class LayoutInflater {
             return result[0];
         };
 
+
         params.width = parseParams.run(width);
         params.height = parseParams.run(height);
+
+        attr.searchDimension("maxWidth", x -> params.maxWidth = x.intValue());
+        attr.searchDimension("maxHeight", x -> params.maxHeight = x.intValue());
 
         return params;
     }
@@ -96,6 +99,7 @@ public class LayoutInflater {
         registerView("CardLayout", CardLayout::new);
         registerView("LinearLayout", LinearLayout::new);
         registerView("FrameLayout", FrameLayout::new);
+        registerView("FlowLayout", FlowLayout::new);
         registerView("ScrollView", ScrollView::new);
 
         registerView("ImageView", ImageView::new);

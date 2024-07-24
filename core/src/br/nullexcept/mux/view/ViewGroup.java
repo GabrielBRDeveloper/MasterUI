@@ -45,6 +45,10 @@ public class ViewGroup extends View {
         }
     }
 
+    protected Size onMeasureChild(View child, int width, int height) {
+        return new Size(width,height);
+    }
+
     protected boolean measureChild(View child) {
         LayoutParams params = child.getLayoutParams();
         if (child.getVisibility() == VISIBILITY_GONE) {
@@ -61,8 +65,10 @@ public class ViewGroup extends View {
 
         int w = measureSpec(getMeasuredWidth()-getPaddingLeft()-getPaddingRight()-left, params.width, size.width, child.getPaddingLeft() + child.getPaddingRight());
         int h = measureSpec(getMeasuredHeight()-getPaddingTop()-getPaddingBottom()-top, params.height, size.height, child.getPaddingTop() + child.getPaddingBottom());
-        if (w != child.getMeasuredWidth() || h != child.getMeasuredHeight()) {
-            child.onMeasure(w,h);
+
+        Size measured = onMeasureChild(child, w,h);
+        if (measured.width != child.getMeasuredWidth() || measured.height != child.getMeasuredHeight()) {
+            child.onMeasure(measured.width, measured.height);
             return true;
         }
         return false;

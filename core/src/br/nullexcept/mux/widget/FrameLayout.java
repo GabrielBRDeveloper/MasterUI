@@ -66,8 +66,22 @@ public class FrameLayout extends ViewGroup {
         super.addChild(view, newParams);
     }
 
+    @Override
+    protected Size onMeasureChild(View child, int width, int height) {
+        LayoutParams params = (LayoutParams) child.getLayoutParams();
+        if (width > params.maxWidth) {
+            width = params.maxWidth;
+        }
+        if (height > params.maxHeight) {
+            height = params.maxHeight;
+        }
+        return super.onMeasureChild(child, width, height);
+    }
+
     public static class LayoutParams extends MarginLayoutParams {
         private int gravity = Gravity.LEFT;
+        public int maxWidth = Integer.MAX_VALUE;
+        public int maxHeight = Integer.MAX_VALUE;
 
         public LayoutParams(int width, int height) {
             super(width, height);
@@ -81,6 +95,8 @@ public class FrameLayout extends ViewGroup {
         public void from(ViewGroup.LayoutParams params) {
             if (params instanceof LayoutParams) {
                 this.gravity = ((LayoutParams) params).gravity;
+                this.maxWidth = ((LayoutParams) params).maxWidth;
+                this.maxHeight = ((LayoutParams) params).maxHeight;
             }
             super.from(params);
         }

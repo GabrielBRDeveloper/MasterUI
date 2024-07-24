@@ -1,73 +1,36 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<LinearLayout
+<FrameLayout
     width="match_parent"
     height="wrap_content"
     paddingBottom="8dp"
     orientation="horizontal"
     padding="10dp"
-    background="#AAA">
+    background="#AAA"
+    gravity="center">
 
   <LinearLayout
-      width="match_parent"
-      height="wrap_content"
-      orientation="vertical"
-      padding="10dp"
-      background="#555"
-      gravity="center">
+    width="match_parent"
+    height="wrap_content"
+    layoutGravity="center|top"
+    maxWidth="1024dp">
 
     <Button
-      width="256dp"
-      height="32dp"
-      margin="5dp"
-      text="OK"/>
-
-    <TextView
-      width="256dp"
-      height="32dp"
-      margin="5dp"
-      text="OK"/>
-
-    <EditText
-      width="256dp"
-      height="32dp"
-      margin="5dp"
-      text="OK"/>
-
-    <Switch
-      margin="5dp"
-      text="OK"/>
-
-    <ImageView
-      width="128dp"
-      height="128dp"
-      margin="5dp"
-      src="@drawable/default_window_icon"
-      text="OK"/>
-
-    <FrameLayout
-      width="256dp"
-      height="256dp"
-      background="#A00">
-      <Button
-        width="128dp"
-        height="128dp"
-        layoutGravity="center|bottom"
-        margin="10dp"/>
-    </FrameLayout>
-
-    <CardLayout
-      width="256dp"
-      height="256dp"
-      marginBottom="90dp"
-      radius="16dp">
-
-      <View
-        width="256dp"
-        height="256dp"
-        background="#000"/>
-
-    </CardLayout>
+      width="match_parent"
+      height="wrap_content"
+      margin="5dp"/>
+    <Button
+      width="match_parent"
+      height="wrap_content"
+      margin="5dp"/>
+    <Button
+      width="match_parent"
+      height="wrap_content"
+      margin="5dp"/>
+    <Button
+      width="match_parent"
+      height="wrap_content"
+      margin="5dp"/>
 
   </LinearLayout>
 
-</LinearLayout>
+</FrameLayout>
