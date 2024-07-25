@@ -7,15 +7,21 @@
 
 ### Components
 
-- 🟩 AbsoluteLayout
-- 🟩 LinearLayout
-- 🟨 FrameLayout
-- 🟨 ScrollView
-- 🟩 Button
-- 🟩 Switch
-- 🟩 TextView
-- 🟨 EditText
-- 🟨 ImageView
+> ##### Layout
+> - 🟩 AbsoluteLayout
+> - 🟩 LinearLayout
+> - 🟩 FlowLayout
+> - 🟨 CardLayout
+> - 🟨 FrameLayout
+> - 🟨 ScrollView
+
+> ##### Views
+> - 🟩 Button
+> - 🟩 Switch
+> - 🟩 TextView
+> - 🟩 SeekBar
+> - 🟨 EditText
+> - 🟨 ImageView
 
 ### Interface
 
@@ -28,8 +34,8 @@
 - 🟩 ColorState
 - 🟩 Read drawables.
 - 🟩 Scalable UI.
-- 🟩 Path (A like SVG) Drawables
-- 🟥 Clip based in path.
+- 🟥 Path (A like SVG) Drawables (Broken in #8)
+- 🟨 Clip based in path.
 
 ### General
 
@@ -42,6 +48,7 @@
 ### Applets
 
 - 🟨 Clipboard.
+- 🟨 Display.
 
 ### Events
 
