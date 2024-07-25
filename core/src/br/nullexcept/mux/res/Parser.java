@@ -227,6 +227,7 @@ class Parser {
     }
 
     public static Drawable parseDrawable(Resources resources, String value) {
+        value = value.trim();
         if (value.startsWith("#")){
             return new ColorDrawable(Color.parseColor(value));
         } else {
@@ -242,7 +243,7 @@ class Parser {
                 }
             }
         }
-        Log.error(LOG_TAG,"Invalid background value: "+value);
+        Log.error(LOG_TAG,"Invalid drawable source value: "+value);
         return null;
     }
 

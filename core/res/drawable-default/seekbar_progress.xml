@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<layer-list>
+  <item height="4dp">
+    <selector>
+      <item pressed="true">
+        <layer-list>
+          <item>
+            <shape
+                type="rounded"
+                radius="2dp"
+                color="?colorPrimaryVariant"/>
+          </item>
+        </layer-list>
+      </item>
+      <item>
+        <layer-list>
+          <item>
+            <shape
+                type="rounded"
+                radius="2dp"
+                color="?colorPrimary"/>
+          </item>
+        </layer-list>
+      </item>
+    </selector>
+  </item>
+</layer-list>

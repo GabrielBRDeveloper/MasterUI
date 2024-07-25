@@ -3,6 +3,7 @@ package br.nullexcept.mux.widget;
 import br.nullexcept.mux.app.Context;
 import br.nullexcept.mux.graphics.Point;
 import br.nullexcept.mux.res.AttributeList;
+import br.nullexcept.mux.view.AttrList;
 import br.nullexcept.mux.view.Gravity;
 import br.nullexcept.mux.view.View;
 import br.nullexcept.mux.view.ViewGroup;
@@ -10,11 +11,13 @@ import br.nullexcept.mux.view.ViewGroup;
 public class FlowLayout extends ViewGroup {
     private int dividerSize = 16;
     public FlowLayout(Context context) {
-        super(context);
+        this(context, null);
     }
 
-    public FlowLayout(Context context, AttributeList attrs) {
-        super(context, attrs);
+    public FlowLayout(Context context, AttributeList init) {
+        super(context, init);
+        AttributeList attrs = initialAttributes();
+        attrs.searchDimension(AttrList.dividerSize, x -> dividerSize = x.intValue());
     }
 
     @Override

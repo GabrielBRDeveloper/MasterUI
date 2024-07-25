@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<layer-list>
+  <item height="4dp">
+    <shape
+        type="rounded"
+        radius="2dp"
+        color="?colorSurfaceVariant"/>
+  </item>
+</layer-list>

@@ -51,6 +51,16 @@ public class SelectorDrawable extends Drawable {
         return !current.equals(old);
     }
 
+    @Override
+    public int getWidth() {
+        return current == null ? super.getWidth() : current.getWidth();
+    }
+
+    @Override
+    public int getHeight() {
+        return current == null ? super.getHeight() : current.getHeight();
+    }
+
     private class StateDrawable {
         public final StateList stateList;
         public final Drawable drawable;

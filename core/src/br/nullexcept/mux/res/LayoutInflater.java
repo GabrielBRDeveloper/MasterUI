@@ -108,6 +108,7 @@ public class LayoutInflater {
         registerView("TextView", TextView::new);
         registerView("Switch", Switch::new);
         registerView("View", View::new);
+        registerView("SeekBar", SeekBar::new);
     }
 
     public static void registerView(String name, ViewRegister register){

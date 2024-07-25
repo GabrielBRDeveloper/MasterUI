@@ -21,6 +21,12 @@
     <item name="scrollbar">@drawable/scrollbar_thumb</item>
   </style>
 
+  <style name="Widget.SeekBar">
+    <item name="trackDrawable">@drawable-default/seekbar_track</item>
+    <item name="thumbDrawable">@drawable-default/seekbar_thumb</item>
+    <item name="progressDrawable">@drawable-default/seekbar_progress</item>
+  </style>
+
   <style name="Widget.MenuLayout">
     <style name="background">@drawable/menu_background</style>
     <style name="paddingTop">10dp</style>

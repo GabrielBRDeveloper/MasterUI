@@ -36,7 +36,7 @@ public class LayerListDrawable extends Drawable {
     public int getWidth() {
         int width = 1;
         for (Layer layer: layers) {
-            width = Math.max(width, layer.drawable.getWidth()+layer.padding.left+layer.padding.right);
+            width = Math.max(width, layer.getWidth()+layer.padding.left+layer.padding.right);
         }
         return width;
     }
@@ -45,7 +45,7 @@ public class LayerListDrawable extends Drawable {
     public int getHeight() {
         int height = 1;
         for (Layer layer: layers) {
-            height = Math.max(height, layer.drawable.getWidth()+layer.padding.bottom+layer.padding.top);
+            height = Math.max(height, layer.getHeight()+layer.padding.bottom+layer.padding.top);
         }
         return height;
     }
@@ -104,6 +104,14 @@ public class LayerListDrawable extends Drawable {
             tmp.move(x,y);
 
             drawable.setBounds(tmp);
+        }
+
+        public int getWidth() {
+            return size.width == -1 ? drawable.getWidth() : size.width;
+        }
+
+        public int getHeight() {
+            return size.height == -1 ? drawable.getHeight() : size.height;
         }
     }
 }

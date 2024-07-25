@@ -45,4 +45,9 @@ public class AttrList {
     public static final String summary = "summary";
     public static final String icon = "icon";
     public static final String visibility = "visibility";
+    public static final String progress = "progress";
+    public static final String max = "max";
+    public static final String thumbDrawable = "thumbDrawable";
+    public static final String trackDrawable = "trackDrawable";
+    public static final String progressDrawable = "progressDrawable";
 }

@@ -26,9 +26,12 @@
       width="match_parent"
       height="wrap_content"
       margin="5dp"/>
-    <Button
+    <SeekBar
       width="match_parent"
       height="wrap_content"
+      progress="50"
+      background="#F00"
+      max="100"
       margin="5dp"/>
 
   </LinearLayout>
