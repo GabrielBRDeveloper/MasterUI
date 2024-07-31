@@ -213,28 +213,23 @@
   <path id="texel.module.production.classpath">
     <path refid="${module.jdk.classpath.texel}"/>
     <path refid="library.texel-libs.classpath"/>
-    <pathelement location="${core.output.dir}"/>
   </path>
   
   <path id="texel.runtime.production.module.classpath">
     <pathelement location="${texel.output.dir}"/>
     <path refid="library.texel-libs.classpath"/>
-    <path refid="core.runtime.production.module.classpath"/>
   </path>
   
   <path id="texel.module.classpath">
     <path refid="${module.jdk.classpath.texel}"/>
     <pathelement location="${texel.output.dir}"/>
     <path refid="library.texel-libs.classpath"/>
-    <pathelement location="${core.testoutput.dir}"/>
-    <pathelement location="${core.output.dir}"/>
   </path>
   
   <path id="texel.runtime.module.classpath">
     <pathelement location="${texel.testoutput.dir}"/>
     <pathelement location="${texel.output.dir}"/>
     <path refid="library.texel-libs.classpath"/>
-    <path refid="core.runtime.module.classpath"/>
   </path>
   
   
@@ -256,7 +251,7 @@
   
   <target name="compile.module.texel" depends="compile.module.texel.production,compile.module.texel.tests" description="Compile module texel"/>
   
-  <target name="compile.module.texel.production" depends="compile.module.core" description="Compile module texel; production classes">
+  <target name="compile.module.texel.production" description="Compile module texel; production classes">
     <mkdir dir="${texel.output.dir}"/>
     <javac destdir="${texel.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.texel}/javac">
       <compilerarg line="${compiler.args.texel}"/>

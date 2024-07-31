@@ -84,7 +84,7 @@ public class ApplicationRuntime extends Context {
     }
 
     void boot(Window window, Activity activity) {
-        window.destroy();
+        window.reset();
         activity.appRuntime = this;
         activity.mWindow = window;
         window.setWindowObserver(buildObserver(activity));

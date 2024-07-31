@@ -31,6 +31,12 @@ public interface Canvas {
     default void drawRoundRect(Rect rect, int radius, Paint paint){
         drawRoundRect(rect.left, rect.top, rect.right, rect.bottom, radius, paint);
     }
+
+    /*
+        left ------------- right
+          |                  |
+         top ------------- bottom
+     */
     default void drawRoundRect(Rect rect, Rect radius, Paint paint){
         drawRoundRect(rect.left, rect.top, rect.right, rect.bottom, radius.left, radius.top, radius.right, radius.bottom, paint);
     }

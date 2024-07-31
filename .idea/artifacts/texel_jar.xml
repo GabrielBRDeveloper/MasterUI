@@ -3,7 +3,6 @@
     <output-path>$PROJECT_DIR$/out/artifacts/texel</output-path>
     <root id="archive" name="texel.jar">
       <element id="module-output" name="texel" />
-      <element id="module-output" name="core" />
       <element id="extracted-dir" path="$PROJECT_DIR$/texel/libs/lwjgl.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/texel/libs/lwjgl-egl.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/texel/libs/lwjgl-glfw.jar" path-in-jar="/" />

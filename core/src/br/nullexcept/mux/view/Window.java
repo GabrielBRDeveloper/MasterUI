@@ -16,13 +16,14 @@ public abstract class Window {
     public abstract void setVisible(boolean visible);
     public abstract void setWindowObserver(WindowObserver observer);
     public abstract WindowObserver getWindowObserver();
+
+    public abstract void reset();
     public abstract void create();
     public abstract void destroy();
     public abstract void setIcon(Drawable icon);
 
     public abstract CharSequence getTitle();
     public abstract Size getSize();
-
     public interface WindowObserver {
         void onCreated();
         void onVisibilityChanged(boolean visible);

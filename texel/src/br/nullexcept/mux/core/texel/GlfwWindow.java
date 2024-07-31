@@ -239,6 +239,12 @@ class GlfwWindow extends Window {
         return observer;
     }
 
+
+    @Override
+    public void reset() {
+        destroy();
+    }
+
     @Override
     public void create() {
         if(!destroyed){
