@@ -15,11 +15,13 @@ public class ScrollView extends ViewGroup {
     private final double[] scroll = new double[2];
     private final Point space = new Point();
     private final Point pixelScroll = new Point();
+    private final Point downMousePosition = new Point();
     private final ScrollContainer container;
     private Drawable scrollDrawable = new ColorDrawable(Color.GREEN);
     private final Point mouseScroll = new Point();
     private boolean capturedMouseScroll = true;
     private final Rect scrollbar = new Rect();
+    private long lastMouseEvent;
 
     public ScrollView(Context context) {
         super(context);
@@ -81,10 +83,16 @@ public class ScrollView extends ViewGroup {
                 mouseEvent.setTarget(hashCode());
                 return true;
             }
-        } else if (mouseEvent.getTarget() == hashCode()) {
-            double percent = mouseEvent.getY() / getMeasuredHeight();
+        } else if (mouseEvent.getTarget() == hashCode() && mouseEvent.getAction() == MotionEvent.ACTION_DOWN) {
+            if (lastMouseEvent != mouseEvent.getDownTime()) {
+                lastMouseEvent = mouseEvent.getDownTime();
+                downMousePosition.set((scrollbar.height()-((int) mouseEvent.getY()-scrollbar.top)), (int) mouseEvent.getY()-scrollbar.top);
+                return true;
+            }
+            double percent = (mouseEvent.getY()) / (getMeasuredHeight()-downMousePosition.x);
             percent = Math.max(0, Math.min(1.0, percent));
             scroll[1] = percent;
+            measureContent();
             measureContent();
             return true;
         }
