@@ -213,23 +213,28 @@
   <path id="texel.module.production.classpath">
     <path refid="${module.jdk.classpath.texel}"/>
     <path refid="library.texel-libs.classpath"/>
+    <pathelement location="${core.output.dir}"/>
   </path>
   
   <path id="texel.runtime.production.module.classpath">
     <pathelement location="${texel.output.dir}"/>
     <path refid="library.texel-libs.classpath"/>
+    <path refid="core.runtime.production.module.classpath"/>
   </path>
   
   <path id="texel.module.classpath">
     <path refid="${module.jdk.classpath.texel}"/>
     <pathelement location="${texel.output.dir}"/>
     <path refid="library.texel-libs.classpath"/>
+    <pathelement location="${core.testoutput.dir}"/>
+    <pathelement location="${core.output.dir}"/>
   </path>
   
   <path id="texel.runtime.module.classpath">
     <pathelement location="${texel.testoutput.dir}"/>
     <pathelement location="${texel.output.dir}"/>
     <path refid="library.texel-libs.classpath"/>
+    <path refid="core.runtime.module.classpath"/>
   </path>
   
   
@@ -251,7 +256,7 @@
   
   <target name="compile.module.texel" depends="compile.module.texel.production,compile.module.texel.tests" description="Compile module texel"/>
   
-  <target name="compile.module.texel.production" description="Compile module texel; production classes">
+  <target name="compile.module.texel.production" depends="compile.module.core" description="Compile module texel; production classes">
     <mkdir dir="${texel.output.dir}"/>
     <javac destdir="${texel.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.texel}/javac">
       <compilerarg line="${compiler.args.texel}"/>
@@ -311,12 +316,11 @@
     <copy file="${temp.jar.path.core.jar}" tofile="${artifact.output.core:jar}/core.jar"/>
   </target>
   
-  <target name="artifact.texel:jar" depends="init.artifacts, compile.module.texel, compile.module.core" description="Build &#39;texel:jar&#39; artifact">
-    <property name="artifact.temp.output.texel:jar" value="${artifacts.temp.dir}/texel"/>
+  <target name="artifact.texel:jar" depends="init.artifacts, compile.module.texel" description="Build &#39;texel:jar&#39; artifact">
+    <property name="artifact.temp.output.texel:jar" value="${artifacts.temp.dir}/texel_jar"/>
     <mkdir dir="${artifact.temp.output.texel:jar}"/>
     <jar destfile="${temp.jar.path.texel.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
       <zipfileset dir="${texel.output.dir}"/>
-      <zipfileset dir="${core.output.dir}"/>
       <zipfileset src="${basedir}/texel/libs/lwjgl.jar"/>
       <zipfileset src="${basedir}/texel/libs/lwjgl-egl.jar"/>
       <zipfileset src="${basedir}/texel/libs/lwjgl-glfw.jar"/>
