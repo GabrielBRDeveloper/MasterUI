@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <layer-list>
-  <item height="16dp" width="16dp">
+  <item height="16dp" width="16dp" padding="2dp">
     <selector>
       <item pressed="true">
         <layer-list>
