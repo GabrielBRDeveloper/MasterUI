@@ -5,6 +5,7 @@
     <item name="colorPrimary">#1F9EDE</item>
     <item name="colorPrimaryVariant">#0B384F</item>
     <item name="colorOnSurface">#FFF</item>
+    <item name="colorHint">#5FFF</item>
     <item name="colorOnSurfaceVariant">#FFFFFF</item>
     <item name="colorSurfaceVariant">#29282E</item>
     <item name="colorSurface">#1C1B1F</item>
@@ -35,6 +36,7 @@
 
   <style name="Widget.TextView">
     <item name="textColor">?colorOnSurface</item>
+    <item name="hintColor">?colorHint</item>
   </style>
 
   <style name="Widget.EditText" parent="Widget.TextView">

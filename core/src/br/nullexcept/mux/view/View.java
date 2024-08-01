@@ -2,7 +2,6 @@ package br.nullexcept.mux.view;
 
 import br.nullexcept.mux.C;
 import br.nullexcept.mux.app.Context;
-import br.nullexcept.mux.app.Looper;
 import br.nullexcept.mux.graphics.*;
 import br.nullexcept.mux.input.*;
 import br.nullexcept.mux.res.AttributeList;
@@ -94,7 +93,7 @@ public class View {
 
         state.set(StateList.CLICKABLE, false);
 
-        Looper.getCurrentLooper().postDelayed(()-> attributes = null,2);
+        context.getMainLooper().postDelayed(()-> attributes = null,2);
     }
 
     protected void showMenu(MenuItem menu, int x, int y) {
@@ -258,7 +257,7 @@ public class View {
     }
 
     public void post(Runnable runnable, long time) {
-        Looper.getCurrentLooper().postDelayed(() -> {
+        context.getMainLooper().postDelayed(() -> {
             if (isVisible()) {
                 runnable.run();
             }

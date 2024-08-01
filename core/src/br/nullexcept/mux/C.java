@@ -28,6 +28,7 @@ public class C {
         public static final boolean DEBUG_OVERLAY;
         public static final boolean DISABLE_AUTO_REDRAW;
         public static final boolean AUTO_GC = true;
+        public static boolean DUMB_VIEWS = false;
         public static boolean RESOURCES_CACHE_XML = true;
         public static boolean RESOURCES_CACHE_FONTS = true;
 

@@ -50,4 +50,6 @@ public class AttrList {
     public static final String thumbDrawable = "thumbDrawable";
     public static final String trackDrawable = "trackDrawable";
     public static final String progressDrawable = "progressDrawable";
+    public static final String editable = "editable";
+    public static String hintColor = "hintColor";
 }

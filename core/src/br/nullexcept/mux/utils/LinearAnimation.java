@@ -1,14 +1,15 @@
 package br.nullexcept.mux.utils;
 
 import br.nullexcept.mux.app.Looper;
+import br.nullexcept.mux.view.View;
 
 public abstract class LinearAnimation {
     private int duration;
     private boolean loop  = false;
     private final Looper looper;
-    public LinearAnimation(int duration) {
+    public LinearAnimation(View view, int duration) {
         this.duration = duration;
-        this.looper = Looper.getCurrentLooper();
+        this.looper = view.getContext().getMainLooper();
     }
 
     public void play() {

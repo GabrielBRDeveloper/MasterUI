@@ -8,6 +8,9 @@ public class Color {
     public static final int BLACK = Color.rgb(0,0,0);
     public static final int WHITE = Color.rgb(255,255,255);
     public static final int TRANSPARENT = Color.argb(0,0,0,0);
+    public static final int YELLOW = Color.rgb(255,255,0);
+    public static final int MAGENTA = Color.rgb(255,0,255);
+    public static final int ORANGE = Color.rgb(255,100,0);
 
     public static int red(int color){
         return (color >> 16) & 0xFF;

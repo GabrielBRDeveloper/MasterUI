@@ -75,12 +75,14 @@ public class Activity extends Context {
             Activity nw = launch.make();
             nw.stack = stack.newStack(nw);
             nw._args = launch;
+            nw.setMainLooper(getMainLooper());
             nw.mWindow = window;
 
             window.setWindowObserver(getApplication().buildObserver(nw));
             window.getWindowObserver().onCreated();
         } else {
             Activity nw = launch.make();
+            nw.setMainLooper(getMainLooper());
             nw._args = launch;
             nw.stack = new ActivityStack(nw);
             getApplication().boot(getApplication().getBootstrap().makeWindow(), nw);

@@ -8,7 +8,8 @@ import br.nullexcept.mux.view.Gravity;
 
 public class TextLayout {
     private final Editable text;
-    private final FontMetrics font;
+    private final Paint paint;
+    private FontMetrics font;
     private final Size viewport = new Size();
     private final Selection selection;
     private TextRenderer drawer;
@@ -16,12 +17,18 @@ public class TextLayout {
     private int gravity;
     // [INTERNAL LINE] => LINE | START | END | WIDTH
     private int breakLines = 0;
-    private Size wrapSize = new Size();
-    private final int[][] lines = new int[10240][4]; //160KB of buffer allow 10240 lines
+    private final Size wrapSize = new Size();
+    private final int[][] lines;
 
     public TextLayout(Editable text, Paint paint, TextRenderer drawer) {
+        this(text, paint, drawer, 10240); //160KB of buffer allow 10.240 lines
+    }
+
+    public TextLayout(Editable text, Paint paint, TextRenderer drawer, int lineBufferSize) {
+        this.lines = new int[lineBufferSize][4];
         this.text = text;
         this.selection = text.getSelection();
+        this.paint = paint;
         this.font = paint.getFontMetrics();
         this.drawer = drawer;
     }
@@ -41,6 +48,7 @@ public class TextLayout {
     /* NEED MAKE A WORD BREAKS */
     public void measure(int width, int height, int gravity) {
         this.gravity = gravity;
+        this.font = paint.getFontMetrics();
         width = Math.max(1, width);
         height = Math.max(1, height);
 
@@ -93,7 +101,7 @@ public class TextLayout {
                 int e = Math.min(start + x, end);
                 width = measureRange(start, e);
                 while (width > viewport.width && e > start) {
-                    width -= font.measureChar(text.charAt(e & (text.length() - 1)));
+                    width -= measureChar(text.charAt(e & (text.length() - 1)));
                     e--;
                 }
 
@@ -119,6 +127,10 @@ public class TextLayout {
         return lineCount;
     }
 
+    private float measureChar(char ch) {
+        return font.measureChar(ch);
+    }
+
     private int findInternalLine(int index) {
         int line = text.getLineIndex(index);
         int c = Math.max(0, line-1);
@@ -132,7 +144,7 @@ public class TextLayout {
     private int measureRange(int start, int end) {
         int w = 0;
         for (int i = start; i < end; i++) {
-            w += font.measureChar(text.charAt(i));
+            w += measureChar(text.charAt(i));
         }
         return w;
     }
@@ -176,10 +188,12 @@ public class TextLayout {
         }
         int x = 0;
         for (int i = lines[line][1]; i < lines[line][2] && i != l; i++) {
-            x += font.measureChar(text.charAt(i));
+            x += measureChar(text.charAt(i));
         }
 
-        drawer.drawCaret(canvas,x, (int) (line*font.getLineHeight()));
+        int y = Gravity.apply(Gravity.vertical(gravity), viewport.height, Math.round(Math.max(1,breakLines) * font.getLineHeight()));
+        x += Gravity.apply(Gravity.horizontal(gravity),viewport.width, lines[line][3]);
+        drawer.drawCaret(canvas,x, (int) (line*font.getLineHeight())+y);
     }
 
     private void drawSelection(Canvas canvas) {
@@ -187,19 +201,20 @@ public class TextLayout {
         int endLine = findInternalLine(selection.high());
 
         if (startLine == endLine) {
-            drawSelection(canvas, selection.low(), selection.end(), startLine);
+            drawSelection(canvas, selection.low(), selection.high(), startLine);
         } else {
             drawSelection(canvas, selection.low(), lines[startLine][2], startLine);
             for (int i = startLine + 1; i < endLine; i++) {
                 drawSelection(canvas, lines[i][1], lines[i][2], i);
             }
-            drawSelection(canvas, lines[endLine][1], selection.end(), endLine);
+            drawSelection(canvas, lines[endLine][1], selection.high(), endLine);
         }
     }
 
     private void drawSelection(Canvas canvas, int start, int end, int line) {
         int z = Gravity.apply(Gravity.vertical(gravity), viewport.height, Math.round(breakLines * font.getLineHeight()));
         int w;
+        int xf = measureRange(lines[line][1], start);
 
         if (start == lines[line][1] && end == lines[line][2]) {
             w = lines[line][3];
@@ -208,8 +223,8 @@ public class TextLayout {
         }
 
         int y = (int) (line * font.getLineHeight()) + z;
-        int x = Gravity.apply(Gravity.horizontal(gravity), viewport.width, w);
-        drawer.drawSelection(canvas, x,y, w, Math.round(font.getLineHeight()));
+        int x = Gravity.apply(Gravity.horizontal(gravity), viewport.width, lines[line][3]);
+        drawer.drawSelection(canvas, x+xf,y, w, Math.round(font.getLineHeight()));
     }
 
     public void drawLine(Canvas canvas, int y, int index) {
@@ -217,10 +232,12 @@ public class TextLayout {
         int[] line = lines[index];
         int x = Gravity.apply(Gravity.horizontal(gravity),viewport.width,line[3]);
 
+        int in = 0;
         for (int i = line[1]; i < line[2]; i++) {
             char ch = text.charAt(i);
-            drawer.drawCharacter(canvas, ch, x, y);
+            drawer.drawCharacter(canvas, ch, x, y,i, line[1], line[2]);
             x += font.measureChar(ch);
+            in++;
         }
     }
 
@@ -234,7 +251,7 @@ public class TextLayout {
 
     public interface TextRenderer {
         void drawSelection(Canvas canvas, int x, int y, int width, int height);
-        void drawCharacter(Canvas canvas, char ch, int x, int y);
+        void drawCharacter(Canvas canvas, char ch, int x, int y, int charIndex, int lineStart, int lineEnd);
         void drawCaret(Canvas canvas, int x, int y);
     }
 }

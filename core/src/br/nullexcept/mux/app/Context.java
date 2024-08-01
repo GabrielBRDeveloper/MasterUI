@@ -11,10 +11,27 @@ public class Context {
     public static final String CLIPBOARD_APPLET = "applet.os.clipboard";
     public static final String DISPLAY_APPLET = "applet.os.display";
 
-    ApplicationRuntime appRuntime;
+    private ApplicationRuntime appRuntime;
     Launch _args;
+    private Looper mainLooper;
 
     public Context(){
+    }
+
+    void setMainLooper(Looper mainLooper) {
+        if (mainLooper != null) {
+            this.mainLooper = mainLooper;
+        }
+    }
+
+    void setAppRuntime(ApplicationRuntime appRuntime) {
+        if (appRuntime != null) {
+            this.appRuntime = appRuntime;
+        }
+    }
+
+    public Looper getMainLooper() {
+        return mainLooper;
     }
 
     public File getFilesDir() {

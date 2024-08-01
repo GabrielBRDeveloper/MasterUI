@@ -1,5 +1,6 @@
 package br.nullexcept.mux.res;
 
+import br.nullexcept.mux.C;
 import br.nullexcept.mux.app.Context;
 import br.nullexcept.mux.lang.ValuedFunction;
 import br.nullexcept.mux.lang.xml.XmlElement;
@@ -35,11 +36,16 @@ public class LayoutInflater {
             return inflate(xml.attr("layout"));
         }
         Resources res = context.getResources();
-        FallbackAttributes agent = new FallbackAttributes(xml, (FallbackAttributes) res.obtainStyled("Widget."+xml.name()), res);
-        if (!registers.containsKey(xml.name())){
-            throw new RuntimeException("Invalid view class "+xml.name()+" you need register class before use.");
+        String viewName = xml.name();
+        if ((!registers.containsKey(viewName))){
+            if (C.Flags.DUMB_VIEWS) {
+                viewName = "View";
+            } else {
+                throw new RuntimeException("Invalid view class " + xml.name() + " you need register class before use.");
+            }
         }
-        ViewRegister register = registers.get(xml.name());
+        FallbackAttributes agent = new FallbackAttributes(xml, (FallbackAttributes) res.obtainStyled("Widget."+viewName), res);
+        ViewRegister register = registers.get(viewName);
         View view = register.create(context,agent);
         view.setLayoutParams(parseLayoutParams(agent));
         if (view instanceof ViewGroup){

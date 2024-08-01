@@ -10,7 +10,6 @@ import br.nullexcept.mux.view.AttrList;
 import br.nullexcept.mux.view.View;
 import br.nullexcept.mux.view.ViewGroup;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -146,7 +145,7 @@ class SimpleTextRenderer implements TextLayout.TextRenderer {
     public void drawSelection(Canvas canvas, int x, int y, int width, int height) {}
 
     @Override
-    public void drawCharacter(Canvas canvas, char ch, int x, int y) {
+    public void drawCharacter(Canvas canvas, char ch, int x, int y, int charIndex, int lineStart, int lineEnd) {
         switch (ch) {
             case '\n':
             case '\r':

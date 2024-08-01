@@ -8,7 +8,7 @@ public class AlphaAnimation extends LinearAnimation {
     private float src, from, to, diff;
 
     public AlphaAnimation(View view, int duration) {
-        super(duration);
+        super(view, duration);
         this.view = view;
         setAlpha(0.0f, 1.0f);
     }

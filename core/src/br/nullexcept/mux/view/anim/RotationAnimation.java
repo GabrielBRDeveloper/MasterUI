@@ -10,7 +10,7 @@ public class RotationAnimation extends LinearAnimation {
     private float old;
 
     public RotationAnimation(View vw, int duration) {
-        super(duration);
+        super(vw, duration);
         view = vw;
         from = 0;
         to = 360;

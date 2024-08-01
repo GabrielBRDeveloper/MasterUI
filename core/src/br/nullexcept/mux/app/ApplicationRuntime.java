@@ -73,7 +73,8 @@ public class ApplicationRuntime extends Context {
         this.resources = new Resources(this);
 
         Activity nw = project.getLaunch().make();
-        nw.appRuntime = this;
+        nw.setMainLooper(getMainLooper());
+        nw.setAppRuntime(this);
         nw.stack = new ActivityStack(nw);
         looper.postDelayed(() -> boot(bootstrap.makeWindow(), nw), 0);
         looper.post(this::loop);
@@ -83,9 +84,15 @@ public class ApplicationRuntime extends Context {
         Looper.sleep(2000); // Wait for all services stop
     }
 
+    @Override
+    public Looper getMainLooper() {
+        return looper;
+    }
+
     void boot(Window window, Activity activity) {
         window.reset();
-        activity.appRuntime = this;
+        activity.setAppRuntime(this);
+        activity.setMainLooper(getMainLooper());
         activity.mWindow = window;
         window.setWindowObserver(buildObserver(activity));
         window.create();
@@ -106,8 +113,9 @@ public class ApplicationRuntime extends Context {
 
             Looper serviceLooper = new Looper();
             service.myLooper = serviceLooper;
+            service.setAppRuntime(this);
+            service.setMainLooper(getMainLooper());
             service._args = launch;
-            service.appRuntime = this;
 
             services.put(name, service);
             new Thread(() -> {
@@ -191,7 +199,8 @@ public class ApplicationRuntime extends Context {
         synchronized (activities) {
             activities.add(activity.stack);
         }
-        activity.appRuntime = this;
+        activity.setMainLooper(getMainLooper());
+        activity.setAppRuntime(this);
         return new WindowObserver(activity);
     }
 
