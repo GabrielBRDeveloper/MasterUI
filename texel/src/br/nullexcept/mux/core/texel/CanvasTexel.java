@@ -124,6 +124,15 @@ class CanvasTexel implements Canvas {
     @Override
     public void drawRoundRect(int left, int top, int right, int bottom, int radiusLeft, int radiusTop, int radiusRight, int radiusBottom, Paint paint) {
         check();
+
+        int rh = bottom-top;
+        int rw = right-left;
+
+        radiusLeft = Math.min(Math.min(rw/2, rh/2), radiusLeft);
+        radiusRight = Math.min(Math.min(rw/2, rh/2), radiusRight);
+        radiusTop = Math.min(Math.min(rw/2, rh/2), radiusTop);
+        radiusBottom = Math.min(Math.min(rw/2, rh/2), radiusBottom);
+
         VgTexel.beginElement();
         VgTexel.applyPaint(paint);
         VgTexel.drawRoundedRect(left,top,right-left, bottom-top, radiusLeft, radiusTop, radiusRight, radiusBottom);
