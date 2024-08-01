@@ -17,10 +17,12 @@
     <Button
       width="match_parent"
       height="wrap_content"
+      text="Hello"
       margin="5dp"/>
     <Button
       width="match_parent"
       height="wrap_content"
+      text="World"
       margin="5dp"/>
     <Button
       width="match_parent"
@@ -37,7 +39,7 @@
 
 
   <ScrollView
-    width="256dp"
+    width="400dp"
     height="match_parent">
     <EditText
         width="match_parent"

@@ -171,7 +171,11 @@ public final class Resources {
         if (family.toLowerCase().equals("default")) {
             family = "roboto";
         }
-        XmlElement fonts = requestXml(fixPath(family, "font"));
+        String path = fixPath(family, "font");
+        if (Manager.exists(path+".ttf")) {
+            return requestFont(path);
+        }
+        XmlElement fonts = requestXml(path);
         Typeface font = Typeface.DEFAULT;
 
         boolean bold = (style & Typeface.STYLE_BOLD) != 0;

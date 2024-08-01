@@ -16,6 +16,9 @@ import br.nullexcept.mux.view.AttrList;
 import br.nullexcept.mux.view.View;
 import br.nullexcept.mux.view.ViewGroup;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class EditText extends View {
     private final Paint paint = new Paint();
     private final Paint paintSelection = new Paint();
@@ -47,16 +50,36 @@ public class EditText extends View {
         super(context, init);
         setFocusable(true);
         setOnClickListener(view -> requestFocus());
-        AttributeList list = initialAttributes();
-        list.searchColorList(AttrList.textColor, this::setTextColor);
-        list.searchDimension(AttrList.textSize, this::setTextSize);
-        list.searchBoolean(AttrList.singleLine, this::setSingleLine);
-        list.searchBoolean(AttrList.editable, this::setEditable);
-        list.searchColorList(AttrList.selectionColor, this::setSelectionColor);
-        list.searchText(AttrList.text, this::setText);
-        list.searchText(AttrList.hint, this::setHint);
+        AttributeList attrs = initialAttributes();
+        attrs.searchColorList(AttrList.textColor, this::setTextColor);
+        attrs.searchDimension(AttrList.textSize, this::setTextSize);
+        attrs.searchBoolean(AttrList.singleLine, this::setSingleLine);
+        attrs.searchBoolean(AttrList.editable, this::setEditable);
+        attrs.searchColorList(AttrList.selectionColor, this::setSelectionColor);
+        attrs.searchText(AttrList.text, this::setText);
+        attrs.searchText(AttrList.hint, this::setHint);
 
-        list.searchColorList(AttrList.hintColor, this::setHintColor);
+        attrs.searchColorList(AttrList.hintColor, this::setHintColor);
+
+        {   // Customize typeface
+            String[] fontFamily = new String[]{"default"};
+            int[] fontStyle = new int[1];
+            attrs.searchRaw(AttrList.fontFamily, value -> fontFamily[0] = value);
+            attrs.searchRaw(AttrList.textStyle, value -> {
+                List<String> values = Arrays.asList(value.toLowerCase().split("\\|"));
+                if (values.contains("italic")) {
+                    fontStyle[0] |= Typeface.STYLE_ITALIC;
+                }
+                if (values.contains("bold")) {
+                    fontStyle[0] |= Typeface.STYLE_BOLD;
+                }
+            });
+
+            Typeface font = context.getResources().getFont(fontFamily[0], fontStyle[0]);
+            if (font != null) {
+                setTypeface(font);
+            }
+        }
     }
 
     public void setOnTextChangedListener(OnTextChangedListener textChangedListener) {
@@ -239,10 +262,12 @@ public class EditText extends View {
             }break;
             case KeyEvent.KEY_V: {
                 if (keyEvent.hasCtrl()) {
+                    String content = ((ClipboardApplet)getContext().getApplet(Context.CLIPBOARD_APPLET)).getContent();
+                    if (content == null) break;
                     if (text.getSelection().length() > 0) {
                         text.delete();
                     }
-                    text.insert(((ClipboardApplet)getContext().getApplet(Context.CLIPBOARD_APPLET)).getContent());
+                    text.insert(preFormatText(content));
                     changeText();
                 }
             } break;
@@ -295,8 +320,12 @@ public class EditText extends View {
     }
 
     private void measureText(boolean force) {
-        int mw = (int) (getMeasuredWidth() - getPaddingLeft() - getPaddingRight() - paint.getFontMetrics().measureText("   "));
-        int mh = (int) (getMeasuredHeight() - getPaddingTop() - getPaddingBottom() - paint.getFontMetrics().measureText("   "));
+        measureText(force, getMeasuredWidth(), getMeasuredHeight());
+    }
+
+    private void measureText(boolean force, int width, int height) {
+        int mw = (int) (width - getPaddingLeft() - getPaddingRight() - paint.getFontMetrics().measureText("   "));
+        int mh = (int) (width - getPaddingTop() - getPaddingBottom() - paint.getFontMetrics().measureText("   "));
         mw = Math.max(1, mw);
         mh = Math.max(1, mh);
         if (force || (textViewport.width != mw || textViewport.height != mw)) {
@@ -330,7 +359,7 @@ public class EditText extends View {
             h = parentHeight;
         }
 
-        measureText(true);
+        measureText(true, w,h);
 
         return new Size(currentLayout().getWrapSize());
     }
