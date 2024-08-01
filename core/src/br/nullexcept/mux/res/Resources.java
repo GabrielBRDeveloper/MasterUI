@@ -10,6 +10,8 @@ import br.nullexcept.mux.graphics.fonts.TypefaceFactory;
 import br.nullexcept.mux.lang.xml.XmlElement;
 
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -103,7 +105,7 @@ public final class Resources {
     }
 
     public AttributeList obtainStyled(XmlElement xml){
-        return new FallbackAttributes(xml, theme, this);
+        return new FallbackAttributes(xml, Collections.singletonList(theme), this);
     }
 
     public AttributeList obtainStyled(String name){

@@ -2,6 +2,8 @@ package br.nullexcept.mux.res;
 
 import br.nullexcept.mux.lang.xml.XmlElement;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,6 +32,6 @@ class StylePreset {
         if (parent != null){
             fallback = resources.obtainStyle(parent).generate(fallback);
         }
-        return new FallbackAttributes(presets,fallback,resources);
+        return new FallbackAttributes(presets, Collections.singletonList(fallback),resources);
     }
 }

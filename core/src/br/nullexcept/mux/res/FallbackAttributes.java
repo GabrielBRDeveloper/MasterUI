@@ -5,32 +5,47 @@ import br.nullexcept.mux.graphics.Drawable;
 import br.nullexcept.mux.graphics.fonts.Typeface;
 import br.nullexcept.mux.lang.Function;
 import br.nullexcept.mux.lang.xml.XmlElement;
+import br.nullexcept.mux.utils.Log;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 class FallbackAttributes implements AttributeList {
     private final Resources resources;
     private final Map<String, String> map;
-    private final FallbackAttributes fallback;
+    private final ArrayList<AttributeList> fallbacks;
 
-    public FallbackAttributes(Map<String, String> attrs, FallbackAttributes fallback, Resources res){
+    public FallbackAttributes(Map<String, String> attrs, List<AttributeList> fallbacks, Resources res){
         this.resources = res;
         this.map = attrs;
-        this.fallback = fallback;
+        this.fallbacks = new ArrayList<>();
+        for (AttributeList attr: fallbacks) {
+            if (attr == null) continue;
+            this.fallbacks.add(attr);
+        }
     }
 
-    public FallbackAttributes(XmlElement xml, FallbackAttributes fallback, Resources res){
-        this(xml.attrs(), fallback, res);
+    public FallbackAttributes(XmlElement xml, List<AttributeList> fallbacks, Resources res){
+        this(xml.attrs(), fallbacks, res);
     }
 
     private String resolve(String value){
-        if (value.startsWith("?")){
+        if (value != null && value.startsWith("?")){
             String name = value.substring(1);
             if (map.containsKey(name)){
                 return resolve(map.get(name));
             }
-            if (fallback != null){
-                return fallback.resolve(value);
+            String[] resolved = new String[1];
+            for (AttributeList fallback: fallbacks) {
+                try {
+                    fallback.searchRaw(name, v -> resolved[0] = v);
+                    if (resolved[0] != null) {
+                        return resolved[0];
+                    }
+                } catch (Exception e){
+                    // Don't do anything because call undefined resolve from other FallbackAttributes
+                }
             }
             throw new RuntimeException("Cannot resolve reference: "+name);
         }
@@ -86,8 +101,15 @@ class FallbackAttributes implements AttributeList {
     public void searchRaw(String name, Function<String> apply) {
         if (contains(name)){
             apply.call(resolve(map.get(name)));
-        } else if (fallback != null){
-            fallback.searchRaw(name, apply);
+        } else {
+          String[] data = new String[1];
+          for (AttributeList fallback : fallbacks) {
+              fallback.searchRaw(name, value -> data[0] = value);
+              if (data[0] != null) {
+                  apply.call(data[0]);
+                  break;
+              }
+          }
         }
     }
 
@@ -103,15 +125,20 @@ class FallbackAttributes implements AttributeList {
 
     @Override
     public String getRawValue(String name) {
-        return map.get(name);
+        return (map.get(name));
     }
 
     @Override
     public CharSequence getText(String name) {
         if (contains(name)){
             return Parser.parseText(resources, resolve(map.get(name)));
-        } else if (fallback != null){
-            return fallback.getText(name);
+        } else {
+            for (AttributeList fallback : fallbacks) {
+                CharSequence seq = fallback.getText(name);
+                if (seq != null) {
+                    return seq;
+                }
+            }
         }
         return null;
     }
@@ -120,8 +147,13 @@ class FallbackAttributes implements AttributeList {
     public int getColor(String name, int defaultValue) {
         if (contains(name)){
             return Parser.parseColor(resolve(map.get(name)));
-        }  else if (fallback != null){
-            return fallback.getColor(name, defaultValue);
+        }  else {
+            for (AttributeList fallback : fallbacks) {
+                int color = fallback.getColor(name, Integer.MAX_VALUE);
+                if (color != Integer.MAX_VALUE) {
+                    return color;
+                }
+            }
         }
         return defaultValue;
     }
@@ -130,8 +162,13 @@ class FallbackAttributes implements AttributeList {
     public float getDimension(String name, float defaultValue) {
         if (contains(name)){
             return Parser.parseDimension(resources, resolve(map.get(name)));
-        } else if (fallback != null){
-            return fallback.getDimension(name, defaultValue);
+        } else {
+            for (AttributeList fallback: fallbacks) {
+                float dimension = fallback.getDimension(name, Float.MAX_VALUE);
+                if (dimension != Float.MAX_VALUE) {
+                    return dimension;
+                }
+            }
         }
         return defaultValue;
     }
@@ -140,8 +177,13 @@ class FallbackAttributes implements AttributeList {
     public Drawable getDrawable(String name) {
         if (contains(name)){
             return Parser.parseDrawable(resources, resolve(map.get(name)));
-        } else if (fallback != null){
-            return fallback.getDrawable(name);
+        } else {
+            for (AttributeList fallback : fallbacks) {
+                Drawable drawable = fallback.getDrawable(name);
+                if (drawable != null) {
+                    return drawable;
+                }
+            }
         }
         return null;
     }
@@ -150,8 +192,13 @@ class FallbackAttributes implements AttributeList {
     public ColorStateList getColorList(String name) {
         if (contains(name)) {
             return Parser.parseColorState(resources, resolve(map.get(name)));
-        } else if (fallback != null) {
-            return fallback.getColorList(name);
+        } else {
+            for (AttributeList fallback: fallbacks) {
+                ColorStateList color = fallback.getColorList(name);
+                if (color != null) {
+                    return fallback.getColorList(name);
+                }
+            }
         }
         return null;
     }

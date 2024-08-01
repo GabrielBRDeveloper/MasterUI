@@ -9,6 +9,8 @@ import br.nullexcept.mux.view.View;
 import br.nullexcept.mux.view.ViewGroup;
 import br.nullexcept.mux.widget.*;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 
 import static br.nullexcept.mux.view.AttrList.*;
@@ -44,10 +46,10 @@ public class LayoutInflater {
                 throw new RuntimeException("Invalid view class " + xml.name() + " you need register class before use.");
             }
         }
-        FallbackAttributes agent = new FallbackAttributes(xml, (FallbackAttributes) res.obtainStyled("Widget."+viewName), res);
+        FallbackAttributes attrs = new FallbackAttributes(xml, Collections.singletonList(res.obtainStyled("Widget." + viewName)), res);
         ViewRegister register = registers.get(viewName);
-        View view = register.create(context,agent);
-        view.setLayoutParams(parseLayoutParams(agent));
+        View view = register.create(context,attrs);
+        view.setLayoutParams(parseLayoutParams(attrs));
         if (view instanceof ViewGroup){
             for (int i = 0; i < xml.childCount(); i++){
                 ((ViewGroup) view).addChild(inflate(xml.childAt(i)));
