@@ -1,6 +1,5 @@
 package br.nullexcept.mux.view.anim;
 
-import br.nullexcept.mux.utils.LinearAnimation;
 import br.nullexcept.mux.view.View;
 
 public class AlphaAnimation extends LinearAnimation {

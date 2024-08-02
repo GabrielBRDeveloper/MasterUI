@@ -18,7 +18,7 @@ public class ImageView extends View {
     public static final int SCALE_FIT = 1;
     public static final int SCALE_CROP = 2;
     public static final int SCALE_WRAP = 3;
-    
+
     private Drawable image;
     private final Rect rect = new Rect();
     private int scaleType = SCALE_FIT;

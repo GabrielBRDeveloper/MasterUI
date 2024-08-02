@@ -68,6 +68,7 @@
         background="#C00"
         src="@drawable/default_window_icon"
         scaleType="fill"
+        rotation="45"
         margin="10dp"/>
 
       <ImageView

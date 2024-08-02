@@ -19,13 +19,11 @@ public class AbsoluteLayout extends ViewGroup {
 
     @Override
     public void addChild(View view, ViewGroup.LayoutParams params) {
-        if (params == null) {
-            params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LayoutParams newParams = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        if (params != null) {
+            newParams.from(params);
         }
-        if (!(params instanceof LayoutParams)) {
-            params = new LayoutParams(params.width, params.height);
-        }
-        super.addChild(view, params);
+        super.addChild(view, newParams);
     }
     
     @Override
@@ -49,6 +47,9 @@ public class AbsoluteLayout extends ViewGroup {
             if (params instanceof MarginLayoutParams) {
                 x = ((MarginLayoutParams) params).getMarginLeft();
                 y = ((MarginLayoutParams) params).getMarginTop();
+            } else if (params instanceof LayoutParams) {
+                x = ((LayoutParams) params).x;
+                y = ((LayoutParams) params).y;
             }
             super.from(params);
         }

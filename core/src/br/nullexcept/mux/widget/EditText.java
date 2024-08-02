@@ -191,8 +191,10 @@ public class EditText extends View {
     @Override
     public void setGravity(int gravity) {
         super.setGravity(gravity);
-        measureText(true);
-        checkMeasure();
+        if (text != null) {
+            measureText(true);
+            checkMeasure();
+        }
     }
 
     @Override
