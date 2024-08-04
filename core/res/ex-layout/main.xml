@@ -35,7 +35,7 @@
         width="50dp"
         height="100dp"
         background="#C00"
-        src="@drawable/default_window_icon"
+        src="@drawable-default/default_window_icon"
         scaleType="fill"
         margin="10dp"/>
 
@@ -43,7 +43,7 @@
         width="50dp"
         height="100dp"
         background="#C00"
-        src="@drawable/default_window_icon"
+        src="@drawable-default/default_window_icon"
         scaleType="crop"
         margin="10dp"/>
 
@@ -51,7 +51,7 @@
         width="50dp"
         height="100dp"
         background="#C00"
-        src="@drawable/default_window_icon"
+        src="@drawable-default/default_window_icon"
         margin="10dp"/>
 
     </LinearLayout>
@@ -66,7 +66,7 @@
         width="100dp"
         height="72dp"
         background="#C00"
-        src="@drawable/default_window_icon"
+        src="@drawable-default/default_window_icon"
         scaleType="fill"
         rotation="45"
         margin="10dp"/>
@@ -75,7 +75,7 @@
         width="100dp"
         height="72dp"
         background="#C00"
-        src="@drawable/default_window_icon"
+        src="@drawable-default/default_window_icon"
         scaleType="wrap"
         margin="10dp"/>
 
@@ -83,7 +83,7 @@
         width="100dp"
         height="72dp"
         background="#C00"
-        src="@drawable/default_window_icon"
+        src="@drawable-default/default_window_icon"
         margin="10dp"/>
 
     </LinearLayout>

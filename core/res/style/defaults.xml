@@ -19,7 +19,7 @@
   </style>
 
   <style name="Widget.ScrollView">
-    <item name="scrollbar">@drawable/scrollbar_thumb</item>
+    <item name="scrollbar">@drawable-default/scrollbar_thumb</item>
   </style>
 
   <style name="Widget.SeekBar">
@@ -29,7 +29,7 @@
   </style>
 
   <style name="Widget.MenuLayout">
-    <style name="background">@drawable/menu_background</style>
+    <style name="background">@drawable-default/menu_background</style>
     <style name="paddingTop">10dp</style>
     <style name="paddingBottom">10dp</style>
   </style>
@@ -43,18 +43,18 @@
     <item name="pointerIcon">textSelection</item>
     <item name="padding">8dp</item>
     <item name="selectionColor">?colorPrimary</item>
-    <item name="background">@drawable/textarea_background</item>
+    <item name="background">@drawable-default/textarea_background</item>
   </style>
 
   <style name="Widget.Window">
-    <item name="icon">@drawable/default_window_icon</item>
+    <item name="icon">@drawable-default/default_window_icon</item>
     <item name="title">MasterUi - Project</item>
     <item name="width">800dp</item>
     <item name="height">500dp</item>
   </style>
 
   <style name="Widget.Button">
-    <item name="background">@drawable/button_background</item>
+    <item name="background">@drawable-default/button_background</item>
     <item name="gravity">center</item>
     <item name="padding">10dp</item>
     <item name="paddingLeft">15dp</item>
@@ -66,7 +66,7 @@
   <style name="Widget.Switch">
     <item name="width">42dp</item>
     <item name="height">26dp</item>
-    <item name="background">@drawable/switch_background</item>
+    <item name="background">@drawable-default/switch_background</item>
   </style>
 
   <style name="Widget.ImageView">
