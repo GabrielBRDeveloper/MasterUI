@@ -17,7 +17,7 @@ public class TextView extends View {
     private final Paint paint = new Paint();
     private ColorStateList textColor = new ColorStateList(Color.RED);
     private final Editable text = new Editable();
-    private final TextLayout layout = new TextLayout(text, paint, new SimpleTextRenderer(paint));
+    private final TextLayout layout = new TextLayout(text, paint, new SimpleTextRenderer());
 
     public TextView(Context context) {
         this(context, null);
@@ -129,36 +129,34 @@ public class TextView extends View {
         setTextSize(paint.getTextSize());
     }
 
+    protected void onDrawCharacter(Canvas canvas, char ch, int x, int y, int charIndex, int lineStart, int lineEnd) {
+        canvas.drawText(String.valueOf(ch), x, y, paint);
+    }
+
     public CharSequence getText() {
         return text;
     }
-}
 
-class SimpleTextRenderer implements TextLayout.TextRenderer {
-    private final Paint paint;
+    private class SimpleTextRenderer implements TextLayout.TextRenderer {
+        @Override
+        public void drawSelection(Canvas canvas, int x, int y, int width, int height) {}
 
-    SimpleTextRenderer(Paint paint) {
-        this.paint = paint;
-    }
-
-    @Override
-    public void drawSelection(Canvas canvas, int x, int y, int width, int height) {}
-
-    @Override
-    public void drawCharacter(Canvas canvas, char ch, int x, int y, int charIndex, int lineStart, int lineEnd) {
-        switch (ch) {
-            case '\n':
-            case '\r':
-            case ' ':
-            case '\t':
-            case '\f':
-                break;
-            default:
-                canvas.drawText(String.valueOf(ch), x, y, paint);
-                break;
+        @Override
+        public void drawCharacter(Canvas canvas, char ch, int x, int y, int charIndex, int lineStart, int lineEnd) {
+            switch (ch) {
+                case '\n':
+                case '\r':
+                case ' ':
+                case '\t':
+                case '\f':
+                    break;
+                default:
+                    onDrawCharacter(canvas, ch, x, y, charIndex, lineStart, lineEnd);
+                    break;
+            }
         }
-    }
 
-    @Override
-    public void drawCaret(Canvas canvas, int x, int y) {}
+        @Override
+        public void drawCaret(Canvas canvas, int x, int y) {}
+    }
 }
