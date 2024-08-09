@@ -326,11 +326,11 @@ public class EditText extends View {
     }
 
     private void measureText(boolean force, int width, int height) {
-        int mw = (int) (width - getPaddingLeft() - getPaddingRight() - paint.getFontMetrics().measureText("   "));
-        int mh = (int) (width - getPaddingTop() - getPaddingBottom() - paint.getFontMetrics().measureText("   "));
+        int mw = width - getPaddingLeft() - getPaddingRight();
+        int mh = height - getPaddingTop() - getPaddingBottom();
         mw = Math.max(1, mw);
         mh = Math.max(1, mh);
-        if (force || (textViewport.width != mw || textViewport.height != mw)) {
+        if (force || (textViewport.width != mw || textViewport.height != mh)) {
             textViewport.set(mw,mh);
             textLayout.measure(mw,mh, getGravity());
             if (text.length() == 0) {
