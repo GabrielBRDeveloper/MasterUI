@@ -11,7 +11,7 @@ public class AttrList {
     public static final String height="height";
     public static final String background = "background";
     public static final String padding = "padding";
-    public static final String paddingRight = "paddingLeft";
+    public static final String paddingRight = "paddingRight";
     public static final String paddingLeft = "paddingLeft";
     public static final String paddingTop = "paddingTop";
     public static final String paddingBottom = "paddingBottom";
