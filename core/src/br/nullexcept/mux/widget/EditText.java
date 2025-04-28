@@ -380,6 +380,12 @@ public class EditText extends View {
         canvas.translate(-getPaddingLeft(), -getPaddingTop());
     }
 
+    @Override
+    public void onFocusChanged(boolean focused) {
+        super.onFocusChanged(focused);
+        invalidate();
+    }
+
     private class TextMeasureRenderer implements TextLayout.TextRenderer {
 
         @Override public void drawSelection(Canvas canvas, int x, int y, int width, int height) {}
@@ -434,7 +440,9 @@ public class EditText extends View {
         @Override
         public void drawCaret(Canvas canvas, int x, int y) {
             paintSelection.setColor(selectionColor.getColor());
-            canvas.drawRect(x,y,x+(paint.getFontMetrics().measureChar('|')/4),y+paint.getFontMetrics().getLineHeight(),paintSelection);
+            if (isFocused()) {
+                canvas.drawRect(x, y, x + (paint.getFontMetrics().measureChar('|') / 4), y + paint.getFontMetrics().getLineHeight(), paintSelection);
+            }
         }
     }
 }
